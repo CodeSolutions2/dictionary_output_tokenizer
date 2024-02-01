@@ -4,17 +4,20 @@
 <body>
 
 <!-- Text classification webapp -->
-  <!-- https://js.tensorflow.org/api/1.0.0/ -->
-  <h1 style='text-align: center; margin-bottom: -35px;'>Text classification webapp</h1>
-  <br><br>
+<!-- https://js.tensorflow.org/api/1.0.0/ -->
+<h1 style='text-align: center; margin-bottom: -35px;'>Text classification webapp</h1>
+<br><br>
 
 <!-- Train model -->
-<input type="text" value="" placeholder="Enter train dataset GitHub repo url" id="apikey" rows="10" cols="200">
+<input type="text" value="" placeholder="Enter train dataset GitHub repo url" id="apikey" rows="1" cols="200" style="display:block">
 <button id="train_model" onclick="train_model()" style="display:block">train_model</button>
 	
-	
-
+<!-- Result: say if model is trained or not -->
 <div id="output" style="font-family:courier;font-size:24px;height:300px"></div>
+
+<!-- Predict/inference: predict each sentence separated by a \n character-->
+	each sentence separated by the \n character will be labeled
+<input type="text" value="" placeholder="Enter text to label" id="apikey" rows="10" cols="200" style="display:none">
 
 	
 <!-- https://developer.mozilla.org/en-US/docs/Web/CSS/position -->
