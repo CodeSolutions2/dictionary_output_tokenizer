@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+
+  <!-- Automatic image classification/labeling webapp -->
+  <!-- https://js.tensorflow.org/api/1.0.0/ -->
+  <h1 style='text-align: center; margin-bottom: -35px;'>CodeSolution2 - Image labeling webapp: Read files from URL and output label</h1>
+  <br><br>
+  <button id="run_label_images" onclick="run_label_images()" style="display:block">run_label_images</button>
+	
+  <div id="output" style="font-family:courier;font-size:24px;height:300px"></div>
+
+	
+<!-- https://developer.mozilla.org/en-US/docs/Web/CSS/position -->
+<style>
+canvas {border: 1px solid black; position: absolute; display: inline-block; z-index: 1; top: 150px;},
+div {position: relative; z-index: 2;},
+table {border-collapse: collapse;}
+td,
+th {border: 1px solid black; padding: 10px 20px;}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+
+<script>
+
+  // -------------------------------------------------
+	
+  const outp = document.getElementById('output');
+
+  var url_vec = [];  // This is a global variable, and I start referencing it in get_urls_from_repo
+
+  // -------------------------------------------------
+	
+async function get_urls_from_repo() {
+	
+  try {
+	  
+    const repoOwner = 'CodeSolutions2';
+    const repoName = 'test_4_webapps';
+    var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
+    //var options = {method : 'get', headers: headers, mode: 'no-cors'};
+    await fetch(url).then(res => res.json()).then(data => {
+
+    data.forEach(file => {
+      if (file.type === 'file' && file.name.match(/.(jpg|jpeg|png|gif)$/i)) {
+        
+        //outp.innerHTML += "Filename=" + file.name + ", file url=" + file.download_url + "<br/>";
+	url_vec.push(file.download_url);
+      }
+    });
+  }).catch(error => { outp.innerHTML += error; });
+
+  } catch (error) {
+    outp.innerHTML = error;
+  }
+
+	return url_vec;
+}
+
+
+  // -------------------------------------------------
+	
+
+//async function load_model(){
+
+	// Did not work
+ 	// model = await mobilenet.load().then(model => { return model });
+	// OR
+	//return await mobilenet.load();
+//}
+//const model = load_model();
+	//TypeError: model.classify is not a function
+	
+  // -------------------------------------------------
+
+	
+  async function run_label_images() {
+
+    // ---------------------------
+
+    // const MODEL_URL = 'https://storage.googleapis.com/tensorflowjsmodels0/model.json';
+    const MODEL_URL = 'model.json';
+    const edgeDetection_model = await tf.loadLayersModel(MODEL_URL);
+
+    // ---------------------------
+	  
+    var url_vec = await get_urls_from_repo();
+    // outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
+
+    var pred_vec = [['', '', '', '', ''],['image_name', 'mobilenet_label', 'mobilenet_probability', 'edgeDetection_label', 'edgeDetection_probability']]; // This is a variable for this function only to accumulate the image labels. The model output is trapped inside image.onload, maybe due to the async () function.
+
+    // ---------------------------
+	  
+
+	url_vec.forEach(function(url, index) {
+        
+	    // ---------------------------
+	    // Create a canvas for first image
+	    var ctx = create_dynamic_canvasElement(index);
+	    // ---------------------------
+        
+	    const image = new Image();
+
+	    // Add 'crossorigin' attribute to bypass insecure error
+	    image.crossOrigin = "anonymous";
+
+	    // PRINT
+	    // outp.innerHTML += 'image.complete: ' + image.complete + "<br/>";
+
+	    image.onload = async () => {
+	
+		        // Draw image on canvas
+		        // canvasElement.style.display = "block";
+		        ctx.drawImage(image, 0,0);
+
+		    	// Call Model 0: mobilenet
+			await model.classify(image).then(predictions => { 
+				// outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>";
+
+				// Write model prediction on image
+				// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_text
+				ctx.font = "bold 14px serif";
+				// context.font = "bold 24px verdana, sans-serif ";
+			
+				// Make a square on canvas
+				ctx.fillStyle = "rgb(0 0 200 / 50%)";  // Background square over image = blue
+    				ctx.fillRect(0, 0, 224, 50);  // fillRect(x, y, width, height)
+
+				// Then, print light color text on square
+				ctx.fillStyle = "#ffffff";  // Font color = white, 
+				ctx.fillText("Mobilenet= "+predictions[0].className, 10, 15); // fillText(text, x, y [, maxWidth])
+
+				// Store model predictions in array
+				let out = url.split("/")
+				let image_name = out[out.length-1];
+				pred_vec.push([image_name, predictions[0].className, predictions[0].probability, '', '']);
+				// data accumulates correctly in pred_vec, here:
+				// outp.innerHTML += 'pred_vec: ' + pred_vec + "<br/>";
+									});
+
+		    	// Call Model 1: edge_detection_model
+		    	await run_group_together(image, edgeDetection_model).then(datavec => { 
+				// outp.innerHTML += 'index: ' + index + "<br/>";
+				// outp.innerHTML += 'datavec[0][0]: ' + datavec[0][0] + "<br/>";
+				// outp.innerHTML += 'datavec[0][1]: ' + datavec[0][1] + "<br/>";
+				
+				// Write model prediction on image
+				ctx.fillStyle = "#ffffff";  // Font color = white, 
+				ctx.fillText("EdgeDetection= " + datavec[0][0], 10, 35);
+		    
+				pred_vec[index+2][3] = datavec[0][0];  // label name
+				pred_vec[index+2][4] = datavec[0][1];  // probability
+									});
+		    	
+		    	// Save accumulated array as csv file at the last url entry
+		    	if (index == url_vec.length-1) {
+				// data accumulates correctly in pred_vec, here:
+				// outp.innerHTML += 'pred_vec: ' + pred_vec + "<br/>";
+				
+				// Save array to csv and put download csv file link on screen (NO AUTOMATIC DOWNLOADING)
+				await put_results_in_CSVfile(pred_vec);
+
+				// Create a table dynamically with the results
+				await generateTable_dynamically(pred_vec);
+			}
+	  
+	    };  // end of image.onload
+
+	    // pred_vec is not defined here
+		
+	    image.src = url;
+
+	});  // end of image.forEach
+
+	// pred_vec is not defined here
+
+}  // end of run_mobilenet
+
+	
+  // -------------------------------------------------
+
+  async function put_results_in_CSVfile(pred_vec) {
+    
+    // ---------------------
+    // Puts array into csv format
+    const blob = new Blob([pred_vec], { type: 'text/csv;charset=utf-8;' });
+
+    // Create a url for the data object
+    const url = URL.createObjectURL(blob);
+    // ---------------------
+    // OR
+    // ---------------------
+    // Puts array into csv format
+    // let csvContent = "data:text/csv; charset=utf-8";
+    // pred_vec.forEach(function(row_array) {
+	// csvContent += row_array.join(",") + "\r\n";
+    // });
+    // OR
+    // let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+	  
+    // Create a url for the data object
+    // var url = encodeURI(csvContent);
+    // ---------------------
+
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+
+    const filename = 'data.csv';
+    link.setAttribute("download", filename);
+	  
+    link.style.display = 'block';
+
+    outp.innerHTML += 'Download CSV here: ' + url + "<br/>";
+    // document.body.appendChild(link);
+
+    // Automatic download of csv
+    // link.click();
+    // document.body.removeChild(link);
+	  
+}
+
+  // -------------------------------------------------
+
+  async function generateTable_dynamically(pred_vec) {
+
+  	const tbl = document.createElement("table");
+  
+  	const tblBody = document.createElement("tbody");
+  
+  	// Create row cells dynamically
+  	for (let i=0; i < pred_vec.length; i++){
+  		// create a table row
+  		const row = document.createElement("tr");
+  
+  		for (let j=0; j < pred_vec[0].length; j++){
+  			const cell = document.createElement("td");
+  			const cellText = document.createTextNode(`${pred_vec[i][j]}`);
+  			cell.appendChild(cellText);
+  			row.appendChild(cell);
+  		}
+  
+  		// add a row to the end of the table
+  		tblBody.appendChild(row);
+  	}
+  	tbl.appendChild(tblBody);
+  
+  	document.body.appendChild(tbl);
+
+  }  
+
+  // -------------------------------------------------
+
+
+  async function run_group_together(image, edgeDetection_model) {
+	  
+    // https://github.com/tensorflow/tfjs-models/tree/master/mobilenet
+    const datavec = [];
+	  
+    try {
+	// ---------------------
+	// For using an image input to mobilenet
+	// ---------------------
+	// await model.classify(image).then(predictions => {for(var i = 0; i<predictions.length; i++){outp.innerHTML += "<br/>" + predictions[i].className + " : " + predictions[i].probability;} }); 
+	// OR
+	// Just list the first prediction choice, use a tensor as input
+	// await model.classify(image).then(predictions => { outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>"; pred_vec.push([predictions[0].className, predictions[0].probability]); });
+	    
+	// ---------------------
+	// For using a tensor input to mobilenet
+	// ---------------------
+	// Convert the image element to a tensor using fromPixels
+	// var tensor_image = tf.browser.fromPixels(image); // This is size 224,224,3
+
+	// View the largest pixel value
+	// outp.innerHTML += tf.max(tensor_image) + "<br/>";
+	
+	// const eTensor = tensor_image.expandDims(0); // This is size 1,224,224,3
+	// outp.innerHTML += eTensor.shape + "<br/>";
+	// ---------------------
+	    
+	// await model.classify(eTensor).then(predictions => {for(var i = 0; i<predictions.length; i++){outp.innerHTML += "<br/>" + predictions[i].className + " : " + predictions[i].probability;} }); 
+	// OR
+	// Just list the first prediction choice, use a tensor as input
+	// await model.classify(eTensor).then(predictions => { outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>"; pred_vec.push([predictions[0].className, predictions[0].probability]); });
+	// OR
+	// Print the first prediction choice, use an image as input
+	// await mobilenet.load().then(model => {model.classify(eTensor).then(predictions => { outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>"; } ) });
+
+
+	// ---------------------
+	// Using a tensor input to edgeDetection_model
+	// ---------------------
+	// Convert the image element to a tensor using fromPixels
+	var tensor_image = tf.browser.fromPixels(image); // This is size 224,224,3
+	    
+	const k_rgb_values = tf.tensor4d([[[[ 1000.], [ 1000.], [ 1000.]],[[    0.], [    0.], [    0.]],[[-1000.], [-1000.], [-1000.]]], [[[ 1000.], [ 1000.], [ 1000.]], [[    0.], [    0.], [    0.]], [[-1000.], [-1000.], [-1000.]]], [[[ 1000.], [ 1000.], [ 1000.]], [[    0.], [    0.], [    0.]], [[-1000.], [-1000.], [-1000.]]]], shape=[3, 3, 3, 1], dtype='float32');
+		  
+	const image_4D = tensor_image.expandDims(0); // This is size 1,224,224,3
+	const image_4D_float = tf.cast(image_4D, 'float32')
+	const image_filter0 = tf.conv2d(image_4D_float, k_rgb_values, 1, 'same') 
+
+	// Dispose of the intermediate tensors
+	tensor_image.dispose();
+	k_rgb_values.dispose();
+	image_4D.dispose();
+	image_4D_float.dispose();
+		  
+	// Make image values from -1 to 1
+            const b = tf.scalar(255);
+	    const image_filter = image_filter0.div(b)
+	    const shape_out = image_filter.shape;   // 1,276,250,1
+
+            // Dispose of the intermediate tensors
+            image_filter0.dispose();
+            b.dispose();
+
+            // Ensure that tensor is 4d
+            const x = tf.reshape(image_filter, [1, shape_out[1], shape_out[2], shape_out[3]])
+            const boxes = tf.tensor2d([[0, 0, 1, 1]], [1, 4]);
+            const boxIndices = tf.tensor1d([0], 'int32');
+            const newSize = [512, 512];
+            const resizedTensor = tf.image.cropAndResize(x, boxes, boxIndices, newSize);
+		  
+            // Give image to model
+            const result = edgeDetection_model.predict(resizedTensor); 
+	    // outp.innerHTML = result.mean();
+			
+	    // Get probability value as a number
+	    const resultData = await result.data(); // correct
+	    
+	    if (resultData > 0.5){
+		datavec.push(['apple', resultData]);
+	    } else {
+		datavec.push(['tomatoe', resultData]);
+	    }
+	    // outp.innerHTML += "datavec: " + datavec + "<br/>";;
+	    
+    } catch (error) {
+      outp.innerHTML = error; 
+    }
+
+	  return datavec;
+  } 
+
+  
+  // -------------------------------------------------
+	
+</script>
+</body>
+</html>
