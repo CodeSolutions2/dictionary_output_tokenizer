@@ -86,16 +86,21 @@ async function get_urls_from_repo() {
   // -------------------------------------------------
 
 	
-  async function run_label_images() {
+  async function train_model() {
 
     // ---------------------------
 
+    // Load custom model 
     // const MODEL_URL = 'https://storage.googleapis.com/tensorflowjsmodels0/model.json';
     const MODEL_URL = 'model.json';
-    const edgeDetection_model = await tf.loadLayersModel(MODEL_URL);
+    const custom_model = await tf.loadLayersModel(MODEL_URL);
 
     // ---------------------------
+
+    // Read in URL: determine if it is cloud storage or GitHub repo url
+
 	  
+    // Read in Github repo url
     var url_vec = await get_urls_from_repo();
     // outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
 
