@@ -9,8 +9,8 @@
 <br><br>
 
 <!-- Train model -->
-<label for="github_repo_url" style="display:block">Enter train dataset GitHub repo url:</label>
-<input type="text" value="" placeholder="GitHub repo url" id="apikey" rows="1" cols="500" style="display:block">
+<label for="github_repo_url_label" style="display:block">Enter train dataset GitHub repo url (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv):</label>
+<input type="text" value="" placeholder="GitHub repo url" id="github_repo_url" rows="1" cols="500" style="display:block">
 <br>
 <button id="train_model" onclick="train_model()" style="display:block">train_model</button>
 	
@@ -18,8 +18,8 @@
 <div id="output" style="font-family:courier;font-size:24px;height:300px"></div>
 
 <!-- Predict/inference: predict each sentence separated by a \n character-->
-<label for="input_text_label" style="display:block">Enter text to label, each sentence separated by the \n character will be labeled:</label>
-<input type="text" value="" placeholder="Enter text to label" id="input_text" rows="10" cols="500" style="display:block">
+<label for="input_text_label" style="display:none">Enter text to label, each sentence separated by the \n character will be labeled:</label>
+<input type="text" value="" placeholder="Enter text to label" id="input_text" rows="10" cols="500" style="display:none">
 
 	
 <!-- https://developer.mozilla.org/en-US/docs/Web/CSS/position -->
