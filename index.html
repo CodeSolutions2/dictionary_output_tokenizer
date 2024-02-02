@@ -9,8 +9,8 @@
 <br><br>
 
 <!-- Train model -->
-<label for="github_repo_url_label" style="display:block">Enter train dataset GitHub repo url (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv):</label>
-<input type="text" value="" placeholder="GitHub repo url" id="github_repo_url" rows="1" cols="500" style="display:block">
+<label for="github_repo_url_label" style="display:block">Enter train dataset location url: url can be Github or GCP storage (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv):</label>
+<input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" style="display:block">
 <br>
 <button id="train_model" onclick="train_model()" style="display:block">train_model</button>
 	
@@ -39,33 +39,44 @@ th {border: 1px solid black; padding: 10px 20px;}
 	
   const outp = document.getElementById('output');
 
-  var url_vec = [];  // This is a global variable, and I start referencing it in get_urls_from_repo
+  var url_vec = [];  // This is a global variable, and I start referencing it in get_train_dataset
 
   // -------------------------------------------------
 	
-async function get_urls_from_repo() {
+async function get_train_dataset() {
+
+	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv
+	// https://storage.googleapis.com/BUCKET_NAME/train_dataset.csv
+	const dataset_url = document.getElementById("train_dataset_url").value;
+
+	let out = dataset_url.split("/")
+	let domain_name = out[2];
+
 	
-  try {
-	  
-    const repoOwner = 'CodeSolutions2';
-    const repoName = 'test_4_webapps';
-    var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
-    //var options = {method : 'get', headers: headers, mode: 'no-cors'};
-    await fetch(url).then(res => res.json()).then(data => {
+	if (domain_name == 'github.com'){
+		const repoOwner = out[3];
+		const repoName = out[4];
+		var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
+		    //var options = {method : 'get', headers: headers, mode: 'no-cors'};
+		    await fetch(url).then(res => res.json()).then(data => {
+		
+		    data.forEach(file => {
+		      if (file.type === 'file' && file.name.match(/.(jpg|jpeg|png|gif)$/i)) {
+		        
+		        //outp.innerHTML += "Filename=" + file.name + ", file url=" + file.download_url + "<br/>";
+			url_vec.push(file.download_url);
+		      }
+		    });
+		  }).catch(error => { outp.innerHTML += error; });
 
-    data.forEach(file => {
-      if (file.type === 'file' && file.name.match(/.(jpg|jpeg|png|gif)$/i)) {
-        
-        //outp.innerHTML += "Filename=" + file.name + ", file url=" + file.download_url + "<br/>";
-	url_vec.push(file.download_url);
-      }
-    });
-  }).catch(error => { outp.innerHTML += error; });
+	} else if (domain_name == 'storage.googleapis.com') {
 
-  } catch (error) {
-    outp.innerHTML = error;
-  }
-
+		
+	} else {
+		outp.innerHTML = 'Please enter a GitHub repository or Google Cloud Platform Storage URL';
+	}
+	
+ 
 	return url_vec;
 }
 
