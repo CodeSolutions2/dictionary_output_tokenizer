@@ -41,7 +41,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   // -------------------------------------------------
 	
-async function get_train_dataset() {
+async function get_train_datasetURL() {
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv
 	// https://storage.googleapis.com/BUCKET_NAME/train_dataset.csv
@@ -50,6 +50,7 @@ async function get_train_dataset() {
 	let out = datasetUrl.split("/")
 
 	outp.innerHTML += "out: " + out;
+	
 	let domain_name = out[2];
 	
 	if (domain_name == 'github.com'){
@@ -103,8 +104,8 @@ async function get_train_dataset() {
 
     // ---------------------------
 
-    // [Step 0] Read in Github repo url
-    var url_vec = await get_urls_from_repo();
+    // [Step 0] Read in url
+    var url_vec = await get_train_datasetURL();
     // outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
 
 
@@ -135,53 +136,70 @@ async function get_train_dataset() {
     // ---------------------------
 	  
     // [Step 2] Load data into model
-    url_vec.forEach(function(csvUrl, index) {
+    // url_vec.forEach(function(csvUrl, index) {
+
+    // Does not make sense to train the model for every dataset found.
+    // It makes more sense to train the model on one seleccted dataset, then test it with predictions.
+
+    // ---------------------------
+	  
+    // X and y use a flattenedDataset (a dataset object)
+    const csvDataset = tf.data.csv(csvUrl, {
+	    columnConfigs: {
+	    Y: {isLabel: true}
+	    }
+    });
+
 	    
-
-	    // [Step 1] X and y
-	    // Way 0: use a flattenedDataset (a dataset object)
-	    const csvDataset = tf.data.csv(
-	     csvUrl, {
-	       columnConfigs: {
-	         Y: {isLabel: true}
-	       }
-	     });
-
+    // X and y (manually)
 	    
-	    // [Step 2] X and y
-	    
+    // ---------------------------
+	  
+    // Number of features is the number of column names minus one for the label column.
+    const numOfFeatures = (await csvDataset.columnNames()).length - 1;
 
+    // Prepare the Dataset for training.
+    const flattenedDataset = csvDataset.map(({X, Y}) => {
+         // Convert rows from object form (keyed by column name) to array form.
+         return {X:Object.values(X), Y:Object.values(Y)};
+       }).batch(1);
 
-
-
-    });  // end of forEach
+    // });  // end of forEach
 	
+    // ---------------------------
+
+    // [Step 3] Load data into model
 
     // ---------------------------
 
+}  // end of train_model
+
+	
+  // -------------------------------------------------
+
+	
+  async function train_model() {
     
     var pred_vec = [['', '', '', '', ''],['image_name', 'mobilenet_label', 'mobilenet_probability', 'edgeDetection_label', 'edgeDetection_probability']]; // This is a variable for this function only to accumulate the image labels. The model output is trapped inside image.onload, maybe due to the async () function.
 
     // Call the custom_model 
-    await model.classify(image).then(predictions => { 
+            const result = custom_model.predict(resizedTensor); 
+	    // outp.innerHTML = result.mean();
+			
+	    // Get probability value as a number
+	    const resultData = await result.data(); // correct
+
+//
+
+
+	  
+	  
+    await custom_model.predict(resizedTensor).then(predictions => { 
+
+
+	    
 				// outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>";
 
-				// Write model prediction on image
-				// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_text
-				ctx.font = "bold 14px serif";
-				// context.font = "bold 24px verdana, sans-serif ";
-			
-				// Make a square on canvas
-				ctx.fillStyle = "rgb(0 0 200 / 50%)";  // Background square over image = blue
-    				ctx.fillRect(0, 0, 224, 50);  // fillRect(x, y, width, height)
-
-				// Then, print light color text on square
-				ctx.fillStyle = "#ffffff";  // Font color = white, 
-				ctx.fillText("Mobilenet= "+predictions[0].className, 10, 15); // fillText(text, x, y [, maxWidth])
-
-				// Store model predictions in array
-				let out = url.split("/")
-				let image_name = out[out.length-1];
 				pred_vec.push([image_name, predictions[0].className, predictions[0].probability, '', '']);
 				// data accumulates correctly in pred_vec, here:
 				// outp.innerHTML += 'pred_vec: ' + pred_vec + "<br/>";
@@ -189,14 +207,6 @@ async function get_train_dataset() {
 
 		    	// Call Model 1: edge_detection_model
 		    	await run_group_together(image, custom_model).then(datavec => { 
-				// outp.innerHTML += 'index: ' + index + "<br/>";
-				// outp.innerHTML += 'datavec[0][0]: ' + datavec[0][0] + "<br/>";
-				// outp.innerHTML += 'datavec[0][1]: ' + datavec[0][1] + "<br/>";
-				
-				// Write model prediction on image
-				ctx.fillStyle = "#ffffff";  // Font color = white, 
-				ctx.fillText("EdgeDetection= " + datavec[0][0], 10, 35);
-		    
 				pred_vec[index+2][3] = datavec[0][0];  // label name
 				pred_vec[index+2][4] = datavec[0][1];  // probability
 									});
