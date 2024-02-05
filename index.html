@@ -154,7 +154,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 	    Y: {isLabel: true}
 	    }
     });
-	  outp.innerHTML += 'csvDataset: ' + csvDataset + "<br/>";
+
+    const datasetArray0 = Array.from(csvDataset)
+    outp.innerHTML += 'datasetArray0: ' + datasetArray0 + "<br/>";
 
 	    
     // Way 1: X and y (manually)
@@ -163,7 +165,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
     // Number of features is the number of column names minus one for the label column.
     const numOfFeatures = (await csvDataset.columnNames()).length - 1;
-    outp.innerHTML += 'numOfFeatures: ' + numOfFeatures + "<br/>";
+    // outp.innerHTML += 'numOfFeatures: ' + numOfFeatures + "<br/>";
 
     // Prepare the Dataset for training.
     const flattenedDataset = csvDataset.map(({X, Y}) => {
@@ -181,7 +183,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 	    
          return {X:X, Y:Y};
        }).batch(1);
-    outp.innerHTML += 'flattenedDataset: ' + flattenedDataset + "<br/>";
+
+
+    const datasetArray1 = Array.from(flattenedDataset)
+    outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
 
 	  
     // });  // end of forEach
