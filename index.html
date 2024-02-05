@@ -57,7 +57,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	let out = datasetUrl.split("/")
 
-	outp.innerHTML += "out: " + out;
+	outp.innerHTML += "out: " + out + "<br/>";
 	
 	let domain_name = out[2];
 	
@@ -65,8 +65,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		const repoOwner = out[3];
 		const repoName = out[4];
 
-		outp.innerHTML += "repoOwner: " + repoOwner;
-		outp.innerHTML += "repoName: " + repoName;
+		outp.innerHTML += "repoOwner: " + repoOwner + "<br/>";
+		outp.innerHTML += "repoName: " + repoName + "<br/>";
 		
 		var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
 		    //var options = {method : 'get', headers: headers, mode: 'no-cors'};
@@ -102,7 +102,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // [Step 0] Read in a list of urls that are .csv or .txt files
     
     var url_vec = await get_train_datasetURL();
-    // outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
+    outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
 
     // ---------------------------
 	  
@@ -162,13 +162,16 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
     // Number of features is the number of column names minus one for the label column.
     const numOfFeatures = (await csvDataset.columnNames()).length - 1;
+    outp.innerHTML += 'numOfFeatures: ' + numOfFeatures + "<br/>";
 
     // Prepare the Dataset for training.
     const flattenedDataset = csvDataset.map(({X, Y}) => {
          // Convert rows from object form (keyed by column name) to array form.
          return {X:Object.values(X), Y:Object.values(Y)};
        }).batch(1);
+    outp.innerHTML += 'flattenedDataset: ' + flattenedDataset + "<br/>";
 
+	  
     // });  // end of forEach
 	
     // ---------------------------
