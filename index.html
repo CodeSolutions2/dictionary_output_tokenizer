@@ -19,7 +19,13 @@
 <div id="output" style="font-family:courier;font-size:24px;height:300px"></div>
 
 	
-<!-- [Step 2] -->
+<!-- [Step 2] Predict/inference: predict each sentence separated by a \n character -->
+<label for="input_text_label" style="display:none">Enter text to label, each sentence separated by the \n character will be labeled:</label>
+<input type="text" value="" placeholder="Enter text to label" id="input_text" rows="10" cols="500" style="display:none">
+
+
+
+	
 <!-- https://developer.mozilla.org/en-US/docs/Web/CSS/position -->
 <style>
 canvas {border: 1px solid black; position: absolute; display: inline-block; z-index: 1; top: 150px;},
@@ -39,9 +45,11 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   var url_vec = [];  // This is a global variable, and I start referencing it in get_train_dataset
 
-  // -------------------------------------------------
 	
-async function get_train_datasetURL() {
+  // -------------------------------------------------
+
+	
+  async function get_train_datasetURL() {
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv
 	// https://storage.googleapis.com/BUCKET_NAME/train_dataset.csv
@@ -81,21 +89,8 @@ async function get_train_datasetURL() {
 	
  
 	return url_vec;
-}
-
-
-  // -------------------------------------------------
+  }
 	
-
-//async function load_model(){
-
-	// Did not work
- 	// model = await mobilenet.load().then(model => { return model });
-	// OR
-	//return await mobilenet.load();
-//}
-//const model = load_model();
-	//TypeError: model.classify is not a function
 	
   // -------------------------------------------------
 
@@ -104,14 +99,15 @@ async function get_train_datasetURL() {
 
     // ---------------------------
 
-    // [Step 0] Read in url
+    // [Step 0] Read in a list of urls that are .csv or .txt files
+    
     var url_vec = await get_train_datasetURL();
     // outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
 
-
     // ---------------------------
 	  
-    // [Step 1] Load custom model 
+    // [Step 1] Load custom model
+	  
     // Way 0: load pre-trained model
     // const MODEL_URL = 'https://storage.googleapis.com/tensorflowjsmodels0/model.json';
     // const MODEL_URL = 'model.json';
@@ -135,15 +131,20 @@ async function get_train_datasetURL() {
 	  
     // ---------------------------
 	  
-    // [Step 2] Load data into model
+    // [Step 2] Select a url from the url list
+	  
     // url_vec.forEach(function(csvUrl, index) {
 
     // Does not make sense to train the model for every dataset found.
     // It makes more sense to train the model on one seleccted dataset, then test it with predictions.
 
+    const csvUrl = url_vec[0];
+
     // ---------------------------
+
+    // [Step 3] Make a Dataset
 	  
-    // X and y use a flattenedDataset (a dataset object)
+    // Way 0: X and y use a flattenedDataset (a dataset object)
     const csvDataset = tf.data.csv(csvUrl, {
 	    columnConfigs: {
 	    Y: {isLabel: true}
@@ -151,7 +152,7 @@ async function get_train_datasetURL() {
     });
 
 	    
-    // X and y (manually)
+    // Way 1: X and y (manually)
 	    
     // ---------------------------
 	  
@@ -168,70 +169,81 @@ async function get_train_datasetURL() {
 	
     // ---------------------------
 
-    // [Step 3] Load data into model
+    // [Step 4] Tokenize X
 
     // ---------------------------
 
-}  // end of train_model
+    // [Step 5] Tokenize Y
+
+    // ---------------------------
+
+    // [Step 5] Fit the model using the prepared Dataset
+   // await custom_model.fitDataset(flattenedDataset, {
+   //   epochs: 10,
+   //   callbacks: {
+   //     onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
+    //  }
+   // });
+
+    // ---------------------------
+
+    return	
+
+  }  // end of train_model
 
 	
   // -------------------------------------------------
 
 	
-  async function train_model() {
+  async function predict_with_custom_model(y_assignment) {
     
-    var pred_vec = [['', '', '', '', ''],['image_name', 'mobilenet_label', 'mobilenet_probability', 'edgeDetection_label', 'edgeDetection_probability']]; // This is a variable for this function only to accumulate the image labels. The model output is trapped inside image.onload, maybe due to the async () function.
+    var pred_vec = [['', '', ''],['row', 'prediction', 'probability']]; 
 
-    // Call the custom_model 
-            const result = custom_model.predict(resizedTensor); 
-	    // outp.innerHTML = result.mean();
-			
-	    // Get probability value as a number
-	    const resultData = await result.data(); // correct
+    const text_input = document.getElementById("input_text").value;
 
-//
+    text_input = text_input.split("\n")
 
-
+    // ---------------------------
 	  
+    // Tokenize X
+    // sequence_array
 	  
-    await custom_model.predict(resizedTensor).then(predictions => { 
+    // ---------------------------
 
-
+    var pred_vec = [];
+	  
+    sequence_array.forEach(function(seq, ind) {
+	  
+	    // Call the custom_model 
+	    const result = custom_model.predict(seq);
 	    
-				// outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>";
+	    // Get index of maximum softmax probability 
+	    const index = result.as1D().argMax().dataSync()[0];
+			
+	    // Get maximum softmax probability 
+	    const resultData = await result.data();
+	    const maxprob = resultData[index];
 
-				pred_vec.push([image_name, predictions[0].className, predictions[0].probability, '', '']);
-				// data accumulates correctly in pred_vec, here:
-				// outp.innerHTML += 'pred_vec: ' + pred_vec + "<br/>";
-									});
+	    pred_vec.push([y_assignment[index], maxprob]);
+	    
+    });  // end of forEach
 
-		    	// Call Model 1: edge_detection_model
-		    	await run_group_together(image, custom_model).then(datavec => { 
-				pred_vec[index+2][3] = datavec[0][0];  // label name
-				pred_vec[index+2][4] = datavec[0][1];  // probability
-									});
-		    	
-		    	// Save accumulated array as csv file at the last url entry
-		    	if (index == url_vec.length-1) {
-				// data accumulates correctly in pred_vec, here:
-				// outp.innerHTML += 'pred_vec: ' + pred_vec + "<br/>";
-				
-				// Save array to csv and put download csv file link on screen (NO AUTOMATIC DOWNLOADING)
-				await put_results_in_CSVfile(pred_vec);
-
-				// Create a table dynamically with the results
-				await generateTable_dynamically(pred_vec);
-			}
+    // ---------------------------
 	  
+    // Save array to csv and put download csv file link on screen (NO AUTOMATIC DOWNLOADING)
+    await put_results_in_CSVfile(pred_vec);
 
-	    // pred_vec is not defined here
-		
+    // Create a table dynamically with the results
+    await generateTable_dynamically(pred_vec);
 
-}  // end of train_model
+    // ---------------------------	
+
+  }  // end of predict_with_custom_model
 
 	
   // -------------------------------------------------
 
+	
   async function put_results_in_CSVfile(pred_vec) {
     
     // ---------------------
@@ -270,10 +282,12 @@ async function get_train_datasetURL() {
     // link.click();
     // document.body.removeChild(link);
 	  
-}
+  }
 
+	
   // -------------------------------------------------
 
+	
   async function generateTable_dynamically(pred_vec) {
 
   	const tbl = document.createElement("table");
@@ -303,100 +317,6 @@ async function get_train_datasetURL() {
 
   // -------------------------------------------------
 
-
-  async function run_group_together(image, edgeDetection_model) {
-	  
-    // https://github.com/tensorflow/tfjs-models/tree/master/mobilenet
-    const datavec = [];
-	  
-    try {
-	// ---------------------
-	// For using an image input to mobilenet
-	// ---------------------
-	// await model.classify(image).then(predictions => {for(var i = 0; i<predictions.length; i++){outp.innerHTML += "<br/>" + predictions[i].className + " : " + predictions[i].probability;} }); 
-	// OR
-	// Just list the first prediction choice, use a tensor as input
-	// await model.classify(image).then(predictions => { outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>"; pred_vec.push([predictions[0].className, predictions[0].probability]); });
-	    
-	// ---------------------
-	// For using a tensor input to mobilenet
-	// ---------------------
-	// Convert the image element to a tensor using fromPixels
-	// var tensor_image = tf.browser.fromPixels(image); // This is size 224,224,3
-
-	// View the largest pixel value
-	// outp.innerHTML += tf.max(tensor_image) + "<br/>";
-	
-	// const eTensor = tensor_image.expandDims(0); // This is size 1,224,224,3
-	// outp.innerHTML += eTensor.shape + "<br/>";
-	// ---------------------
-	    
-	// await model.classify(eTensor).then(predictions => {for(var i = 0; i<predictions.length; i++){outp.innerHTML += "<br/>" + predictions[i].className + " : " + predictions[i].probability;} }); 
-	// OR
-	// Just list the first prediction choice, use a tensor as input
-	// await model.classify(eTensor).then(predictions => { outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>"; pred_vec.push([predictions[0].className, predictions[0].probability]); });
-	// OR
-	// Print the first prediction choice, use an image as input
-	// await mobilenet.load().then(model => {model.classify(eTensor).then(predictions => { outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>"; } ) });
-
-
-	// ---------------------
-	// Using a tensor input to edgeDetection_model
-	// ---------------------
-	// Convert the image element to a tensor using fromPixels
-	var tensor_image = tf.browser.fromPixels(image); // This is size 224,224,3
-	    
-	const k_rgb_values = tf.tensor4d([[[[ 1000.], [ 1000.], [ 1000.]],[[    0.], [    0.], [    0.]],[[-1000.], [-1000.], [-1000.]]], [[[ 1000.], [ 1000.], [ 1000.]], [[    0.], [    0.], [    0.]], [[-1000.], [-1000.], [-1000.]]], [[[ 1000.], [ 1000.], [ 1000.]], [[    0.], [    0.], [    0.]], [[-1000.], [-1000.], [-1000.]]]], shape=[3, 3, 3, 1], dtype='float32');
-		  
-	const image_4D = tensor_image.expandDims(0); // This is size 1,224,224,3
-	const image_4D_float = tf.cast(image_4D, 'float32')
-	const image_filter0 = tf.conv2d(image_4D_float, k_rgb_values, 1, 'same') 
-
-	// Dispose of the intermediate tensors
-	tensor_image.dispose();
-	k_rgb_values.dispose();
-	image_4D.dispose();
-	image_4D_float.dispose();
-		  
-	// Make image values from -1 to 1
-            const b = tf.scalar(255);
-	    const image_filter = image_filter0.div(b)
-	    const shape_out = image_filter.shape;   // 1,276,250,1
-
-            // Dispose of the intermediate tensors
-            image_filter0.dispose();
-            b.dispose();
-
-            // Ensure that tensor is 4d
-            const x = tf.reshape(image_filter, [1, shape_out[1], shape_out[2], shape_out[3]])
-            const boxes = tf.tensor2d([[0, 0, 1, 1]], [1, 4]);
-            const boxIndices = tf.tensor1d([0], 'int32');
-            const newSize = [512, 512];
-            const resizedTensor = tf.image.cropAndResize(x, boxes, boxIndices, newSize);
-		  
-            // Give image to model
-            const result = edgeDetection_model.predict(resizedTensor); 
-	    // outp.innerHTML = result.mean();
-			
-	    // Get probability value as a number
-	    const resultData = await result.data(); // correct
-	    
-	    if (resultData > 0.5){
-		datavec.push(['apple', resultData]);
-	    } else {
-		datavec.push(['tomatoe', resultData]);
-	    }
-	    // outp.innerHTML += "datavec: " + datavec + "<br/>";;
-	    
-    } catch (error) {
-      outp.innerHTML = error; 
-    }
-
-	  return datavec;
-  } 
-
-  
-  // -------------------------------------------------
 	
 </script>
 </body>
