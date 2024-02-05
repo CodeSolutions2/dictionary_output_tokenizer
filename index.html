@@ -149,14 +149,14 @@ th {border: 1px solid black; padding: 10px 20px;}
     // [Step 3] Make a Dataset
 	  
     // Way 0: X and y use a flattenedDataset (a dataset object)
-    const csvDataset = tf.data.csv(csvUrl, {
+    const csvDataset = await tf.data.csv(csvUrl, {
 	    columnConfigs: {
 	    Y: {isLabel: true}
 	    }
     });
 
     const datasetArray0 = Array.from(csvDataset)
-    outp.innerHTML += 'datasetArray0: ' + datasetArray0 + "<br/>";
+    outp.innerHTML += 'datasetArray0: ' +  datasetArray0 + "<br/>";
 
 	    
     // Way 1: X and y (manually)
@@ -165,21 +165,24 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
     // Number of features is the number of column names minus one for the label column.
     const numOfFeatures = (await csvDataset.columnNames()).length - 1;
-    // outp.innerHTML += 'numOfFeatures: ' + numOfFeatures + "<br/>";
+    outp.innerHTML += 'numOfFeatures: ' + numOfFeatures + "<br/>";
 
     // Prepare the Dataset for training.
     const flattenedDataset = csvDataset.map(({X, Y}) => {
          // Convert rows from object form (keyed by column name) to array form.
          // return {X:Object.values(X), Y:Object.values(Y)};
 
-	    // make text lower case
+	    // Make text lower case
 	    X = X.toLocaleLowerCase();
 
-	    // remove characters between parenthesis
-	    // let regexp = /\((.*?)\)/g;
-	    // let regexp = /\{(.*?)\}/g;
-	    // let regexp = /\[(.*?)\]/g;
-	    // X.replace(regexp, '')
+	    // Remove characters between parenthesis
+	    X.replace(/\((.*?)\)/g, '');
+	    X.replace(/\{(.*?)\}/g, '');
+	    X.replace(/\[(.*?)\]/g, '');
+
+	    // [Step 3] Remove undesireable words 
+
+	    // [Step 4] Remove sentences with less than 10 words. Narrow the sentences down to realistic sentences.
 	    
          return {X:X, Y:Y};
        }).batch(1);
