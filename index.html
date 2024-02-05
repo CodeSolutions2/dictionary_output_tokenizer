@@ -116,10 +116,14 @@ th {border: 1px solid black; padding: 10px 20px;}
     // OR
 
     // Way 1: load model layers using sequential
-    const custom_model = tf.sequential();
-    custom_model.add( tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN) );
-    custom_model.add( tf.layers.globalAveragePooling1d() );
-    custom_model.add( tf.layers.dense(num_of_classes, activation='softmax') );
+    // const NUM_WORDS = ;
+    // const EMBEDDING_DIM = 256;
+    //  const MAXLEN 
+    //  const num_of_classes
+    // const custom_model = tf.sequential();
+    // custom_model.add( tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN) );
+    // custom_model.add( tf.layers.globalAveragePooling1d() );
+    // custom_model.add( tf.layers.dense(num_of_classes, activation='softmax') );
 
     // OR
 
@@ -127,7 +131,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
     // ---------------------------
 
-    custom_model.compile({optimizer='adam', loss='sparse_categorical_crossentropy', metrics=["accuracy"]});
+    // custom_model.compile({optimizer='adam', loss='sparse_categorical_crossentropy', metrics=["accuracy"]});
 	  
     // ---------------------------
 	  
