@@ -215,20 +215,34 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     var pred_vec = [];
-	  
+	 
+		  
     sequence_array.forEach(function(seq, ind) {
 	  
 	    // Call the custom_model 
-	    const result = custom_model.predict(seq);
-	    
-	    // Get index of maximum softmax probability 
+	    // const result = custom_model.predict(seq) ;
+	    // OR
+	    async () => {
+		    await custom_model.predict(seq).then(result => {
+
+			// Get index of maximum softmax probability 
 	    const index = result.as1D().argMax().dataSync()[0];
 			
 	    // Get maximum softmax probability 
-	    const resultData = await result.data();
+	    // const resultData = await result.data();
+			    // OR
+			const resultData = result.data();    
+
+			    
 	    const maxprob = resultData[index];
 
 	    pred_vec.push([y_assignment[index], maxprob]);
+			    
+		    }
+
+	    }
+	    
+	    
 	    
     });  // end of forEach
 
