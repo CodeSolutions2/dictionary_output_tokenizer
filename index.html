@@ -8,20 +8,18 @@
 <h1 style='text-align: center; margin-bottom: -35px;'>Text classification webapp</h1>
 <br><br>
 
-<!-- Train model -->
-<label for="github_repo_url_label" style="display:block">Enter train dataset location url: url can be Github or GCP storage (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv):</label>
+<!-- [Step 0] Train model -->
+<label for="train_dataset_url_label" style="display:block">Enter train dataset location url: url can be Github or GCP storage (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv):</label>
 <input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" style="display:block">
 <br>
 <button id="train_model" onclick="train_model()" style="display:block">train_model</button>
+
 	
-<!-- Result: say if model is trained or not -->
+<!-- [Step 1] Result: say if model is trained or not -->
 <div id="output" style="font-family:courier;font-size:24px;height:300px"></div>
 
-<!-- Predict/inference: predict each sentence separated by a \n character-->
-<label for="input_text_label" style="display:none">Enter text to label, each sentence separated by the \n character will be labeled:</label>
-<input type="text" value="" placeholder="Enter text to label" id="input_text" rows="10" cols="500" style="display:none">
-
 	
+<!-- [Step 2] -->
 <!-- https://developer.mozilla.org/en-US/docs/Web/CSS/position -->
 <style>
 canvas {border: 1px solid black; position: absolute; display: inline-block; z-index: 1; top: 150px;},
@@ -47,21 +45,25 @@ async function get_train_dataset() {
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv
 	// https://storage.googleapis.com/BUCKET_NAME/train_dataset.csv
-	const dataset_url = document.getElementById("train_dataset_url").value;
+	const datasetUrl = document.getElementById("train_dataset_url").value;
 
-	let out = dataset_url.split("/")
+	let out = datasetUrl.split("/")
+
+	outp.innerHTML += "out: " + out;
 	let domain_name = out[2];
-
 	
 	if (domain_name == 'github.com'){
 		const repoOwner = out[3];
 		const repoName = out[4];
+
+		outp.innerHTML += "repoOwner: " + repoOwner;
+		outp.innerHTML += "repoName: " + repoName;
+		
 		var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
 		    //var options = {method : 'get', headers: headers, mode: 'no-cors'};
 		    await fetch(url).then(res => res.json()).then(data => {
-		
 		    data.forEach(file => {
-		      if (file.type === 'file' && file.name.match(/.(jpg|jpeg|png|gif)$/i)) {
+		      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
 		        
 		        //outp.innerHTML += "Filename=" + file.name + ", file url=" + file.download_url + "<br/>";
 			url_vec.push(file.download_url);
@@ -70,7 +72,7 @@ async function get_train_dataset() {
 		  }).catch(error => { outp.innerHTML += error; });
 
 	} else if (domain_name == 'storage.googleapis.com') {
-
+		url_vec.push(datasetUrl);
 		
 	} else {
 		outp.innerHTML = 'Please enter a GitHub repository or Google Cloud Platform Storage URL';
@@ -101,48 +103,67 @@ async function get_train_dataset() {
 
     // ---------------------------
 
-    // Load custom model 
-    // const MODEL_URL = 'https://storage.googleapis.com/tensorflowjsmodels0/model.json';
-    const MODEL_URL = 'model.json';
-    const custom_model = await tf.loadLayersModel(MODEL_URL);
-
-    // ---------------------------
-
-    // Read in URL: determine if it is cloud storage or GitHub repo url
-
-	  
-    // Read in Github repo url
+    // [Step 0] Read in Github repo url
     var url_vec = await get_urls_from_repo();
     // outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
 
-    var pred_vec = [['', '', '', '', ''],['image_name', 'mobilenet_label', 'mobilenet_probability', 'edgeDetection_label', 'edgeDetection_probability']]; // This is a variable for this function only to accumulate the image labels. The model output is trapped inside image.onload, maybe due to the async () function.
 
     // ---------------------------
 	  
+    // [Step 1] Load custom model 
+    // Way 0: load pre-trained model
+    // const MODEL_URL = 'https://storage.googleapis.com/tensorflowjsmodels0/model.json';
+    // const MODEL_URL = 'model.json';
+    // const custom_model = await tf.loadLayersModel(MODEL_URL);
 
-	url_vec.forEach(function(url, index) {
-        
-	    // ---------------------------
-	    // Create a canvas for first image
-	    var ctx = create_dynamic_canvasElement(index);
-	    // ---------------------------
-        
-	    const image = new Image();
+    // OR
 
-	    // Add 'crossorigin' attribute to bypass insecure error
-	    image.crossOrigin = "anonymous";
+    // Way 1: load model layers using sequential
+    const custom_model = tf.sequential();
+    custom_model.add( tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN) );
+    custom_model.add( tf.layers.globalAveragePooling1d() );
+    custom_model.add( tf.layers.dense(num_of_classes, activation='softmax') );
 
-	    // PRINT
-	    // outp.innerHTML += 'image.complete: ' + image.complete + "<br/>";
+    // OR
 
-	    image.onload = async () => {
+    // Way 2: load model layers using functional API (tf.LayersModel)
+	  
+    // ---------------------------
+
+    custom_model.compile({optimizer='adam', loss='sparse_categorical_crossentropy', metrics=["accuracy"]});
+	  
+    // ---------------------------
+	  
+    // [Step 2] Load data into model
+    url_vec.forEach(function(csvUrl, index) {
+	    
+
+	    // [Step 1] X and y
+	    // Way 0: use a flattenedDataset (a dataset object)
+	    const csvDataset = tf.data.csv(
+	     csvUrl, {
+	       columnConfigs: {
+	         Y: {isLabel: true}
+	       }
+	     });
+
+	    
+	    // [Step 2] X and y
+	    
+
+
+
+
+    });  // end of forEach
 	
-		        // Draw image on canvas
-		        // canvasElement.style.display = "block";
-		        ctx.drawImage(image, 0,0);
 
-		    	// Call Model 0: mobilenet
-			await model.classify(image).then(predictions => { 
+    // ---------------------------
+
+    
+    var pred_vec = [['', '', '', '', ''],['image_name', 'mobilenet_label', 'mobilenet_probability', 'edgeDetection_label', 'edgeDetection_probability']]; // This is a variable for this function only to accumulate the image labels. The model output is trapped inside image.onload, maybe due to the async () function.
+
+    // Call the custom_model 
+    await model.classify(image).then(predictions => { 
 				// outp.innerHTML += predictions[0].className + " : " + predictions[0].probability + "<br/>";
 
 				// Write model prediction on image
@@ -167,7 +188,7 @@ async function get_train_dataset() {
 									});
 
 		    	// Call Model 1: edge_detection_model
-		    	await run_group_together(image, edgeDetection_model).then(datavec => { 
+		    	await run_group_together(image, custom_model).then(datavec => { 
 				// outp.innerHTML += 'index: ' + index + "<br/>";
 				// outp.innerHTML += 'datavec[0][0]: ' + datavec[0][0] + "<br/>";
 				// outp.innerHTML += 'datavec[0][1]: ' + datavec[0][1] + "<br/>";
@@ -192,17 +213,11 @@ async function get_train_dataset() {
 				await generateTable_dynamically(pred_vec);
 			}
 	  
-	    };  // end of image.onload
 
 	    // pred_vec is not defined here
 		
-	    image.src = url;
 
-	});  // end of image.forEach
-
-	// pred_vec is not defined here
-
-}  // end of run_mobilenet
+}  // end of train_model
 
 	
   // -------------------------------------------------
