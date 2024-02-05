@@ -154,6 +154,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	    Y: {isLabel: true}
 	    }
     });
+	  outp.innerHTML += 'csvDataset: ' + csvDataset + "<br/>";
 
 	    
     // Way 1: X and y (manually)
@@ -168,16 +169,32 @@ th {border: 1px solid black; padding: 10px 20px;}
     const flattenedDataset = csvDataset.map(({X, Y}) => {
          // Convert rows from object form (keyed by column name) to array form.
          // return {X:Object.values(X), Y:Object.values(Y)};
+
+	    // make text lower case
+	    X = X.toLocaleLowerCase();
+
+	    // remove characters between parenthesis
+	    // let regexp = /\((.*?)\)/g;
+	    // let regexp = /\{(.*?)\}/g;
+	    // let regexp = /\[(.*?)\]/g;
+	    // X.replace(regexp, '')
+	    
          return {X:X, Y:Y};
        }).batch(1);
     outp.innerHTML += 'flattenedDataset: ' + flattenedDataset + "<br/>";
 
 	  
     // });  // end of forEach
-	
+
+
     // ---------------------------
 
-    // [Step 4] Tokenize X
+    // [Step 4] Clean the dataset
+	  
+    // ---------------------------
+
+    // [Step 5] Tokenize X
+	  
 
     // ---------------------------
 
