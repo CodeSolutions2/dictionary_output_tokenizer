@@ -215,7 +215,6 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     var pred_vec = [];
-	 
 		  
     sequence_array.forEach(async function(seq, ind) {
 	  
@@ -230,10 +229,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	    const maxprob = resultData[index];
 
 	    pred_vec.push([y_assignment[index], maxprob]);    
-    }    
-	    
-	    
-  });  // end of forEach
+    
+    });  // end of forEach
 
     // ---------------------------
 	  
