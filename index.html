@@ -148,17 +148,16 @@ th {border: 1px solid black; padding: 10px 20px;}
 
     // [Step 3] Make a Dataset
 	  
-    // Way 0: X and y use a flattenedDataset (a dataset object)
-    const csvDataset = await tf.data.csv(csvUrl, {
-	    columnConfigs: {
-	    Y: {isLabel: true}
-	    }
+    // Way 0: X and y (dataset object)
+    // const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
+    // const datasetArray0 = Array.from(csvDataset)
+    // outp.innerHTML += 'datasetArray0: ' +  datasetArray0 + "<br/>";
+    // OR
+    await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } }).then(csvDataset => { 
+	    const datasetArray0 = Array.from(csvDataset); 
+	    outp.innerHTML += 'datasetArray0: ' +  datasetArray0 + "<br/>";
     });
-
-    const datasetArray0 = Array.from(csvDataset)
-    outp.innerHTML += 'datasetArray0: ' +  datasetArray0 + "<br/>";
-
-	    
+	
     // Way 1: X and y (manually)
 	    
     // ---------------------------
