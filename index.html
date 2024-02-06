@@ -239,10 +239,15 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // const resultData = await result.data();    
 
 	  const tensors = await csvDataset.toArray();
+		var dataout = tf.tensor(tensors);
+	  
 	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
-	  outp.innerHTML += 'num_of_cols = tensors.data()[0].length: ' + tensors.data()[0].length + "<br/>";
+
+	  // TypeError: tensors.data is not a function
+	  outp.innerHTML += 'num_of_cols = dataout.data()[0].length: ' + dataout.data()[0].length + "<br/>";
 	  // outp.innerHTML += 'tensors[0][0]: ' + tensors[0][0] + "<br/>";  // tensors[0][0]: undefined
-	  outp.innerHTML += 'tensors.data()[0][0]: ' + tensors.data()[0][0] + "<br/>";  // tensors[0][0]: undefined
+	  
+	  outp.innerHTML += 'dataout.data()[0][0]: ' + dataout.data()[0][0] + "<br/>";  // dataout[0][0]: undefined
 	  
 	  
 	  // ---------------------------
