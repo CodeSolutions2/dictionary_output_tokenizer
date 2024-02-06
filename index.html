@@ -196,15 +196,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 	
   // -------------------------------------------------
 
-async function run_in_group(csv_iterator) {
-	await csv_iterator.next().then(row => {
-	      X = row.value.X.dataSync();
-	      Y = row.value.Y.dataSync();
-	      outp.innerHTML += 'X: ' + X + "<br/>";
-	      outp.innerHTML += 'Y: ' + Y + "<br/>";
-	});
-		  
-}
 
 	
   // -------------------------------------------------
@@ -256,7 +247,15 @@ async function run_in_group(csv_iterator) {
 	  tensors.forEach(async function(csvUrl, index) {
 	   // for (let i = 0; i < tensors.length; i++) {
 
-		  await run_in_group(csv_iterator);
+	  await csv_iterator.next().then(row => {
+	      outp.innerHTML += 'row: ' + row + "<br/>";
+
+	      // TypeError: row.value.X is undefined
+	      // X = row.value.X.dataSync();
+	      // Y = row.value.Y.dataSync();
+	      // outp.innerHTML += 'X: ' + X + "<br/>";
+	      // outp.innerHTML += 'Y: ' + Y + "<br/>";
+	  });
 
 		  // OR
 	      // let row = await csv_iterator.next();
