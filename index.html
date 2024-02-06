@@ -215,11 +215,11 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   async function modify_X_Y(csvDataset) {
 
-	  const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
+	  //const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
 
-	  outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
+	  //outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
 	  
-	  const it = await flattenedDataset.iterator()
+	  const it = await csvDataset.iterator()
 		  
 	   const xs = []
 	   const ys = []
