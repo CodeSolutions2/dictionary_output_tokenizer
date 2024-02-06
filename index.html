@@ -229,7 +229,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // tensors: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
 	  // outp.innerHTML += 'tensors: ' + tensors + "<br/>";
-	  
+
+	  var X = '';
+	  var Y = '';
 	  
 	  // ---------------------------
 	  const xs = [];
@@ -244,8 +246,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		// valueNames: xs,ys
 		if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
-		const X = tf.tensor(Object.values(rowdata.xs));
-		const Y = tf.tensor(Object.values(rowdata.ys));
+		X = tf.tensor(Object.values(rowdata.xs));
+		Y = tf.tensor(Object.values(rowdata.ys));
 
 		 // Convert string tensor to javascript tensor
 		  X = X.toString();
