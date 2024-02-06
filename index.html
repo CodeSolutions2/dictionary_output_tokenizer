@@ -243,17 +243,21 @@ th {border: 1px solid black; padding: 10px 20px;}
 		// valueNames: xs,ys
 		if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
-		const X = Object.values(rowdata.xs);
-		const Y = Object.values(rowdata.ys);
-		
+		const X = tf.tensor(Object.values(rowdata.xs));
+		const Y = tf.tensor(Object.values(rowdata.ys));
+	
+		X = X.asType('string'); //.dataSync()[0];
+		X = X.toLowerCase();
+		  
+		X1 = X.toString();
+		X1 = X1.toLowerCase();
 
 		// Make text lower case
-		// TypeError: X.toLowerCase is not a function
-		// X = X.toLowerCase();
-		// Y = Y.toLowerCase();
+		X = X.toLowerCase();
+		Y = Y.toLowerCase();
 
 		// Remove characters between parenthesis
-		X = X.replace(/\((.*?)\)/g, '');
+		// X = X.replace(/\((.*?)\)/g, '');
 		//X.replace(/\{(.*?)\}/g, '');
 		//X.replace(/\[(.*?)\]/g, '');
 
