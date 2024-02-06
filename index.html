@@ -197,12 +197,13 @@ th {border: 1px solid black; padding: 10px 20px;}
   // -------------------------------------------------
 
 async function run_in_group(csv_iterator) {
-	let row = await csv_iterator.next();
-		  
+	await csv_iterator.next().then(row => {
 	      X = row.value.X.dataSync();
 	      Y = row.value.Y.dataSync();
 	      outp.innerHTML += 'X: ' + X + "<br/>";
 	      outp.innerHTML += 'Y: ' + Y + "<br/>";
+	});
+		  
 }
 
 	
