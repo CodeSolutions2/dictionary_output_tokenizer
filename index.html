@@ -45,6 +45,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   var url_vec = [];  // This is a global variable, and I start referencing it in get_train_dataset
 
+
+	const xs = [];
+	   const ys = [];
 	
   // -------------------------------------------------
 
@@ -166,7 +169,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     // [Step 4] Clean the dataset
-    await modify_X_Y(csvDataset);
+    await modify_X_Y(csvDataset).then((xs, ys) => { outp.innerHTML += 'xs: ' + xs + "<br/>"; outp.innerHTML += 'ys: ' + ys + "<br/>"; } );
 	  
     // ---------------------------
 
@@ -221,25 +224,15 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // OR
 
-	  const tensors = await csvDataset.toArray();
+	  const tensors = await csvDataset.toArray().then(tensors => { outp.innerHTML += 'dataout: ' + tf.tensor(tensors).dataSync() + "<br/>"; });
 	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
-	  
-	  var dataout = tf.tensor(tensors).dataSync();
-	  // outp.innerHTML += 'num_of_rows = dataout.length: ' + dataout.length + "<br/>"; // dataout.length: 0
-	  outp.innerHTML += 'dataout: ' + dataout + "<br/>";
-	  
 
-	  // TypeError: tensors.data is not a function
-	  // outp.innerHTML += 'num_of_cols = dataout.data()[0].length: ' + dataout.data()[0].length + "<br/>";
-	  // outp.innerHTML += 'tensors[0][0]: ' + tensors[0][0] + "<br/>";  // tensors[0][0]: undefined
-	  
-	  // outp.innerHTML += 'dataout.data()[0][0]: ' + dataout.data()[0][0] + "<br/>";  // dataout[0][0]: undefined
+	  outp.innerHTML += 'tensors: ' + tensors + "<br/>";
 	  
 	  
 	  // ---------------------------
 	  
-	   const xs = [];
-	   const ys = [];
+	   
 	  var X;
 	  var Y;
 
@@ -256,6 +249,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	// await csv_iterator.next().then(row => {tf.tensor(row).dataSync()}).then( (x,y) => {
 
 	// OR
+
+	
 		
 	await csv_iterator.next().then(row => {
 		
@@ -275,6 +270,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	      // OR
 
+		// row.map is not a function
 	      row.map(({xs, ys}) => {
 			outp.innerHTML += 'xs: ' + xs + "<br/>";
 			outp.innerHTML += 'ys: ' + ys + "<br/>";
@@ -341,9 +337,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  });
 
-	  outp.innerHTML += 'xs: ' + xs + "<br/>";
-
-	  outp.innerHTML += 'ys: ' + ys + "<br/>";
+	  
 
   }
 
