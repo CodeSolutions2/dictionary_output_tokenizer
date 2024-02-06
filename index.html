@@ -46,8 +46,7 @@ th {border: 1px solid black; padding: 10px 20px;}
   var url_vec = [];  // This is a global variable, and I start referencing it in get_train_dataset
 
 
-	const xs = [];
-	   const ys = [];
+	
 	
   // -------------------------------------------------
 
@@ -209,7 +208,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   async function modify_X_Y(csvDataset) {
 
-	  //  Same output as csvDataset, so just using csvDataset directly
+	  // Same output as csvDataset, so just using csvDataset directly
 	  // This is an object, and can iterate over values in the Object
 	  // const flattenedDataset = await csvDataset.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
 	  // outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
@@ -222,95 +221,59 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // OR
 	  
-	  // No output 
-	  // const datasetArray1 = await Array.from(csvDataset)
-	  // outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
-
-	  // OR
-
-	  // dataout is empty
-	  // const tensors = await csvDataset.toArray().then(tensors => { outp.innerHTML += 'dataout: ' + tf.tensor(tensors).dataSync() + "<br/>"; return tensors;});
-	// so this function only has the objects after it returns, it is useless to use a then()
-
 	  const tensors = await csvDataset.toArray();
 
 	  // tensors.length: 10
-	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  
+	  // outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  
 
 	  // tensors: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
-	  outp.innerHTML += 'tensors: ' + tensors + "<br/>";
+	  // outp.innerHTML += 'tensors: ' + tensors + "<br/>";
 	  
 	  
 	  // ---------------------------
+	  const xs = [];
+	  const ys = [];
 
 	  tensors.forEach(async function(rowdata, index) {
 
-		  // Try 0
+		// Try 0: Works!
 		outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
 		outp.innerHTML += 'index: ' + index + "<br/>";
 
-		  // valueNames: xs,ys
-	      if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
+		// valueNames: xs,ys
+		if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
 		const X = Object.values(rowdata.xs);
-		outp.innerHTML += 'X: ' + X + "<br/>";
-		
 		const Y = Object.values(rowdata.ys);
-		outp.innerHTML += 'Y: ' + Y + "<br/>";
+		
 
 		// Make text lower case
 		// TypeError: X.toLowerCase is not a function
 		// X = X.toLowerCase();
 		// Y = Y.toLowerCase();
-		  
+
+		// Remove characters between parenthesis
+		X = X.replace(/\((.*?)\)/g, '');
+		//X.replace(/\{(.*?)\}/g, '');
+		//X.replace(/\[(.*?)\]/g, '');
+
+		outp.innerHTML += 'X: ' + X + "<br/>";
+		outp.innerHTML += 'Y: ' + Y + "<br/>";
 		xs.push(X)
 		ys.push(Y)
 	
 	// OR
-		  
-	// Try 1
-	// values passed to tensor(values) must be a number/boolean/string or an array of numbers/booleans/strings, or a TypedArray
-	// means that row.value.xs does not have a value
-	// await csv_iterator.next().then(row => {tf.tensor(row.value.xs).dataSync()}).then( row => {
 
-	// OR
-
-	// Try 2
-	// values passed to tensor(values) must be a number/boolean/string or an array of numbers/booleans/strings, or a TypedArray
-	// await csv_iterator.next().then(row => {tf.tensor(row).dataSync()}).then( (x,y) => {
-
-	// OR
-
-	// Try 3: Best
+	// Try 1: Best
 	//await csv_iterator.next().then(row => {
 
 	// OR
 
-	// Try 4: Works like Try 3
+	// Try 2: Works like Try 1
 	// await csv_iterator_values.next().then(row => {
 		
-	      // row is [object Object] for Try 2
+	      // row is [object Object] for Try 1 and 2
 	     // outp.innerHTML += 'row: ' + row + "<br/>";
-
-	      // --------------------------------------
-	      // Get values from the object row
-	      // const get_rowvalues = row.dataSync();
-		
-	      // OR
-		
-	      //async (row) => {
-		//      const X_tensor = await tf.tensor(row.value.xs).dataSync();
-		//      outp.innerHTML += 'X_tensor: ' + X_tensor + "<br/>";
-	     // };
-
-	      // OR
-
-		// row.map is not a function
-	      //row.map(({xs, ys}) => {
-		//	outp.innerHTML += 'xs: ' + xs + "<br/>";
-		//	outp.innerHTML += 'ys: ' + ys + "<br/>";
-	      // })
-	      // --------------------------------------
 
 	      // --------------------------------------
 	      // Assign X and Y
@@ -352,6 +315,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  });  // end of forEach
 
+	  return xs, ys;
 
   }
 
