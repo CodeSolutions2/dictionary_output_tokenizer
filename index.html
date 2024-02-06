@@ -263,12 +263,12 @@ th {border: 1px solid black; padding: 10px 20px;}
 	// OR
 
 	// Try 2
-	// await csv_iterator.next().then(row => {
+	await csv_iterator.next().then(row => {
 
 	// OR
 
 	// Try 3
-	await csv_iterator_values.next().then(row => {
+	//await csv_iterator_values.next().then(row => {
 		
 	      // row is [object Object] for Try 2
 	      outp.innerHTML += 'row: ' + row + "<br/>";
@@ -307,16 +307,27 @@ th {border: 1px solid black; padding: 10px 20px;}
               // valueNames: xs,ys
 	      if (index == 0) { const valueNames = Object.keys(row.value); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
-	const valueX = Object.values(row.value.xs); outp.innerHTML += 'valueX: ' + valueX + "<br/>";
-		const valueY = Object.values(row.value.ys); outp.innerHTML += 'valueY: ' + valueY + "<br/>";
+		const X = Object.values(row.value.xs);
+		outp.innerHTML += 'X: ' + X + "<br/>";
+		
+		const Y = Object.values(row.value.ys);
+		outp.innerHTML += 'Y: ' + Y + "<br/>";
+
+		// Make text lower case
+		X = X.toLowerCase();
+		Y = Y.toLowerCase();
+
+
+		xs.push(X)
+		ys.push(Y)
 	
-	});
+	});  // end of await csv_iterator.next().then(row =>
 
 	// OR
 
 	// Try 4
 	out = await rowdata.value.xs;
-	outp.innerHTML += 'X values from forEach loop: ' + out + "<br/>";
+	outp.innerHTML += '*******: ' + out + "<br/>";
 
 
 		  
@@ -345,8 +356,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // outp.innerHTML += 'X: ' + X + "<br/>";
 		  
 		  
-	      // Make text lower case
-	      X = X.toLowerCase();
+	      
 	
 	      // Remove characters between parenthesis
 	      //X.replace(/\((.*?)\)/g, '');
@@ -357,8 +367,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	
 	      // [Step 4] Remove sentences with less than 10 words. Narrow the sentences down to realistic sentences.
 		   
-	      xs.push(X)
-	      ys.push(Y)
+	      //xs.push(X)
+	      //ys.push(Y)
 
 	  });  // end of forEach
 
