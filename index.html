@@ -244,19 +244,21 @@ th {border: 1px solid black; padding: 10px 20px;}
 	   // for (let i = 0; i < tensors.length; i++) {
 
 		  // row.dataSync is not a function
-	//await csv_iterator.next().then(row => {tf.tensor(row.value.xs).dataSync()}).then(row => {
+	await csv_iterator.next().then(row => {tf.tensor(row.value.xs).dataSync()}).then(row => {
 		  
-	  await csv_iterator.next().then(row => {
+	  //await csv_iterator.next().then(row => {
 	      outp.innerHTML += 'row: ' + row + "<br/>";
 
 	      // --------------------------------------
 	      // Get values from the object row
 	      // const get_rowvalues = row.dataSync();
+		
 	      // OR
-	      async (row) => {
-		      const X_tensor = await tf.tensor(row.value.xs).dataSync();
-		      outp.innerHTML += 'X_tensor: ' + X_tensor + "<br/>";
-	      };
+		
+	      //async (row) => {
+		//      const X_tensor = await tf.tensor(row.value.xs).dataSync();
+		//      outp.innerHTML += 'X_tensor: ' + X_tensor + "<br/>";
+	     // };
 
 		  
 	      // --------------------------------------
@@ -268,10 +270,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	      // OR
 		  
-	      X = row.value.xs;  // returns empty value
-	      Y = row.value.ys;  // returns empty value
-	      outp.innerHTML += 'X: ' + X + "<br/>";
-	      outp.innerHTML += 'Y: ' + Y + "<br/>";
+	      // X = row.value.xs;  // returns empty value
+	     //  Y = row.value.ys;  // returns empty value
+	     //  outp.innerHTML += 'X: ' + X + "<br/>";
+	     //  outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 	      // valueNames: value,done
 	      // if (index == 0) { const valueNames = Object.keys(row); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
@@ -289,8 +291,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 	      // OR
-
-	      await new Promise(row => {outp.innerHTML += 'row.value.xs: ' + row.value.xs + "<br/>";});
+		  
+// TypeError: row.value is undefined
+	      //await new Promise(row => {outp.innerHTML += 'row.value.xs: ' + row.value.xs + "<br/>";});
 
 	      // OR
 		  
@@ -300,7 +303,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // X = tensors.data()[i][0]
 	      // Y = tensors.data()[i][1]
 	      // outp.innerHTML += 'X: ' + X + "<br/>";
-		   
+
+	      X = 'TEST';
+		  
 	      // Make text lower case
 	      X = X.toLowerCase();
 	
