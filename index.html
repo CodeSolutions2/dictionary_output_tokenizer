@@ -152,7 +152,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // const datasetArray0 = Array.from(csvDataset)
     // outp.innerHTML += 'datasetArray0: ' +  datasetArray0 + "<br/>";
     // OR
-    await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
+    const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
 	
     // Way 1: X and y (manually)
 	    
