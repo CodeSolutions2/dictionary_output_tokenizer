@@ -244,23 +244,38 @@ th {border: 1px solid black; padding: 10px 20px;}
 	   // for (let i = 0; i < tensors.length; i++) {
 
 		  // row.dataSync is not a function
-		  // .then(row => row.dataSync())
-
+	//await csv_iterator.next().then(row => {row.dataSync()}).then(row => {
 		  
 	  await csv_iterator.next().then(row => {
 	      outp.innerHTML += 'row: ' + row + "<br/>";
 
-	      const get_rowvalues = row.dataSync();
+	      // --------------------------------------
+	      // Get values from the object row
+	      // const get_rowvalues = row.dataSync();
+	      // OR
+	      const get_X_tensorvalue = async (row) => {
+		      const X_tensor = tf.tensor(row.value.xs);
+		      return X_tensor.dataSync();
+	      };
 
-	      // X = await get_rowvalues.value.xs; 
-	      X = get_rowvalues.value.xs; 
+		  outp.innerHTML += 'get_X_tensorvalue: ' + get_X_tensorvalue + "<br/>";
+	      // --------------------------------------
+
+	      // --------------------------------------
+	      // Assign X and Y
 		  
-	      outp.innerHTML += 'X: ' + get_rowvalues.value.xs + "<br/>";  
+	      // X = await get_rowvalues.value.xs; 
+
+	      // OR
+		  
+	      X = row.value.xs; 
+		  
+	      outp.innerHTML += 'X: ' + row.value.xs + "<br/>";  
 
               // OR
 		  
-	      X = get_rowvalues.value.xs;  // returns empty value
-	      Y = get_rowvalues.value.ys;  // returns empty value
+	      X = row.value.xs;  // returns empty value
+	      Y = row.value.ys;  // returns empty value
 	      outp.innerHTML += 'X: ' + X + "<br/>";
 	      outp.innerHTML += 'Y: ' + Y + "<br/>";
 
