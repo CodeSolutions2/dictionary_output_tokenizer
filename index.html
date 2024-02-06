@@ -212,8 +212,13 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // const it = await flattenedDataset.iterator()
 
 	  // OR
+
+	  const flattenedDataset = await csvDataset.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; })
+	  const csv_iterator_values = await flattenedDataset.iterator()
 	  
-	  // TypeError: X.toLowerCase is not a function
+	  // OR
+	  
+	  // This is an object, and can iterate over values in the Object
 	  const csv_iterator = await csvDataset.iterator();
 
 	  // OR
@@ -226,6 +231,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // dataout is empty
 	  const tensors = await csvDataset.toArray().then(tensors => { outp.innerHTML += 'dataout: ' + tf.tensor(tensors).dataSync() + "<br/>"; return tensors;});
+	  
 	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
 
 	  outp.innerHTML += 'tensors: ' + tensors + "<br/>";
@@ -272,10 +278,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // OR
 
 		// row.map is not a function
-	      row.map(({xs, ys}) => {
-			outp.innerHTML += 'xs: ' + xs + "<br/>";
-			outp.innerHTML += 'ys: ' + ys + "<br/>";
-	      })
+	      //row.map(({xs, ys}) => {
+		//	outp.innerHTML += 'xs: ' + xs + "<br/>";
+		//	outp.innerHTML += 'ys: ' + ys + "<br/>";
+	      // })
 	      // --------------------------------------
 
 	      // --------------------------------------
