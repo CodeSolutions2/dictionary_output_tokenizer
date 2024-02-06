@@ -222,9 +222,12 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // OR
 
 	  const tensors = await csvDataset.toArray();
-	  // var dataout = tf.tensor(tensors);
-	  
 	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
+	  
+	  var dataout = tf.tensor(tensors).dataSync();
+	  outp.innerHTML += 'num_of_rows = dataout.length: ' + dataout.length + "<br/>";
+	  
+	  
 
 	  // TypeError: tensors.data is not a function
 	  // outp.innerHTML += 'num_of_cols = dataout.data()[0].length: ' + dataout.data()[0].length + "<br/>";
