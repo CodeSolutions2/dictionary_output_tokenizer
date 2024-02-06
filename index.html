@@ -147,66 +147,33 @@ th {border: 1px solid black; padding: 10px 20px;}
 
     // [Step 3] Make a Dataset
 	  
-    // Way 0: X and y (dataset object)
-    // const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
-    // const datasetArray0 = Array.from(csvDataset)
-    // outp.innerHTML += 'datasetArray0: ' +  datasetArray0 + "<br/>";
-    // OR
+    // X and y (dataset object)
     const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
-    outp.innerHTML += 'csvDataset: ' +  csvDataset + "<br/>";
-	  
-    // Way 1: X and y (manually)
+    outp.innerHTML += 'csvDataset: ' +  csvDataset + "<br/>";  // csvDataset: [object Object]
 	    
     // ---------------------------
 	  
     // Number of features is the number of column names minus one for the label column.
     const numOfFeatures = (await csvDataset.columnNames()).length - 1;
     outp.innerHTML += 'numOfFeatures: ' + numOfFeatures + "<br/>";
-
-    // Prepare the Dataset for training.
-    //const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
-
-    const flattenedDataset =
-     csvDataset
-     .map(({xs, ys}) =>
-       {
+	  
+    // ---------------------------
+	  
+    // Modify the Dataset for training.
+   //  const flattenedDataset =
+   //   csvDataset
+   //   .map(({X, Y}) =>
+    //    {
          // Convert rows from object form (keyed by column name) to array
          // form.
-         return {xs:Object.values(xs), ys:Object.values(ys)};
-       })
-     .batch(10);
-
-const it = await flattenedDataset.iterator()
-   const xs = []
-   const ys = []
-   // read only the data for the first 5 rows
-   // all the data need not to be read once 
-   // since it will consume a lot of memory
-   for (let i = 0; i < 5; i++) {
-        let e = await it.next()
-	   X = e.value.xs;
-	   
-	   // Make text lower case
-	    X = X.toLocaleLowerCase();
-
-	    // Remove characters between parenthesis
-	    X.replace(/\((.*?)\)/g, '');
-	    X.replace(/\{(.*?)\}/g, '');
-	    X.replace(/\[(.*?)\]/g, '');
-
-	    // [Step 3] Remove undesireable words 
-
-	    // [Step 4] Remove sentences with less than 10 words. Narrow the sentences down to realistic sentences.
-	   
-      xs.push(X)
-      ys.push(e.value.ys)
-   }
-
+    //      return {xs:Object.values(xs), ys:Object.values(ys)};
+    //    })
+   //   .batch(10);
 	  
 // OR
 
-    const datasetArray1 = await Array.from(flattenedDataset)
-    outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
+    // const datasetArray1 = await Array.from(flattenedDataset)
+    // outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
 
 	  
     // });  // end of forEach
@@ -215,6 +182,7 @@ const it = await flattenedDataset.iterator()
     // ---------------------------
 
     // [Step 4] Clean the dataset
+	  await modify_X_Y(csvDataset);
 	  
     // ---------------------------
 
@@ -240,6 +208,49 @@ const it = await flattenedDataset.iterator()
     return	
 
   }  // end of train_model
+
+	
+  // -------------------------------------------------
+
+
+  async function modify_X_Y(csvDataset) {
+
+	  const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
+
+	  outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
+	  
+	  const it = await flattenedDataset.iterator()
+		  
+	   const xs = []
+	   const ys = []
+	   // read only the data for the first 5 rows
+	   // all the data need not to be read once 
+	   // since it will consume a lot of memory
+	   for (let i = 0; i < 5; i++) {
+	        let e = await it.next()
+		   X = e.value.xs;
+		   
+		   // Make text lower case
+		    X = X.toLocaleLowerCase();
+	
+		    // Remove characters between parenthesis
+		    X.replace(/\((.*?)\)/g, '');
+		    X.replace(/\{(.*?)\}/g, '');
+		    X.replace(/\[(.*?)\]/g, '');
+	
+		    // [Step 3] Remove undesireable words 
+	
+		    // [Step 4] Remove sentences with less than 10 words. Narrow the sentences down to realistic sentences.
+		   
+	      xs.push(X)
+	      ys.push(e.value.ys)
+	  }
+
+	  outp.innerHTML += 'xs: ' + xs + "<br/>";
+
+	  outp.innerHTML += 'ys: ' + ys + "<br/>";
+
+  }
 
 	
   // -------------------------------------------------
