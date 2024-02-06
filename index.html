@@ -242,12 +242,17 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  tensors.forEach(async function(rowdata, index) {
 	   // for (let i = 0; i < tensors.length; i++) {
+	
+	// values passed to tensor(values) must be a number/boolean/string or an array of numbers/booleans/strings, or a TypedArray
+	// means that row.value.xs does not have a value
+	// await csv_iterator.next().then(row => {tf.tensor(row.value.xs).dataSync()}).then( row => {
 
-		  // row.dataSync is not a function
-	await csv_iterator.next().then(row => {tf.tensor(row.value.xs).dataSync()}).then(row => {
+	// OR
+		
+	await csv_iterator.next().then(row => {tf.tensor(row).dataSync()}).then( (x,y) => {
 		  
 	  //await csv_iterator.next().then(row => {
-	      outp.innerHTML += 'row: ' + row + "<br/>";
+	      outp.innerHTML += 'x: ' + x + "<br/>";
 
 	      // --------------------------------------
 	      // Get values from the object row
