@@ -252,10 +252,11 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // Y = row.value.Y.dataSync();
 	      // outp.innerHTML += 'X: ' + X + "<br/>";
 	      // outp.innerHTML += 'Y: ' + Y + "<br/>";
-		if (index == 0) {
-		  const valueNames = Object.keys(row);
-		  outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";
-		}
+
+		// valueNames: value,done
+		// if (index == 0) { const valueNames = Object.keys(row); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
+
+		  if (index == 0) { const valueNames = Object.keys(row.value); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 	  });
 
 		  // OR
