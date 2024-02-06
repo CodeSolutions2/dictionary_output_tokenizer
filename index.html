@@ -255,10 +255,11 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // OR
 	      const get_X_tensorvalue = async (row) => {
 		      const X_tensor = tf.tensor(row.value.xs);
-		      return X_tensor.dataSync();
+		      //return X_tensor.dataSync();
+		      outp.innerHTML += 'X_tensor.dataSync(): ' + X_tensor.dataSync() + "<br/>";
 	      };
 
-		  outp.innerHTML += 'get_X_tensorvalue: ' + get_X_tensorvalue + "<br/>";
+		  
 	      // --------------------------------------
 
 	      // --------------------------------------
