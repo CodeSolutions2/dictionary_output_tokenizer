@@ -249,14 +249,13 @@ th {border: 1px solid black; padding: 10px 20px;}
 		outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
 		outp.innerHTML += 'index: ' + index + "<br/>";
 
-		  // TypeError: can't convert undefined to object
-		  // rowdata.value is undefined, maybe it needs to be iterated per row
+		  // valueNames: xs,ys
 	      if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
-		const X = Object.values(rowdata.value.xs);
+		const X = Object.values(rowdata.xs);
 		outp.innerHTML += 'X: ' + X + "<br/>";
 		
-		const Y = Object.values(rowdata.value.ys);
+		const Y = Object.values(rowdata.ys);
 		outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 		// Make text lower case
