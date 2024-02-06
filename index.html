@@ -138,7 +138,6 @@ th {border: 1px solid black; padding: 10px 20px;}
     // [Step 2] Select a url from the url list
 	  
     // url_vec.forEach(function(csvUrl, index) {
-
     // Does not make sense to train the model for every dataset found.
     // It makes more sense to train the model on one seleccted dataset, then test it with predictions.
 
@@ -169,9 +168,20 @@ th {border: 1px solid black; padding: 10px 20px;}
     // Prepare the Dataset for training.
     const flattenedDataset = csvDataset.map(({X, Y}) => {
          // Convert rows from object form (keyed by column name) to array form.
-         // return {X:Object.values(X), Y:Object.values(Y)};
+         return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
 
-	    // Make text lower case
+
+const it = await flattenedDataset.iterator()
+   const xs = []
+   const ys = []
+   // read only the data for the first 5 rows
+   // all the data need not to be read once 
+   // since it will consume a lot of memory
+   for (let i = 0; i < 5; i++) {
+        let e = await it.next()
+	   X = e.value.xs;
+	   
+	   // Make text lower case
 	    X = X.toLocaleLowerCase();
 
 	    // Remove characters between parenthesis
@@ -182,12 +192,15 @@ th {border: 1px solid black; padding: 10px 20px;}
 	    // [Step 3] Remove undesireable words 
 
 	    // [Step 4] Remove sentences with less than 10 words. Narrow the sentences down to realistic sentences.
-	    
-         return {X:X, Y:Y};
-       }).batch(1);
+	   
+      xs.push(X)
+      ys.push(e.value.ys)
+   }
 
+	  
+// OR
 
-    const datasetArray1 = Array.from(flattenedDataset)
+    const datasetArray1 = await Array.from(flattenedDataset)
     outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
 
 	  
