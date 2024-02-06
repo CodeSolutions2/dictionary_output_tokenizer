@@ -222,8 +222,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // OR
 	  
 	  // TypeError: X.toLowerCase is not a function
-	  const csvDataset_values = csvDataset.dataSync();
-	  const csv_iterator = await csvDataset_values.iterator();
+	  const csv_iterator = await csvDataset.iterator();
 
 	  // OR
 	  
@@ -258,18 +257,22 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  tensors.forEach(async function(csvUrl, index) {
 	   // for (let i = 0; i < tensors.length; i++) {
-	      // let e = await it.next()
-	      // X = e.value.xs;
-	      // Y = e.value.ys;
+		  
+	      let row = await csv_iterator.next();
+		  
+	      X = row.value.X.dataSync();
+	      Y = row.value.Y.dataSync();
+	      outp.innerHTML += 'X: ' + X + "<br/>";
+	      outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 	      // OR
 
 	      const rowdata = await i.value;
 	      outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
 
-	      X = tensors.data()[i][0]
-	      Y = tensors.data()[i][1]
-	      outp.innerHTML += 'X: ' + X + "<br/>";
+	      // X = tensors.data()[i][0]
+	      // Y = tensors.data()[i][1]
+	      // outp.innerHTML += 'X: ' + X + "<br/>";
 		   
 	      // Make text lower case
 	      X = X.toLowerCase();
