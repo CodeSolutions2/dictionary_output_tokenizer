@@ -222,7 +222,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // OR
 	  
 	  // TypeError: X.toLowerCase is not a function
-	  // const it = await csvDataset.iterator()
+	  const csv_iterator = await csvDataset.iterator();
 
 	  // OR
 	  
@@ -239,47 +239,50 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // const resultData = await result.data();    
 
 	  const tensors = await csvDataset.toArray();
-		var dataout = tf.tensor(tensors);
+	  // var dataout = tf.tensor(tensors);
 	  
 	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
 
 	  // TypeError: tensors.data is not a function
-	  outp.innerHTML += 'num_of_cols = dataout.data()[0].length: ' + dataout.data()[0].length + "<br/>";
+	  // outp.innerHTML += 'num_of_cols = dataout.data()[0].length: ' + dataout.data()[0].length + "<br/>";
 	  // outp.innerHTML += 'tensors[0][0]: ' + tensors[0][0] + "<br/>";  // tensors[0][0]: undefined
 	  
-	  outp.innerHTML += 'dataout.data()[0][0]: ' + dataout.data()[0][0] + "<br/>";  // dataout[0][0]: undefined
+	  // outp.innerHTML += 'dataout.data()[0][0]: ' + dataout.data()[0][0] + "<br/>";  // dataout[0][0]: undefined
 	  
 	  
 	  // ---------------------------
 	  
-	   const xs = []
-	   const ys = []
-	   // read only the data for the first 5 rows
-	   // all the data need not to be read once 
-	   // since it will consume a lot of memory
+	   const xs = [];
+	   const ys = [];
+	  
 	   for (let i = 0; i < tensors.length; i++) {
-	        // let e = await it.next()
-		   //X = e.value.xs;
+	      // let e = await it.next()
+	      // X = e.value.xs;
+	      // Y = e.value.ys;
 
-		   // OR
+	      // OR
 
-		   X = tensors.data()[i][0]
-		   //outp.innerHTML += 'X: ' + X + "<br/>";
+	      const rowdata = await i.value;
+	      outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
+
+	      // X = tensors.data()[i][0]
+	      // outp.innerHTML += 'X: ' + X + "<br/>";
 		   
-		   // Make text lower case
-		    X = X.toLowerCase();
+	      // Make text lower case
+	      X = X.toLowerCase();
 	
-		    // Remove characters between parenthesis
-		    //X.replace(/\((.*?)\)/g, '');
-		    //X.replace(/\{(.*?)\}/g, '');
-		    //X.replace(/\[(.*?)\]/g, '');
+	      // Remove characters between parenthesis
+	      //X.replace(/\((.*?)\)/g, '');
+	      //X.replace(/\{(.*?)\}/g, '');
+	      //X.replace(/\[(.*?)\]/g, '');
 	
-		    // [Step 3] Remove undesireable words 
+	      // [Step 3] Remove undesireable words 
 	
-		    // [Step 4] Remove sentences with less than 10 words. Narrow the sentences down to realistic sentences.
+	      // [Step 4] Remove sentences with less than 10 words. Narrow the sentences down to realistic sentences.
 		   
 	      xs.push(X)
-	      ys.push(e.value.ys)
+	      ys.push(Y)
+
 	  }
 
 	  outp.innerHTML += 'xs: ' + xs + "<br/>";
