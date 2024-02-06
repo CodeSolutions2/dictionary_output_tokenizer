@@ -163,10 +163,17 @@ th {border: 1px solid black; padding: 10px 20px;}
     outp.innerHTML += 'numOfFeatures: ' + numOfFeatures + "<br/>";
 
     // Prepare the Dataset for training.
-    const flattenedDataset = csvDataset.map(({X, Y}) => {
-         // Convert rows from object form (keyed by column name) to array form.
-         return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
+    //const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
 
+    const flattenedDataset =
+     csvDataset
+     .map(({xs, ys}) =>
+       {
+         // Convert rows from object form (keyed by column name) to array
+         // form.
+         return {xs:Object.values(xs), ys:Object.values(ys)};
+       })
+     .batch(10);
 
 const it = await flattenedDataset.iterator()
    const xs = []
