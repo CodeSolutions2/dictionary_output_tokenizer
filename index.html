@@ -172,7 +172,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     // [Step 4] Clean the dataset
-    await modify_X_Y(csvDataset).then(xs_ys => { outp.innerHTML += 'xs: ' + xs_ys[0] + "<br/>"; outp.innerHTML += 'ys: ' + xs_ys[1] + "<br/>"; } );
+    await modify_X_Y(csvDataset).then(xs_ys => { outp.innerHTML += 'xs: ' + xs_ys[0] + "<br/>"; outp.innerHTML += 'ys: ' + xs_ys[0][1] + "<br/>"; } );
 	  
     // ---------------------------
 
@@ -253,11 +253,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  X = X.toString();
 		  Y = Y.toString();
 
-		// Make text lower case
-		//   const X1 = tfn.util.encodeString(X);
-     //  const X2 = tfn.string.toLowerCase(X1);
-     //  const X3 = tfn.util.decodeString(X2);
-		  
+		// Make text lower case		  
 		X = X.toLowerCase();
 		Y = Y.toLowerCase();
 
