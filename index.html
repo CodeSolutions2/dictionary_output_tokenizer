@@ -254,9 +254,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // const get_rowvalues = row.dataSync();
 	      // OR
 	      const get_X_tensorvalue = async (row) => {
-		      const X_tensor = tf.tensor(row.value.xs);
-		      //return X_tensor.dataSync();
-		      outp.innerHTML += 'X_tensor.dataSync(): ' + X_tensor.dataSync() + "<br/>";
+		      const X_tensor = await tf.tensor(row.value.xs).dataSync();
+		      outp.innerHTML += 'X_tensor: ' + X_tensor + "<br/>";
 	      };
 
 		  
@@ -268,12 +267,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // X = await get_rowvalues.value.xs; 
 
 	      // OR
-		  
-	      X = row.value.xs; 
-		  
-	      outp.innerHTML += 'X: ' + row.value.xs + "<br/>";  
-
-              // OR
 		  
 	      X = row.value.xs;  // returns empty value
 	      Y = row.value.ys;  // returns empty value
@@ -297,8 +290,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	      // OR
 
-	      
-	      await new Promise(r => {outp.innerHTML += 'r.value: ' + r.value + "<br/>";});
+	      await new Promise(row => {outp.innerHTML += 'row.value.xs: ' + row.value.xs + "<br/>";});
 
 	      // OR
 		  
