@@ -213,7 +213,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // OR
 
-	  const flattenedDataset = await csvDataset.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; })
+	  const flattenedDataset = await csvDataset.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
+	  outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
+	  
 	  const csv_iterator_values = await flattenedDataset.iterator()
 	  
 	  // OR
@@ -230,38 +232,49 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // OR
 
 	  // dataout is empty
-	  const tensors = await csvDataset.toArray().then(tensors => { outp.innerHTML += 'dataout: ' + tf.tensor(tensors).dataSync() + "<br/>"; return tensors;});
+	  // const tensors = await csvDataset.toArray().then(tensors => { outp.innerHTML += 'dataout: ' + tf.tensor(tensors).dataSync() + "<br/>"; return tensors;});
+
+	// so this function only has the objects after it returns, it is useless to use a then()
+
+	  const tensors = await csvDataset.toArray();
 	  
 	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
 
+	  // tensors: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
 	  outp.innerHTML += 'tensors: ' + tensors + "<br/>";
 	  
 	  
 	  // ---------------------------
 	  
 	   
-	  var X;
-	  var Y;
+	  var X = 'TESTx';
+	  var Y = 'TESTy';
 
 	  tensors.forEach(async function(rowdata, index) {
 	   // for (let i = 0; i < tensors.length; i++) {
-	
+
+	// Try 0
 	// values passed to tensor(values) must be a number/boolean/string or an array of numbers/booleans/strings, or a TypedArray
 	// means that row.value.xs does not have a value
 	// await csv_iterator.next().then(row => {tf.tensor(row.value.xs).dataSync()}).then( row => {
 
 	// OR
 
+	// Try 1
 	// values passed to tensor(values) must be a number/boolean/string or an array of numbers/booleans/strings, or a TypedArray
 	// await csv_iterator.next().then(row => {tf.tensor(row).dataSync()}).then( (x,y) => {
 
 	// OR
 
-	
+	// Try 2
+	// await csv_iterator.next().then(row => {
+
+	// OR
+
+	// Try 3
+	await csv_iterator_values.next().then(row => {
 		
-	await csv_iterator.next().then(row => {
-		
-		// row is [object Object]
+	      // row is [object Object] for Try 2
 	      outp.innerHTML += 'row: ' + row + "<br/>";
 
 	      // --------------------------------------
@@ -324,8 +337,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // X = tensors.data()[i][0]
 	      // Y = tensors.data()[i][1]
 	      // outp.innerHTML += 'X: ' + X + "<br/>";
-
-	      X = 'TEST';
+		  
 		  
 	      // Make text lower case
 	      X = X.toLowerCase();
