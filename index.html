@@ -214,32 +214,45 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   async function modify_X_Y(csvDataset) {
 
-	  //const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
+	  // Returns an error
+	  const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
+	  outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
+	  const it = await flattenedDataset.iterator()
 
-	  //outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
+	  // OR
 	  
-	  const it = await csvDataset.iterator()
+	  // TypeError: X.toLowerCase is not a function
+	  // const it = await csvDataset.iterator()
 
-	  const datasetArray1 = await Array.from(csvDataset)
-		  outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
-		  
+	  // OR
+	  
+	  // No output 
+	  // const datasetArray1 = await Array.from(csvDataset)
+	  // outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
+
+	  // OR
+
+	  const tensors = await csvDataset.toArray();
+	  outp.innerHTML += 'tensors[0]: ' + tensors[0] + "<br/>";
+	  // ---------------------------
+	  
 	   const xs = []
 	   const ys = []
 	   // read only the data for the first 5 rows
 	   // all the data need not to be read once 
 	   // since it will consume a lot of memory
-	   for (let i = 0; i < 5; i++) {
+	   for (let i = 0; i < tensors.length; i++) {
 	        let e = await it.next()
 		   X = e.value.xs;
-		   outp.innerHTML += 'X: ' + X + "<br/>";
+		   //outp.innerHTML += 'X: ' + X + "<br/>";
 		   
 		   // Make text lower case
 		    X = X.toLowerCase();
 	
 		    // Remove characters between parenthesis
-		    X.replace(/\((.*?)\)/g, '');
-		    X.replace(/\{(.*?)\}/g, '');
-		    X.replace(/\[(.*?)\]/g, '');
+		    //X.replace(/\((.*?)\)/g, '');
+		    //X.replace(/\{(.*?)\}/g, '');
+		    //X.replace(/\[(.*?)\]/g, '');
 	
 		    // [Step 3] Remove undesireable words 
 	
