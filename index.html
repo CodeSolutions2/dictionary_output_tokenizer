@@ -224,7 +224,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // OR
 
-	  const tensors = await csvDataset.toArray().then(tensors => { outp.innerHTML += 'dataout: ' + tf.tensor(tensors).dataSync() + "<br/>"; });
+	  // dataout is empty
+	  const tensors = await csvDataset.toArray().then(tensors => { outp.innerHTML += 'dataout: ' + tf.tensor(tensors).dataSync() + "<br/>"; return tensors;});
 	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
 
 	  outp.innerHTML += 'tensors: ' + tensors + "<br/>";
