@@ -172,8 +172,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
 // OR
 
-    // const datasetArray1 = await Array.from(flattenedDataset)
-    // outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
+    // 
 
 	  
     // });  // end of forEach
@@ -220,6 +219,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  //outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
 	  
 	  const it = await csvDataset.iterator()
+
+	  const datasetArray1 = await Array.from(csvDataset)
+		  outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
 		  
 	   const xs = []
 	   const ys = []
