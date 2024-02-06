@@ -243,19 +243,23 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  tensors.forEach(async function(rowdata, index) {
 	   // for (let i = 0; i < tensors.length; i++) {
 
-	  await csv_iterator.next().then(row => row.dataSync()).then(row => {
+		  // row.dataSync is not a function
+		  // .then(row => row.dataSync())
+
+		  
+	  await csv_iterator.next().then(row => {
 	      outp.innerHTML += 'row: ' + row + "<br/>";
 
-		// const get_rowvalues = row.dataSync();
+	      const get_rowvalues = row.dataSync();
 		  
-		  //X = await get_rowvalues.value.xs; 
+		X = await get_rowvalues.value.xs; 
 		  
-	      outp.innerHTML += 'X: ' + row.value.xs + "<br/>";  
+	      outp.innerHTML += 'X: ' + get_rowvalues.value.xs + "<br/>";  
 
               // OR
 		  
-	      X = row.value.xs;  // returns empty value
-	      Y = row.value.ys;  // returns empty value
+	      X = get_rowvalues.value.xs;  // returns empty value
+	      Y = get_rowvalues.value.ys;  // returns empty value
 	      outp.innerHTML += 'X: ' + X + "<br/>";
 	      outp.innerHTML += 'Y: ' + Y + "<br/>";
 
@@ -266,7 +270,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // if (index == 0) { const valueNames = Object.keys(row.value); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 	  });
 
-		  // OR
+	      // OR
 		  
 	      // let row = await csv_iterator.next();
 	      // X = row.value.X.dataSync();
@@ -276,8 +280,13 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	      // OR
 
+	      
+	      await new Promise(r => outp.innerHTML += 'r.value: ' + r.value + "<br/>";)
+
+	      // OR
+		  
 	      // rowdata.value: undefined
-	      outp.innerHTML += 'rowdata.value: ' + rowdata.value + "<br/>";
+	      // outp.innerHTML += 'rowdata.value: ' + rowdata.value + "<br/>";
 
 	      // X = tensors.data()[i][0]
 	      // Y = tensors.data()[i][1]
