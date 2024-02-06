@@ -51,7 +51,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	
   async function get_train_datasetURL() {
 
-	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv
+	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv
 	// https://storage.googleapis.com/BUCKET_NAME/train_dataset.csv
 	const datasetUrl = document.getElementById("train_dataset_url").value;
 
@@ -152,10 +152,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // const datasetArray0 = Array.from(csvDataset)
     // outp.innerHTML += 'datasetArray0: ' +  datasetArray0 + "<br/>";
     // OR
-    await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } }).then(csvDataset => { 
-	    const datasetArray0 = Array.from(csvDataset); 
-	    outp.innerHTML += 'datasetArray0: ' +  datasetArray0 + "<br/>";
-    });
+    await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
 	
     // Way 1: X and y (manually)
 	    
