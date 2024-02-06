@@ -36,6 +36,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-node@4.17.0/dist/index.min.js"></script> -->
 
 <script>
 
@@ -245,14 +246,16 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		const X = tf.tensor(Object.values(rowdata.xs));
 		const Y = tf.tensor(Object.values(rowdata.ys));
-	
-		X = X.asType('string'); //.dataSync()[0];
-		X = X.toLowerCase();
-		  
-		X1 = X.toString();
-		X1 = X1.toLowerCase();
+
+		 // Convert string tensor to javascript tensor
+		  X = X.toString();
+		  Y = Y.toString();
 
 		// Make text lower case
+		//   const X1 = tfn.util.encodeString(X);
+     //  const X2 = tfn.string.toLowerCase(X1);
+     //  const X3 = tfn.util.decodeString(X2);
+		  
 		X = X.toLowerCase();
 		Y = Y.toLowerCase();
 
