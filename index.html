@@ -220,9 +220,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // outp.innerHTML += 'datasetArray1: ' + datasetArray1 + "<br/>";
 
 	  // OR
-			
-	    // to try 1
-	  // const resultData = await result.data();    
 
 	  const tensors = await csvDataset.toArray();
 	  // var dataout = tf.tensor(tensors);
@@ -240,15 +237,25 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
 	   const xs = [];
 	   const ys = [];
+	  var X;
+	  var Y;
 
 	  tensors.forEach(async function(rowdata, index) {
 	   // for (let i = 0; i < tensors.length; i++) {
 
-	  await csv_iterator.next().then(row => {
+	  await csv_iterator.next().then(row => row.dataSync()).then(row => {
 	      outp.innerHTML += 'row: ' + row + "<br/>";
 
-	      X = row.value.xs.dataSync();
-	      Y = row.value.ys.dataSync();
+		// const get_rowvalues = row.dataSync();
+		  
+		  //X = await get_rowvalues.value.xs; 
+		  
+	      outp.innerHTML += 'X: ' + row.value.xs + "<br/>";  
+
+              // OR
+		  
+	      X = row.value.xs;  // returns empty value
+	      Y = row.value.ys;  // returns empty value
 	      outp.innerHTML += 'X: ' + X + "<br/>";
 	      outp.innerHTML += 'Y: ' + Y + "<br/>";
 
