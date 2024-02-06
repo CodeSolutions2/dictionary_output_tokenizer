@@ -225,8 +225,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
 	  
 	  var dataout = tf.tensor(tensors).dataSync();
-	  outp.innerHTML += 'num_of_rows = dataout.length: ' + dataout.length + "<br/>";
-	  
+	  // outp.innerHTML += 'num_of_rows = dataout.length: ' + dataout.length + "<br/>"; // dataout.length: 0
+	  outp.innerHTML += 'dataout: ' + dataout + "<br/>";
 	  
 
 	  // TypeError: tensors.data is not a function
@@ -251,11 +251,16 @@ th {border: 1px solid black; padding: 10px 20px;}
 	// await csv_iterator.next().then(row => {tf.tensor(row.value.xs).dataSync()}).then( row => {
 
 	// OR
+
+	// values passed to tensor(values) must be a number/boolean/string or an array of numbers/booleans/strings, or a TypedArray
+	// await csv_iterator.next().then(row => {tf.tensor(row).dataSync()}).then( (x,y) => {
+
+	// OR
 		
-	await csv_iterator.next().then(row => {tf.tensor(row).dataSync()}).then( (x,y) => {
-		  
-	  //await csv_iterator.next().then(row => {
-	      outp.innerHTML += 'x: ' + x + "<br/>";
+	await csv_iterator.next().then(row => {
+		
+		// row is [object Object]
+	      outp.innerHTML += 'row: ' + row + "<br/>";
 
 	      // --------------------------------------
 	      // Get values from the object row
@@ -268,7 +273,12 @@ th {border: 1px solid black; padding: 10px 20px;}
 		//      outp.innerHTML += 'X_tensor: ' + X_tensor + "<br/>";
 	     // };
 
-		  
+	      // OR
+
+	      row.map(({xs, ys}) => {
+			outp.innerHTML += 'xs: ' + xs + "<br/>";
+			outp.innerHTML += 'ys: ' + ys + "<br/>";
+	      })
 	      // --------------------------------------
 
 	      // --------------------------------------
