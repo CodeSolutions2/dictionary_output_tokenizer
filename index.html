@@ -159,21 +159,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
     // ---------------------------
 	  
-    // Modify the Dataset for training.
-   //  const flattenedDataset =
-   //   csvDataset
-   //   .map(({X, Y}) =>
-    //    {
-         // Convert rows from object form (keyed by column name) to array
-         // form.
-    //      return {xs:Object.values(xs), ys:Object.values(ys)};
-    //    })
-   //   .batch(10);
-	  
-// OR
-
-    // 
-
 	  
     // });  // end of forEach
 
@@ -207,6 +192,18 @@ th {border: 1px solid black; padding: 10px 20px;}
     return	
 
   }  // end of train_model
+
+	
+  // -------------------------------------------------
+
+async function run_in_group(csv_iterator) {
+	let row = await csv_iterator.next();
+		  
+	      X = row.value.X.dataSync();
+	      Y = row.value.Y.dataSync();
+	      outp.innerHTML += 'X: ' + X + "<br/>";
+	      outp.innerHTML += 'Y: ' + Y + "<br/>";
+}
 
 	
   // -------------------------------------------------
@@ -257,13 +254,15 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  tensors.forEach(async function(csvUrl, index) {
 	   // for (let i = 0; i < tensors.length; i++) {
-		  
-	      let row = await csv_iterator.next();
-		  
-	      X = row.value.X.dataSync();
-	      Y = row.value.Y.dataSync();
-	      outp.innerHTML += 'X: ' + X + "<br/>";
-	      outp.innerHTML += 'Y: ' + Y + "<br/>";
+
+		  await run_in_group(csv_iterator);
+
+		  // OR
+	      // let row = await csv_iterator.next();
+		// X = row.value.X.dataSync();
+	      // Y = row.value.Y.dataSync();
+	      //outp.innerHTML += 'X: ' + X + "<br/>";
+	      //outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 	      // OR
 
