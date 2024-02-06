@@ -172,7 +172,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     // [Step 4] Clean the dataset
-    await modify_X_Y(csvDataset).then((xs, ys) => { outp.innerHTML += 'xs: ' + xs + "<br/>"; outp.innerHTML += 'ys: ' + ys + "<br/>"; } );
+    await modify_X_Y(csvDataset).then(xs_ys => { outp.innerHTML += 'xs: ' + xs_ys[0] + "<br/>"; outp.innerHTML += 'ys: ' + xs_ys[1] + "<br/>"; } );
 	  
     // ---------------------------
 
@@ -234,8 +234,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  var Y = '';
 	  
 	  // ---------------------------
-	  const xs = [];
-	  const ys = [];
+	  var xs = [];
+	  var ys = [];
 
 	  tensors.forEach(async function(rowdata, index) {
 
@@ -262,9 +262,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 		Y = Y.toLowerCase();
 
 		// Remove characters between parenthesis
-		// X = X.replace(/\((.*?)\)/g, '');
-		//X.replace(/\{(.*?)\}/g, '');
-		//X.replace(/\[(.*?)\]/g, '');
+		X = X.replace(/\((.*?)\)/g, '');
+		X = X.replace(/\{(.*?)\}/g, '');
+		X = X.replace(/\[(.*?)\]/g, '');
 
 		outp.innerHTML += 'X: ' + X + "<br/>";
 		outp.innerHTML += 'Y: ' + Y + "<br/>";
