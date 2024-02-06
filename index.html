@@ -247,28 +247,29 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  await csv_iterator.next().then(row => {
 	      outp.innerHTML += 'row: ' + row + "<br/>";
 
-	      // TypeError: row.value.X is undefined
-	      // X = row.value.X.dataSync();
-	      // Y = row.value.Y.dataSync();
-	      // outp.innerHTML += 'X: ' + X + "<br/>";
-	      // outp.innerHTML += 'Y: ' + Y + "<br/>";
+	      X = row.value.xs.dataSync();
+	      Y = row.value.ys.dataSync();
+	      outp.innerHTML += 'X: ' + X + "<br/>";
+	      outp.innerHTML += 'Y: ' + Y + "<br/>";
 
-		// valueNames: value,done
-		// if (index == 0) { const valueNames = Object.keys(row); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
+	      // valueNames: value,done
+	      // if (index == 0) { const valueNames = Object.keys(row); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
-		  if (index == 0) { const valueNames = Object.keys(row.value); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
+              // valueNames: xs,ys
+	      // if (index == 0) { const valueNames = Object.keys(row.value); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 	  });
 
 		  // OR
 		  
 	      // let row = await csv_iterator.next();
-		// X = row.value.X.dataSync();
+	      // X = row.value.X.dataSync();
 	      // Y = row.value.Y.dataSync();
-	      //outp.innerHTML += 'X: ' + X + "<br/>";
-	      //outp.innerHTML += 'Y: ' + Y + "<br/>";
+	      // outp.innerHTML += 'X: ' + X + "<br/>";
+	      // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 	      // OR
 
+	      // rowdata.value: undefined
 	      outp.innerHTML += 'rowdata.value: ' + rowdata.value + "<br/>";
 
 	      // X = tensors.data()[i][0]
