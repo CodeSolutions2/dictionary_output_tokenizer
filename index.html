@@ -156,9 +156,12 @@ th {border: 1px solid black; padding: 10px 20px;}
 	    
     // ---------------------------
 	  
-    // Number of features is the number of column names minus one for the label column.
-    const numOfFeatures = (await csvDataset.columnNames()).length - 1;
-    outp.innerHTML += 'numOfFeatures: ' + numOfFeatures + "<br/>";
+    // Number of columns
+    const num_of_cols = (await csvDataset.columnNames()).length;
+    outp.innerHTML += 'num_of_cols: ' + num_of_cols + "<br/>";
+
+   const column_names = (await csvDataset.columnNames());
+   outp.innerHTML += 'column_names: ' + column_names + "<br/>";
 	  
     // ---------------------------
 	  
@@ -205,13 +208,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 
   async function modify_X_Y(csvDataset) {
-
-	  // Line 218 = TypeError: can't convert undefined to object
-	  // const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
-	  // outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
-	  // const it = await flattenedDataset.iterator()
-
-	  // OR
 
 	  const flattenedDataset = await csvDataset.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
 	  outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
@@ -299,11 +295,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	      // --------------------------------------
 	      // Assign X and Y
-		  
-	      // X = await get_rowvalues.value.xs; 
-
-	      // OR
-		  
+		
 	      // X = row.value.xs;  // returns empty value
 	     //  Y = row.value.ys;  // returns empty value
 	     //  outp.innerHTML += 'X: ' + X + "<br/>";
@@ -313,11 +305,25 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      // if (index == 0) { const valueNames = Object.keys(row); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
               // valueNames: xs,ys
-	      // if (index == 0) { const valueNames = Object.keys(row.value); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
-	  });
+	      if (index == 0) { const valueNames = Object.keys(row.value); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
-	      // OR
+	const valueX = Object.values(row.value.xs); outp.innerHTML += 'valueX: ' + valueX + "<br/>";
+		const valueY = Object.values(row.value.ys); outp.innerHTML += 'valueY: ' + valueY + "<br/>";
+	
+	});
+
+	// OR
+
+	// Try 4
+	out = await rowdata.value.xs;
+	outp.innerHTML += 'X values from forEach loop: ' + out + "<br/>";
+
+
 		  
+
+	// --------------------------------------
+        // Modify and store csv values in an X and Y array
+	// --------------------------------------
 	      // let row = await csv_iterator.next();
 	      // X = row.value.X.dataSync();
 	      // Y = row.value.Y.dataSync();
@@ -354,7 +360,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	      xs.push(X)
 	      ys.push(Y)
 
-	  });
+	  });  // end of forEach
 
 	  
 
