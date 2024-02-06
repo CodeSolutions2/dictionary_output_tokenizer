@@ -214,10 +214,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   async function modify_X_Y(csvDataset) {
 
-	  // Returns an error
-	  const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
-	  outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
-	  const it = await flattenedDataset.iterator()
+	  // Line 218 = TypeError: can't convert undefined to object
+	  // const flattenedDataset = csvDataset.map(({X, Y}) => { return {X:Object.values(X), Y:Object.values(Y)};}).batch(1);
+	  // outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
+	  // const it = await flattenedDataset.iterator()
 
 	  // OR
 	  
@@ -232,9 +232,19 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // OR
 
+	  // to try 0
+	 //  .dataSync()[0];
+			
+	    // to try 1
+	  // const resultData = await result.data();    
+
 	  const tensors = await csvDataset.toArray();
-	  outp.innerHTML += 'tensors.length: ' + tensors.length + "<br/>";
-	  outp.innerHTML += 'tensors[0][0]: ' + tensors[0][0] + "<br/>";
+	  outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  // tensors.length: 10
+	  outp.innerHTML += 'num_of_cols = tensors.data()[0].length: ' + tensors.data()[0].length + "<br/>";
+	  // outp.innerHTML += 'tensors[0][0]: ' + tensors[0][0] + "<br/>";  // tensors[0][0]: undefined
+	  outp.innerHTML += 'tensors.data()[0][0]: ' + tensors.data()[0][0] + "<br/>";  // tensors[0][0]: undefined
+	  
+	  
 	  // ---------------------------
 	  
 	   const xs = []
@@ -243,8 +253,12 @@ th {border: 1px solid black; padding: 10px 20px;}
 	   // all the data need not to be read once 
 	   // since it will consume a lot of memory
 	   for (let i = 0; i < tensors.length; i++) {
-	        let e = await it.next()
-		   X = e.value.xs;
+	        // let e = await it.next()
+		   //X = e.value.xs;
+
+		   // OR
+
+		   X = tensors.data()[i][0]
 		   //outp.innerHTML += 'X: ' + X + "<br/>";
 		   
 		   // Make text lower case
