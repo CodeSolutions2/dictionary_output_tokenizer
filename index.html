@@ -240,7 +240,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  const counted_list = [...Array(unique_ylabel.length).keys()].map((x) => x);
 	  // const y_assignment = unique_ylabel.reduce((accumulated, current, index) => { return Object.assign(accumulated, { [current]: counted_list[index] }); }, {});
 	  // OR
-	  const y_assignment = unique_ylabel.map(x => ({[x]: index}));
+	  const y_assignment = counted_list.map(x => ({[unique_ylabel[x]]: x}));
 	  
 	  outp.innerHTML += 'y_assignment.keys(): ' + y_assignment["business"] + "<br/>";
 	  outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
