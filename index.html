@@ -157,10 +157,10 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 	  
     // Number of columns
-    const num_of_cols = (await csvDataset.columnNames()).length;
+    // const num_of_cols = (await csvDataset.columnNames()).length;
     // outp.innerHTML += 'num_of_cols: ' + num_of_cols + "<br/>";
 
-    const column_names = (await csvDataset.columnNames());
+    // const column_names = (await csvDataset.columnNames());
     // outp.innerHTML += 'column_names: ' + column_names + "<br/>";
 	  
     // ---------------------------
@@ -207,7 +207,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // OR
 	  
 	  // This is an object, and can iterate over values in the Object
-	  const csv_iterator = await csvDataset.iterator();
+	  // const csv_iterator = await csvDataset.iterator();
 
 	  // OR
 	  
@@ -242,7 +242,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // Incorrect
 	  // const y_assignment = new Map(counted_list.map(x => ({[unique_ylabel[x]]: x})));
 	  // OR
-	const y_assignment = Object.fromEntries(unique_ylabel.map((key, index) => [key, index]);
+	const y_assignment = Object.fromEntries(unique_ylabel.map((key, index) => [key, index]));
 	  
 	  outp.innerHTML += 'y_assignment["business"]: ' + y_assignment['business'] + "<br/>";
 	  // outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
