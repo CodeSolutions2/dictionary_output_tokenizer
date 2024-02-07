@@ -296,8 +296,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // ---------------------------
 		 // Clean text procedure
 		 // ---------------------------
-
-		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
+		 X = Object.values(rowdata.xs).toString(); //.toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
 		Y = Object.values(rowdata.ys).toString();
 		  
 		// Make text lower case		  
@@ -325,12 +324,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		  // ---------------------------
                   // Using user input labels to validate X and Y values 
-		  // (*** could be automated so no user input labels are needed ***)
 		  // ---------------------------
-		  // Split string on space 
-		  let temp = y_labels.split(" ");
-		  let sentence_length = temp.length;
-
+		  
 		  // Search to determine if user inputted y is in list
 		  // *** there could be a more optimal way to do this ***
 		  let correct_y = false;
@@ -341,16 +336,17 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  
 		  //  OR
 		  
-		  let matches = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
+		  let matches = async () => { await [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)]; };
 		  //let matches = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
 		  outp.innerHTML += 'matches: ' + matches + "<br/>";
-		  //var regex = `/(^|,)${Y}(,|$)/`;
-		  //outp.innerHTML += 'matches2: ' + regex.test(y_labels) + "<br/>";
 		  
 		  // ---------------------------
+		  // Verify that data is correct
+		  // Split X string on space 
+
+		  outp.innerHTML += 'y_assignment[Y]: ' + y_assignment[Y] + "<br/>";
 		  
-		  // Save data
-		  if (sentence_length > 10 && matches.len == 1){
+		  if (X.split(" ").length > 10 && matches.length == 1){
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
 		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
