@@ -9,8 +9,11 @@
 <br><br>
 
 <!-- [Step 0] Train model -->
-<label for="train_dataset_url_label" style="display:block">Enter train dataset location url: url can be Github or GCP storage (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv):</label>
-<input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" style="display:block">
+<label for="train_dataset_url_label" style="display:block">Enter train dataset location url - url can be Github or GCP storage: (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv)</label>
+<input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" size="500" style="display:block">
+<br><br>
+<label for="y_datasetLabels_label" style="display:block">Enter the y dataset labels: (ie: sport,business,politics,entertainment,tech)</label>
+<input type="text" value="" placeholder="y dataset labels" id="y_datasetLabels" rows="1" cols="500" size="500" style="display:block">
 <br>
 <button id="train_model" onclick="train_model()" style="display:block">train_model</button>
 
@@ -158,10 +161,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
     // Number of columns
     const num_of_cols = (await csvDataset.columnNames()).length;
-    outp.innerHTML += 'num_of_cols: ' + num_of_cols + "<br/>";
+    // outp.innerHTML += 'num_of_cols: ' + num_of_cols + "<br/>";
 
-   const column_names = (await csvDataset.columnNames());
-   outp.innerHTML += 'column_names: ' + column_names + "<br/>";
+    const column_names = (await csvDataset.columnNames());
+    // outp.innerHTML += 'column_names: ' + column_names + "<br/>";
 	  
     // ---------------------------
 	  
@@ -172,7 +175,16 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     // [Step 4] Clean the dataset
-    await modify_X_Y(csvDataset).then(dictXY => { outp.innerHTML += 'xs: ' + dictXY.xs + "<br/>"; outp.innerHTML += 'ys: ' + dictXY.ys + "<br/>"; } );
+    await modify_X_Y(csvDataset).then(dictXY => { 
+
+	    
+	    
+	    
+    
+	    
+
+	    
+    });
 	  
     // ---------------------------
 
@@ -181,7 +193,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
     // ---------------------------
 
-    // [Step 5] Tokenize Y
+    
 
     // ---------------------------
 
@@ -230,12 +242,54 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // tensors: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
 	  // outp.innerHTML += 'tensors: ' + tensors + "<br/>";
 
+	  // ---------------------------
+	  // Handling desired y labels
+	  // ---------------------------
+	  // Obtain desired labels from user
+	  const y_labels = document.getElementById("y_datasetLabels").value;
+	  
+	  // Convert string tensor to javascript tensor
+	  y_labels = y_labels.toString();
+
+	  // Make text lower case		  
+	  y_labels = y_labels.toLowerCase();
+	  let ylabels = y_labels.split(",").trim()
+
+	  // Tokenize Y using user input labels
+	  const unique_ylabel = [...new Set(ylabels)]; // y label should be unique, but find unique values just in case 
+	  const counted_list = [...Array(unique_ylabel.length).keys()].map((x) => x);
+	  const y_assignment = unique_ylabel.reduce((accumulated, current, index) => {
+		  return Object.assign(accumulated, { [current]: counted_list[index] });
+	  }, {});
+
+	  // ---------------------------
+	  
+	  
+          // ---------------------------
+          // Read data from csv object, clean each row, validate if X and Y are correct, tokenize X, 
+	  // save tokenized X and Y to a flattenedDataset
+	  // ---------------------------
 	  var X = '';
 	  var Y = '';
-	  
-	  // ---------------------------
 	  var xs = [];
 	  var ys = [];
+
+	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", 
+                     "any", "are", "because", "been", "before", "being", "below", 
+                     "between", "both", "but", "could", "did", "does", "doing", "down", 
+                     "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", 
+                     "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", 
+                     "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've",
+                     "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", 
+                     "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", 
+                     "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", 
+                     "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", 
+                     "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", 
+                     "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", 
+                     "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", 
+                     "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", 
+                     "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves",
+    '</p>', '<a', 'id=', "href=", 'title=', 'class=', '</a>', '</sup>', '<p>', '</b>', '<sup'];
 
 	  tensors.forEach(async function(rowdata, index) {
 
@@ -253,6 +307,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 X = X.toString();
 		 Y = Y.toString();
 
+		  // ---------------------------
+		  // Clean text procedure
+		  // ---------------------------
 		 // Make text lower case		  
 		 X = X.toLowerCase();
 		 Y = Y.toLowerCase();
@@ -262,11 +319,53 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 X = X.replace(/\{(.*?)\}/g, '');
 		 X = X.replace(/\[(.*?)\]/g, '');
 
-		 // outp.innerHTML += 'X: ' + X + "<br/>";
-		 // outp.innerHTML += 'Y: ' + Y + "<br/>";
-		 xs.push(X)
-		 ys.push(Y)
-	
+		  // Remove undesireable words 
+		  // Maybe memory intensive - **** run after everything works ****
+		  // undesireable_words.forEach(function(word2remove, index) {X = X.replace(`/\b${word2remove}\b/g`, '');}
+
+		  // Remove text that are 1 or 2 characters long
+		  X = X.replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '');
+		  
+		  // Remove undesireable characters
+		  X = X.replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
+
+		  // ---------------------------
+
+		  // ---------------------------
+                  // Using user input labels to validate X and Y values 
+		  // (*** could be automated so no user input labels are needed ***)
+		  // ---------------------------
+		  // Split string on space 
+		  let temp = y_labels.split(" ");
+		  let sentence_length = temp.length;
+
+		  // Search to determine if user inputted y is in list
+		  // *** there could be a more optimal way to do this ***
+		  let correct_y = false;
+		  for (i=0; i<ylabels.length; i++){
+			  if (Y == ylabels[i]){
+				  correct_y = true;
+			  }
+		  }
+		  outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
+		  //  OR
+		  let matches = [...Y.matchAll(/,(.*?),/)];
+		  outp.innerHTML += 'matches.len: ' + matches.len + "<br/>";
+		  
+		  // Save data
+		  if (sentence_length > 10 && matches.len == 1){
+		       // outp.innerHTML += 'X: ' + X + "<br/>";
+		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
+
+			
+
+
+			  
+		       xs.push(X);
+		       ys.push(Y);
+		  }
+
+		  
 	// OR
 
 	// Try 1: Best
