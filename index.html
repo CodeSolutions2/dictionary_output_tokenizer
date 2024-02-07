@@ -319,23 +319,20 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // Search to determine if user inputted y is in list
 		  // *** there could be a more optimal way to do this ***
 		  let correct_y = false;
-		  for (i=0; i<ylabels.length; i++){
-			  if (Y == ylabels[i]){
-				  correct_y = true;
-			  }
+		  ylabels.forEach(async function(yrow, yindex) {
+			  if (Y == yrow){ correct_y = true; }
 		  }
 		  outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
 		  
 		  //  OR
 		  
-		  //let matches = [...Y.matchAll(/,(.*?),/)];
-
-		  //  OR
+		  //let matches = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
+		  let matches = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
+		  outp.innerHTML += 'matches: ' + matches + "<br/>";
+		  var regex = `/(^|,)${Y}(,|$)/`;
+		  outp.innerHTML += 'matches2: ' + regex.test(y_labels) + "<br/>";
 		  
-		  let regexp = /,(.*?),/;
-		  let matches = regexp.exec(Y);
-		  outp.innerHTML += 'matches.len: ' + matches.len + "<br/>";
-
+		  // ---------------------------
 		  
 		  // Save data
 		  if (sentence_length > 10 && matches.len == 1){
