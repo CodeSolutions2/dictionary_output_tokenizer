@@ -9,7 +9,7 @@
 <br><br>
 
 <!-- [Step 0] Train model -->
-<label for="train_dataset_url_label" style="display:block">Enter train dataset location url: url can be Github or GCP storage (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset.csv):</label>
+<label for="train_dataset_url_label" style="display:block">Enter train dataset location url: url can be Github or GCP storage (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv):</label>
 <input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" style="display:block">
 <br>
 <button id="train_model" onclick="train_model()" style="display:block">train_model</button>
@@ -172,7 +172,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     // [Step 4] Clean the dataset
-    await modify_X_Y(csvDataset).then(xs_ys => { outp.innerHTML += 'xs: ' + xs_ys[0] + "<br/>"; outp.innerHTML += 'ys: ' + xs_ys[1] + "<br/>"; } );
+    await modify_X_Y(csvDataset).then(dictXY => { outp.innerHTML += 'xs: ' + dictXY.xs + "<br/>"; outp.innerHTML += 'ys: ' + dictXY.ys + "<br/>"; } );
 	  
     // ---------------------------
 
@@ -240,32 +240,32 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  tensors.forEach(async function(rowdata, index) {
 
 		// Try 0: Works!
-		outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
-		outp.innerHTML += 'index: ' + index + "<br/>";
+		// outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
+		// outp.innerHTML += 'index: ' + index + "<br/>";
 
 		// valueNames: xs,ys
 		if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
-		X = tf.tensor(Object.values(rowdata.xs));
-		Y = tf.tensor(Object.values(rowdata.ys));
+		 X = tf.tensor(Object.values(rowdata.xs));
+		 Y = tf.tensor(Object.values(rowdata.ys));
 
 		 // Convert string tensor to javascript tensor
-		  X = X.toString();
-		  Y = Y.toString();
+		 X = X.toString();
+		 Y = Y.toString();
 
-		// Make text lower case		  
-		X = X.toLowerCase();
-		Y = Y.toLowerCase();
+		 // Make text lower case		  
+		 X = X.toLowerCase();
+		 Y = Y.toLowerCase();
 
-		// Remove characters between parenthesis
-		X = X.replace(/\((.*?)\)/g, '');
-		X = X.replace(/\{(.*?)\}/g, '');
-		X = X.replace(/\[(.*?)\]/g, '');
+		 // Remove characters between parenthesis
+		 X = X.replace(/\((.*?)\)/g, '');
+		 X = X.replace(/\{(.*?)\}/g, '');
+		 X = X.replace(/\[(.*?)\]/g, '');
 
-		outp.innerHTML += 'X: ' + X + "<br/>";
-		outp.innerHTML += 'Y: ' + Y + "<br/>";
-		xs.push(X)
-		ys.push(Y)
+		 // outp.innerHTML += 'X: ' + X + "<br/>";
+		 // outp.innerHTML += 'Y: ' + Y + "<br/>";
+		 xs.push(X)
+		 ys.push(Y)
 	
 	// OR
 
@@ -319,9 +319,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 
 	  });  // end of forEach
-
-	  return xs, ys;
-
+	  
+	  return {xs: xs, ys: ys};
   }
 
 	
