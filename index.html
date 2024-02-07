@@ -277,13 +277,17 @@ th {border: 1px solid black; padding: 10px 20px;}
 		// outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
 		// outp.innerHTML += 'index: ' + index + "<br/>";
 
-		// valueNames: xs,ys
-		if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
+		// Initially determined the name of the dictionary keys and values - valueNames: xs,ys
+		// if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
 		// X = tf.tensor(Object.values(rowdata.xs));
 		// Y = tf.tensor(Object.values(rowdata.ys));
-		X = await Object.values(rowdata.xs).toString();
-		Y = await Object.values(rowdata.ys).toString();
+
+		// OR
+		
+		// The value of X and Y does not change per rowdata
+		// X = await Object.values(rowdata.xs).toString();
+		// Y = await Object.values(rowdata.ys).toString();
 
 		 // Convert string tensor to javascript tensor
 		 // X = X.toString();
@@ -293,7 +297,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // Clean text procedure
 		 // ---------------------------
 
-		 X = await X.toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
+		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
+		Y = Object.values(rowdata.ys).toString();
 		  
 		// Make text lower case		  
 		// X = X.toLowerCase();
@@ -330,14 +335,14 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // *** there could be a more optimal way to do this ***
 		  let correct_y = false;
 		  ylabels.forEach(async function(yrow, yindex) {
-			  if (Y == yrow){ correct_y = true; }
+			  if (Y == yrow){ correct_y = true; break;}
 		  });
 		  outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
 		  
 		  //  OR
 		  
-		  //let matches = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
-		  let matches = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
+		  let matches = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
+		  //let matches = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
 		  outp.innerHTML += 'matches: ' + matches + "<br/>";
 		  //var regex = `/(^|,)${Y}(,|$)/`;
 		  //outp.innerHTML += 'matches2: ' + regex.test(y_labels) + "<br/>";
