@@ -225,11 +225,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // Obtain desired labels from user
 	  var y_labels = document.getElementById("y_datasetLabels").value;
 	  
-	  // Convert string tensor to javascript tensor
-	  y_labels = y_labels.toString();
-
-	  // Make text lower case		  
-	  y_labels = y_labels.toLowerCase();
+	  // Convert string tensor to javascript tensor, Make text lower case		  
+	  y_labels = y_labels.toString().toLowerCase();
 	  outp.innerHTML += 'y_labels: ' + y_labels + "<br/>";
 	  
 	  let ylabels = y_labels.split(","); //.trim()
@@ -240,7 +237,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  const counted_list = [...Array(unique_ylabel.length).keys()].map((x) => x);
 	  // const y_assignment = unique_ylabel.reduce((accumulated, current, index) => { return Object.assign(accumulated, { [current]: counted_list[index] }); }, {});
 	  // OR
-	  const y_assignment = counted_list.map(x => ({[unique_ylabel[x]]: x}));
+	  const y_assignment = new Map(counted_list.map(x => ({[unique_ylabel[x]]: x})));
 	  
 	  outp.innerHTML += 'y_assignment.get("business"): ' + y_assignment.get('business') + "<br/>";  // undefined
 	  outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
