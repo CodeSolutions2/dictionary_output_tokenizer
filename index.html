@@ -301,15 +301,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // ---------------------------
 		  
 		  // Search to determine if user inputted y is in list
-		  // *** there could be a more optimal way to do this ***
-		  // let correct_y = false;
-		  // ylabel_vec.forEach(async function(yrow, yindex) { if (Y == yrow){ correct_y = true;} });
-		  // outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
-		  
-		  // OR
 		  
 		  // To input the expression, remove the / in front and the /g at the end
 		  let regexp = new RegExp(`(?<=,${Y})(.*?)(?=,)`, 'g');
+		  outp.innerHTML += 'regexp1: ' + regexp + "<br/>";
 		  let iterator = [...ylabel_str.matchAll(regexp)];
 		  // let iterator = ylabel_str.matchAll(regexp);
 		  let matches0 = Array.from(iterator); // Convert iterator to array
@@ -325,15 +320,17 @@ th {border: 1px solid black; padding: 10px 20px;}
   
 		  
 		  regexp = new RegExp(`(?<=,${Y})(.*?)(?=,)`, 'g');
+		  outp.innerHTML += 'regexp1: ' + regexp + "<br/>";
 		  let matches3 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
-		  // regexp = /`${Y}`/g;
 		  regexp = new RegExp(`${Y}`, 'g');
+		  outp.innerHTML += 'regexp1: ' + regexp + "<br/>";
 		  let matches4 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches4: ' + matches4 + "<br/>";
 		  
-		  regexp = new RegExp(`(?<=(^|,)${Y})(.*?)(?=(,|$))`, 'g');  
+		  regexp = new RegExp(`(?<=(^|,)${Y})(.*?)(?=(,|$))`, 'g');
+		  outp.innerHTML += 'regexp5: ' + regexp + "<br/>";
 		  let matches5 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches5: ' + matches5 + "<br/>";
 
