@@ -251,13 +251,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  var xs = [];
 	  var ys = [];
 
-	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", "any", "are", "because", "been", "before", "being", "below", "between", "both", "but", "could", "did", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", 
-                     "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", 
-                     "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've",
-                     "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", 
-                     "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", 
-                     "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", 
-                     "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", 
+	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", "any", "are", "because", "been", "before", "being", "below", "between", "both", "but", "could", "did", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", 
                      "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", 
                      "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", 
                      "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", 
@@ -355,7 +349,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		  // null
 		  // let matches6 = ylabel_str.match('/'+Y+'/');
-		  outp.innerHTML += 'matches6: ' + ('/'+Y+'/').match(y_label_str) + "<br/>";
+		  outp.innerHTML += 'matches6: ' + ('/'+Y+'/').match(ylabel_str) + "<br/>";
 		  
 		  // ---------------------------
 		  // Verify that data is correct
@@ -363,7 +357,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		  outp.innerHTML += 'X.split(" ").length: ' + X.split(" ").length + "<br/>"; // Correct
 		  
-		  if (X.split(" ").length > 10 && ylabel_str.match('/'+Y+'/') == true){
+		  if (X.split(" ").length > 10 && matches5 == true){
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
 		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
