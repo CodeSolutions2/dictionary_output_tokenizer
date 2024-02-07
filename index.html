@@ -269,8 +269,7 @@ th {border: 1px solid black; padding: 10px 20px;}
                      "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", 
                      "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", 
                      "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", 
-                     "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves",
-    '</p>', '<a', 'id=', "href=", 'title=', 'class=', '</a>', '</sup>', '<p>', '</b>', '<sup'];
+                     "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", '</p>', '<a', 'id=', "href=", 'title=', 'class=', '</a>', '</sup>', '<p>', '</b>', '<sup'];
 
 	  tensors.forEach(async function(rowdata, index) {
 
@@ -310,7 +309,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // Remove undesireable characters
 		 X = X.replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
 		  // ---------------------------
-		  
+
+		  X = X.toString();
+		  Y = Y.toString();
 		  outp.innerHTML += 'X: ' + X + "<br/>";
 		  outp.innerHTML += 'Y: ' + Y + "<br/>";
 
