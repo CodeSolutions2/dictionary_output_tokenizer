@@ -48,9 +48,6 @@ th {border: 1px solid black; padding: 10px 20px;}
   const outp = document.getElementById('output');
 
   var url_vec = [];  // This is a global variable, and I start referencing it in get_train_dataset
-
-
-	
 	
   // -------------------------------------------------
 
@@ -63,7 +60,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	let out = datasetUrl.split("/")
 
-	outp.innerHTML += "out: " + out + "<br/>";
+	// outp.innerHTML += "out: " + out + "<br/>";
 	
 	let domain_name = out[2];
 	
@@ -71,8 +68,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		const repoOwner = out[3];
 		const repoName = out[4];
 
-		outp.innerHTML += "repoOwner: " + repoOwner + "<br/>";
-		outp.innerHTML += "repoName: " + repoName + "<br/>";
+		// outp.innerHTML += "repoOwner: " + repoOwner + "<br/>";
+		// outp.innerHTML += "repoName: " + repoName + "<br/>";
 		
 		var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
 		    //var options = {method : 'get', headers: headers, mode: 'no-cors'};
@@ -108,7 +105,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // [Step 0] Read in a list of urls that are .csv or .txt files
     
     var url_vec = await get_train_datasetURL();
-    outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
+    // outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
 
     // ---------------------------
 	  
@@ -155,7 +152,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
     // X and y (dataset object)
     const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
-    outp.innerHTML += 'csvDataset: ' +  csvDataset + "<br/>";  // csvDataset: [object Object]
+    // outp.innerHTML += 'csvDataset: ' +  csvDataset + "<br/>";  // csvDataset: [object Object]
 	    
     // ---------------------------
 	  
