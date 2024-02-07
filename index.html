@@ -309,26 +309,28 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // OR
 
 		  // regexp.matchAll is not a function
-		  let regexp = /(?<=,`${Y}`)(.*?)(?=,)/g;
+		  let regexp = /(?<=,`${Y}`)(.*?)(?=,)/g;  
 		  // let matches0 = [...ylabel_str.matchAll(regexp)];
 		  let matches0 = ylabel_str.matchAll(regexp);
 		  outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
 
 		  // No output
-		  regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
+		  // regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
+		  regexp = new RegExp(`(?<=(^|,)${Y})(.*?)(?=(,|$))`, 'g');
 		  outp.innerHTML += 'regexp1: ' + regexp + "<br/>";
 		  outp.innerHTML += 'ylabel_str1: ' + ylabel_str + "<br/>";
 		  // let matches1 = [...ylabel_str.matchAll(regexp)];
 		  let matches1 = ylabel_str.matchAll(regexp);
 		  outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
   
-		  // null
-		  regexp = /(?<=,`${Y}`)(.*?)(?=,)/g;
+		  
+		  regexp = /(?<=,`${Y}`)(.*?)(?=,)/g;   // null
 		  let matches3 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
 		  // null
-		  regexp = /`${Y}`/g;
+		  // regexp = /`${Y}`/g;
+		  regexp = new RegExp(`${Y}`, 'g');
 		  let matches4 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches4: ' + matches4 + "<br/>";
 		  
