@@ -223,17 +223,17 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // Handling desired y labels
 	  // ---------------------------
 	  // Obtain desired labels from user
-	  var y_labels = document.getElementById("y_datasetLabels").value;
+	  var ylabel_str = document.getElementById("y_datasetLabels").value;
 	  
 	  // Convert string tensor to javascript tensor, Make text lower case		  
-	  y_labels = y_labels.toString().toLowerCase();
-	  // outp.innerHTML += 'y_labels: ' + y_labels + "<br/>";
+	  ylabel_str = ylabel_str.toString().toLowerCase();
+	  // outp.innerHTML += 'ylabel_str: ' + ylabel_str + "<br/>";
 	  
-	  let ylabels = y_labels.split(","); //.trim()
-	  // outp.innerHTML += 'ylabels: ' + ylabels + "<br/>";
+	  let ylabel_vec = ylabel_str.split(","); //.trim()
+	  // outp.innerHTML += 'ylabel_vec: ' + ylabel_vec + "<br/>";
 
 	  // Tokenize Y using user input labels
-	  const unique_ylabel = [...new Set(ylabels)]; // y label should be unique, but find unique values just in case 
+	  const unique_ylabel = [...new Set(ylabel_vec)]; // y label should be unique, but find unique values just in case 
 	  const y_assignment = Object.fromEntries(unique_ylabel.map((key, index) => [key, index]));
 	  
 	  // outp.innerHTML += 'y_assignment["business"]: ' + y_assignment['business'] + "<br/>";  // correct
@@ -289,8 +289,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // ---------------------------
 		 // Clean text procedure
 		 // ---------------------------
-		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\\s)[A-Za-z]{1,2}(?=\\s)/g, '');  
-		  //
+		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '');  
+		
 		  //.replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '')
 		Y = Object.values(rowdata.ys).toString().toLowerCase();
 		  
@@ -323,49 +323,48 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  
 		  // Search to determine if user inputted y is in list
 		  // *** there could be a more optimal way to do this ***
-		  let correct_y = false;
-		  ylabels.forEach(async function(yrow, yindex) {
-			  if (Y == yrow){ correct_y = true;}
-		  });
-		  outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
+		  // let correct_y = false;
+		  // ylabel_vec.forEach(async function(yrow, yindex) { if (Y == yrow){ correct_y = true;} });
+		  // outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
 		  
 		  // OR
 
 		  // No output
-		  // let matches0 = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
+		  // let matches0 = [...ylabel_str.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
 		  // outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
 
 		  // No output
-		  // let matches1 = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
+		  // let matches1 = [...ylabel_str.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
 		  // outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
 
 		  // exec is not a function
 		  //let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
-		  // let matches2 = (`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`).exec(y_labels);
+		  // let matches2 = (`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`).exec(ylabel_str);
 		  // outp.innerHTML += 'matches2: ' + matches2 + "<br/>";
   
 		  // null
-		  // let matches3 = y_labels.match(`/(?<=,${Y})(.*?)(?=,)/g`);
+		  // let matches3 = ylabel_str.match(`/(?<=,${Y})(.*?)(?=,)/g`);
 		  // outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
 		  // null
-		  // let matches4 = y_labels.match(`/${Y}/g`);
+		  // let matches4 = ylabel_str.match(`/${Y}/g`);
 		  // outp.innerHTML += 'matches4: ' + matches4 + "<br/>";
 		  
 		  // null
-		  // let matches5 = y_labels.match(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`);
+		  // let matches5 = ylabel_str.match(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`);
 		  // outp.innerHTML += 'matches5: ' + matches5 + "<br/>";
 
-		  let matches6 = y_labels.match('/'+Y+'/g');
-		  outp.innerHTML += 'matches6: ' + matches6 + "<br/>";
+		  // null
+		  // let matches6 = ylabel_str.match('/'+Y+'/');
+		  outp.innerHTML += 'matches6: ' + ylabel_str.match('/'+Y+'/') + "<br/>";
 		  
 		  // ---------------------------
 		  // Verify that data is correct
 		  // Split X string on space
 
-		  outp.innerHTML += 'X.split(" ").length: ' + X.split(" ").length + "<br/>";
+		  outp.innerHTML += 'X.split(" ").length: ' + X.split(" ").length + "<br/>"; // Correct
 		  
-		  if (X.split(" ").length > 10 && matches.length == 1){
+		  if (X.split(" ").length > 10 && ylabel_str.match('/'+Y+'/') == true){
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
 		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
