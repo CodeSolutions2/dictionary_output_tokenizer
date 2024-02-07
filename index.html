@@ -242,8 +242,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // OR
 	  const y_assignment = counted_list.map(x => ({[unique_ylabel[x]]: x}));
 	  
-	  outp.innerHTML += 'y_assignment["business"]: ' + y_assignment["business"] + "<br/>";  // undefined
-	  outp.innerHTML += 'y_assignment[business]: ' + y_assignment[business] + "<br/>";  // undefined
+	  outp.innerHTML += 'y_assignment.get("business"): ' + y_assignment.get('business') + "<br/>";  // undefined
 	  outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
 	  // ---------------------------
 	  
@@ -352,7 +351,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // Verify that data is correct
 		  // Split X string on space 
 
-		  outp.innerHTML += 'y_assignment[Y]: ' + y_assignment[Y] + "<br/>";
+		  outp.innerHTML += 'y_assignment.get(Y): ' + y_assignment.get(Y) + "<br/>";
 
 		  outp.innerHTML += 'X.split(" ").length: ' + X.split(" ").length + "<br/>";
 		  
