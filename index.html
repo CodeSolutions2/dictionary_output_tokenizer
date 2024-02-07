@@ -175,37 +175,17 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     // [Step 4] Clean the dataset
-    await modify_X_Y(csvDataset).then(dictXY => { 
+    await modify_X_Y(csvDataset).then(flattenedDataset => {
 
-	    
-	    
-	    
-    
-	    
-
+	// [Step 5] Fit the model using the prepared Dataset
+	   // await custom_model.fitDataset(flattenedDataset, {
+	   //   epochs: 10,
+	   //   callbacks: {
+	   //     onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
+	    //  }
+	   // });
 	    
     });
-	  
-    // ---------------------------
-
-    // [Step 5] Tokenize X
-	  
-
-    // ---------------------------
-
-    
-
-    // ---------------------------
-
-    // [Step 5] Fit the model using the prepared Dataset
-   // await custom_model.fitDataset(flattenedDataset, {
-   //   epochs: 10,
-   //   callbacks: {
-   //     onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
-    //  }
-   // });
-
-    // ---------------------------
 
     return	
 
@@ -357,20 +337,24 @@ th {border: 1px solid black; padding: 10px 20px;}
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
 		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
-			
+			// Tokenize X
 
-
-			  
+		       // Save tokenized X values to array
 		       xs.push(X);
-		       ys.push(Y);
+		       ys.push(y_assignment[Y]);
 		  }
 
 		  
 	// OR
 
-	// Try 1: Best
+	// Try 1: 
 	//await csv_iterator.next().then(row => {
 
+	      // row is [object Object] for Try 1 and 2
+	     // outp.innerHTML += 'row: ' + row + "<br/>";
+		  
+	//});  // end of await csv_iterator.next().then(row =>
+		  
 	// OR
 
 	// Try 2: Works like Try 1
@@ -378,46 +362,14 @@ th {border: 1px solid black; padding: 10px 20px;}
 		
 	      // row is [object Object] for Try 1 and 2
 	     // outp.innerHTML += 'row: ' + row + "<br/>";
-
-	      // --------------------------------------
-	      // Assign X and Y
-		
-	      // valueNames: value,done
-	      // if (index == 0) { const valueNames = Object.keys(row); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
-
-		// ----------------------- Works
-              // valueNames: xs,ys
-	   //   if (index == 0) { const valueNames = Object.keys(row.value); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
-
-	//	const X = Object.values(row.value.xs);
-		//outp.innerHTML += 'X: ' + X + "<br/>";
-		
-		//const Y = Object.values(row.value.ys);
-		//outp.innerHTML += 'Y: ' + Y + "<br/>";
-
-		  // ------------------------------------------
-		// Make text lower case
-		// TypeError: X.toLowerCase is not a function
-		// X = X.toLowerCase();
-		// Y = Y.toLowerCase();
-
-		  // Remove characters between parenthesis
-	      //X.replace(/\((.*?)\)/g, '');
-	      //X.replace(/\{(.*?)\}/g, '');
-	      //X.replace(/\[(.*?)\]/g, '');
-	
-	      // [Step 3] Remove undesireable words 
-	
-	      // [Step 4] Remove sentences with less than 10 words. Narrow the sentences down to realistic sentences.
-		// ------------------------------------------
 		  
-		// xs.push(X)
-		//ys.push(Y)
-	
 	//});  // end of await csv_iterator.next().then(row =>
 
 
 	  });  // end of forEach
+
+	  
+	// Convert the xs and ys to a flattenedDataset
 	  
 	  return {xs: xs, ys: ys};
   }
