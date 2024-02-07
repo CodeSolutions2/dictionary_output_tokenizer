@@ -322,34 +322,38 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // OR
 
 		  // No output
-		  let matches0 = [...(`/(?<=,${Y})(.*?)(?=,)/g`).matchAll(ylabel_str)];
+		  let matches0 = [...(/(?<=,`${Y}`)(.*?)(?=,)/g).matchAll(ylabel_str)];
 		  outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
 
 		  // No output
-		  let matches1 = [...(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`).matchAll(ylabel_str)];
+		  let regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
+		  outp.innerHTML += 'regexp1: ' + regexp + "<br/>";
+		  outp.innerHTML += 'ylabel_str1: ' + ylabel_str + "<br/>";
+		  let matches1 = [...regexp.matchAll(ylabel_str)];
 		  outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
 
 		  // exec is not a function
-		  //let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
-		  // let matches2 = (`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`).exec(ylabel_str);
+		  //let regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
+		  // let matches2 = (/(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g).exec(ylabel_str);
 		  // outp.innerHTML += 'matches2: ' + matches2 + "<br/>";
   
 		  // null
-		  let matches3 = (`/(?<=,${Y})(.*?)(?=,)/g`).match(ylabel_str);
+		  let matches3 = (/(?<=,`${Y}`)(.*?)(?=,)/g).match(ylabel_str);
 		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
 		  // null
-		  let matches4 = (`/${Y}/g`).match(ylabel_str);
+		  let matches4 = (/`${Y}`/g).match(ylabel_str);
 		  outp.innerHTML += 'matches4: ' + matches4 + "<br/>";
 		  
 		  // null
-		  let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
+		  let regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
 		  let matches5 = regexp.match(ylabel_str);
 		  outp.innerHTML += 'matches5: ' + matches5 + "<br/>";
 
 		  // null
-		  // let matches6 = ylabel_str.match('/'+Y+'/');
-		  outp.innerHTML += 'matches6: ' + ('/'+Y+'/').match(ylabel_str) + "<br/>";
+		  let regexp = /abc/;
+		  // let matches6 = ylabel_str.match(/`${Y}`/);
+		  outp.innerHTML += 'matches6: ' + (/`${Y}`/).match(ylabel_str) + "<br/>";
 		  
 		  // ---------------------------
 		  // Verify that data is correct
