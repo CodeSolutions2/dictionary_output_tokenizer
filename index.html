@@ -310,34 +310,36 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		  // No output
 		  let regexp = /(?<=,`${Y}`)(.*?)(?=,)/g;
-		  let matches0 = [...regexp.matchAll(ylabel_str)];
+		  let matches0 = [...ylabel_str.matchAll(regexp)];
+		  // let matches0 = ylabel_str.matchAll(regexp);
 		  outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
 
 		  // No output
 		  regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
 		  outp.innerHTML += 'regexp1: ' + regexp + "<br/>";
 		  outp.innerHTML += 'ylabel_str1: ' + ylabel_str + "<br/>";
-		  let matches1 = [...regexp.matchAll(ylabel_str)];
+		  let matches1 = [...ylabel_str.matchAll(regexp)];
+		  // let matches1 = ylabel_str.matchAll(regexp);
 		  outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
   
 		  // null
 		  regexp = /(?<=,`${Y}`)(.*?)(?=,)/g;
-		  let matches3 = regexp.match(ylabel_str);
+		  let matches3 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
 		  // null
 		  regexp = /`${Y}`/g;
-		  let matches4 = regexp.match(ylabel_str);
+		  let matches4 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches4: ' + matches4 + "<br/>";
 		  
 		  // null
 		  regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
-		  let matches5 = regexp.match(ylabel_str);
+		  let matches5 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches5: ' + matches5 + "<br/>";
 
 		  // null
 		  regexp = /`${Y}`/;
-		  outp.innerHTML += 'matches6: ' + regexp.match(ylabel_str) + "<br/>";
+		  outp.innerHTML += 'matches6: ' + ylabel_str.match(regexp) + "<br/>";
 		  
 		  // ---------------------------
 		  // Verify that data is correct
