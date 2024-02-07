@@ -230,7 +230,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // Make text lower case		  
 	  y_labels = y_labels.toLowerCase();
-	  let ylabels = y_labels.split(",").trim()
+	  let ylabels = y_labels.split(","); //.trim()
 
 	  // Tokenize Y using user input labels
 	  const unique_ylabel = [...new Set(ylabels)]; // y label should be unique, but find unique values just in case 
@@ -277,16 +277,16 @@ th {border: 1px solid black; padding: 10px 20px;}
 		// valueNames: xs,ys
 		if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
 
-		 X = tf.tensor(Object.values(rowdata.xs));
-		 Y = tf.tensor(Object.values(rowdata.ys));
+		X = tf.tensor(Object.values(rowdata.xs));
+		Y = tf.tensor(Object.values(rowdata.ys));
 
 		 // Convert string tensor to javascript tensor
 		 X = X.toString();
 		 Y = Y.toString();
 
-		  // ---------------------------
-		  // Clean text procedure
-		  // ---------------------------
+		 // ---------------------------
+		 // Clean text procedure
+		 // ---------------------------
 		 // Make text lower case		  
 		 X = X.toLowerCase();
 		 Y = Y.toLowerCase();
@@ -296,16 +296,15 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 X = X.replace(/\{(.*?)\}/g, '');
 		 X = X.replace(/\[(.*?)\]/g, '');
 
-		  // Remove undesireable words 
-		  // Maybe memory intensive - **** run after everything works ****
-		  // undesireable_words.forEach(function(word2remove, index) {X = X.replace(`/\b${word2remove}\b/g`, '');}
+		 // Remove undesireable words 
+		 // Maybe memory intensive - **** run after everything works ****
+		 // undesireable_words.forEach(function(word2remove, index) {X = X.replace(`/\b${word2remove}\b/g`, '');}
 
-		  // Remove text that are 1 or 2 characters long
-		  X = X.replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '');
+		 // Remove text that are 1 or 2 characters long
+		 X = X.replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '');
 		  
-		  // Remove undesireable characters
-		  X = X.replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
-
+		 // Remove undesireable characters
+		 X = X.replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
 		  // ---------------------------
 
 		  // ---------------------------
