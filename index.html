@@ -301,6 +301,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // ---------------------------
 		  
 		  // Search to determine if user inputted y is in list
+
+		  outp.innerHTML += 'ylabel_str: ' + ylabel_str + "<br/>";
 		  
 		  // To input the expression, remove the / in front and the /g at the end
 		  let regexp = new RegExp(`(?<=,${Y})(.*?)(?=,)`, 'g');
@@ -309,6 +311,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // let iterator = ylabel_str.matchAll(regexp);
 		  let matches0 = Array.from(iterator); // Convert iterator to array
 		  outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
+		  outp.innerHTML += 'matches0.length: ' + matches0.length + "<br/>";
 
 
 		  regexp = new RegExp(`(?<=(^|,)${Y})(.*?)(?=(,|$))`, 'g');
@@ -317,6 +320,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  iterator = ylabel_str.matchAll(regexp);
 		  let matches1 = Array.from(iterator); // Convert iterator to array
 		  outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
+		  outp.innerHTML += 'matches1.length: ' + matches1.length + "<br/>";
   
 		  
 		  regexp = new RegExp(`(?<=,${Y})(.*?)(?=,)`, 'g');
