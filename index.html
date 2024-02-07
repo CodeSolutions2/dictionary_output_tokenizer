@@ -307,41 +307,37 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
 		  
 		  // OR
-
-		  // regexp.matchAll is not a function
-		  let regexp = /(?<=,`${Y}`)(.*?)(?=,)/g;  
-		  // let matches0 = [...ylabel_str.matchAll(regexp)];
-		  let matches0 = ylabel_str.matchAll(regexp);
+		  
+		  // To input the expression, remove the / in front and the /g at the end
+		  let regexp = new RegExp(`(?<=,`${Y}`)(.*?)(?=,)`, 'g');
+		  let matches0 = [...ylabel_str.matchAll(regexp)];
+		  // let matches0 = ylabel_str.matchAll(regexp);
+		  let iterator = ylabel_str.matchAll(regexp);
+		  let matches0 = Array.from(iterator); // Convert iterator to array
 		  outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
 
-		  // No output
-		  // regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
+
 		  regexp = new RegExp(`(?<=(^|,)${Y})(.*?)(?=(,|$))`, 'g');
 		  outp.innerHTML += 'regexp1: ' + regexp + "<br/>";
-		  outp.innerHTML += 'ylabel_str1: ' + ylabel_str + "<br/>";
 		  // let matches1 = [...ylabel_str.matchAll(regexp)];
-		  let matches1 = ylabel_str.matchAll(regexp);
+		  iterator = ylabel_str.matchAll(regexp);
+		  let matches1 = Array.from(iterator); // Convert iterator to array
 		  outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
   
 		  
-		  regexp = /(?<=,`${Y}`)(.*?)(?=,)/g;   // null
+		  regexp = new RegExp(`(?<=,`${Y}`)(.*?)(?=,)`, 'g');
 		  let matches3 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
-		  // null
 		  // regexp = /`${Y}`/g;
 		  regexp = new RegExp(`${Y}`, 'g');
 		  let matches4 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches4: ' + matches4 + "<br/>";
 		  
-		  // null
-		  regexp = /(?<=(^|,)`${Y}`)(.*?)(?=(,|$))/g;
+		  regexp = new RegExp(`(?<=(^|,)`${Y}`)(.*?)(?=(,|$))`, 'g');  
 		  let matches5 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches5: ' + matches5 + "<br/>";
 
-		  // null
-		  regexp = /`${Y}`/;
-		  outp.innerHTML += 'matches6: ' + ylabel_str.match(regexp) + "<br/>";
 		  
 		  // ---------------------------
 		  // Verify that data is correct
