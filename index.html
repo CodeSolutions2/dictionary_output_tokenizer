@@ -239,9 +239,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  const unique_ylabel = [...new Set(ylabels)]; // y label should be unique, but find unique values just in case 
 	  const counted_list = [...Array(unique_ylabel.length).keys()].map((x) => x);
 	  // const y_assignment = unique_ylabel.reduce((accumulated, current, index) => { return Object.assign(accumulated, { [current]: counted_list[index] }); }, {});
-	  const y_assignment = new Map(unique_ylabel.map((key, index) => [key, index]));
+	  // OR
+	  const y_assignment = unique_ylabel.map(x => ({[x]: index}));
 	  
-	  outp.innerHTML += 'y_assignment.keys(): ' + y_assignment.keys() + "<br/>";
+	  outp.innerHTML += 'y_assignment.keys(): ' + y_assignment["business"] + "<br/>";
 	  outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
 	  // ---------------------------
 	  
@@ -255,10 +256,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  var xs = [];
 	  var ys = [];
 
-	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", 
-                     "any", "are", "because", "been", "before", "being", "below", 
-                     "between", "both", "but", "could", "did", "does", "doing", "down", 
-                     "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", 
+	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", "any", "are", "because", "been", "before", "being", "below", "between", "both", "but", "could", "did", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", 
                      "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", 
                      "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've",
                      "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", 
@@ -296,8 +294,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // ---------------------------
 		 // Clean text procedure
 		 // ---------------------------
-		 X = Object.values(rowdata.xs).toString(); //.toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
-		Y = Object.values(rowdata.ys).toString();
+		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, ''); //.replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
+		Y = Object.values(rowdata.ys).toString().toLowerCase();
 		  
 		// Make text lower case		  
 		// X = X.toLowerCase();
@@ -336,9 +334,18 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  
 		  //  OR
 		  
-		  let matches = async () => { await [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)]; };
-		  //let matches = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
-		  outp.innerHTML += 'matches: ' + matches + "<br/>";
+		  let matches0 = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
+		  outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
+		  
+		  let matches1 = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
+		  outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
+		  
+		  let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
+		  let matches2 = regexp.exec(y_labels);
+		  outp.innerHTML += 'matches2: ' + matches2 + "<br/>";
+		  
+		  let matches3 = y_labels.match(regexp)
+		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
 		  // ---------------------------
 		  // Verify that data is correct
