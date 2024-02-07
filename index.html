@@ -235,12 +235,17 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // Tokenize Y using user input labels
 	  const unique_ylabel = [...new Set(ylabels)]; // y label should be unique, but find unique values just in case 
 	  const counted_list = [...Array(unique_ylabel.length).keys()].map((x) => x);
+
+	  // Incorrect
 	  // const y_assignment = unique_ylabel.reduce((accumulated, current, index) => { return Object.assign(accumulated, { [current]: counted_list[index] }); }, {});
 	  // OR
-	  const y_assignment = new Map(counted_list.map(x => ({[unique_ylabel[x]]: x})));
+	  // Incorrect
+	  // const y_assignment = new Map(counted_list.map(x => ({[unique_ylabel[x]]: x})));
+	  // OR
+	const y_assignment = Object.fromEntries(unique_ylabel.map((key, index) => [key, index]);
 	  
-	  outp.innerHTML += 'y_assignment.get("business"): ' + y_assignment.get('business') + "<br/>";  // undefined
-	  outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
+	  outp.innerHTML += 'y_assignment["business"]: ' + y_assignment['business'] + "<br/>";
+	  // outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
 	  // ---------------------------
 	  
 	  
@@ -291,7 +296,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // ---------------------------
 		 // Clean text procedure
 		 // ---------------------------
-		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '\s').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');  
+		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\\s)[A-Za-z]{1,2}(?=\\s)/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');  
 		Y = Object.values(rowdata.ys).toString().toLowerCase();
 		  
 		// Make text lower case		  
@@ -329,26 +334,32 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  });
 		  outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
 		  
-		  //  OR
-		  
-		  let matches0 = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
+		  // OR
+
+		  // No output
+		  // let matches0 = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
+		  // outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
+
+		  // No output
+		  // let matches1 = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
+		  // outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
+
+		  //is not a function
+		  //let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
+		  // let matches2 = (`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`).exec(y_labels);
+		  // outp.innerHTML += 'matches2: ' + matches2 + "<br/>";
+
+		  let matches0 = y_labels.match(`/(?<=,${Y})(.*?)(?=,)/g`);
 		  outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
 		  
-		  let matches1 = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
-		  outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
-		  
-		  //let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
-		  let matches2 = (`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`).exec(y_labels);
-		  outp.innerHTML += 'matches2: ' + matches2 + "<br/>";
-		  
-		  let matches3 = y_labels.match(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)
+		  let matches3 = y_labels.match(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`);
 		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
 		  // ---------------------------
 		  // Verify that data is correct
 		  // Split X string on space 
 
-		  outp.innerHTML += 'y_assignment.get(Y): ' + y_assignment.get(Y) + "<br/>";
+		  outp.innerHTML += 'y_assignment[Y]: ' + y_assignment[Y] + "<br/>";
 
 		  outp.innerHTML += 'X.split(" ").length: ' + X.split(" ").length + "<br/>";
 		  
