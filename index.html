@@ -310,9 +310,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  
 		  // To input the expression, remove the / in front and the /g at the end
 		  let regexp = new RegExp(`(?<=,${Y})(.*?)(?=,)`, 'g');
-		  let matches0 = [...ylabel_str.matchAll(regexp)];
-		  // let matches0 = ylabel_str.matchAll(regexp);
-		  let iterator = ylabel_str.matchAll(regexp);
+		  let iterator = [...ylabel_str.matchAll(regexp)];
+		  // let iterator = ylabel_str.matchAll(regexp);
 		  let matches0 = Array.from(iterator); // Convert iterator to array
 		  outp.innerHTML += 'matches0: ' + matches0 + "<br/>";
 
