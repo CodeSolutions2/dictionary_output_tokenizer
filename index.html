@@ -238,7 +238,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  const y_assignment = unique_ylabel.reduce((accumulated, current, index) => {
 		  return Object.assign(accumulated, { [current]: counted_list[index] });
 	  }, {});
-
+	  
+	  outp.innerHTML += 'y_assignment: ' + y_assignment + "<br/>";
 	  // ---------------------------
 	  
 	  
@@ -324,9 +325,17 @@ th {border: 1px solid black; padding: 10px 20px;}
 			  }
 		  }
 		  outp.innerHTML += 'correct_y: ' + correct_y + "<br/>";
+		  
 		  //  OR
-		  let matches = [...Y.matchAll(/,(.*?),/)];
+		  
+		  //let matches = [...Y.matchAll(/,(.*?),/)];
+
+		  //  OR
+		  
+		  let regexp = /,(.*?),/;
+		  let matches = regexp.exec(Y);
 		  outp.innerHTML += 'matches.len: ' + matches.len + "<br/>";
+
 		  
 		  // Save data
 		  if (sentence_length > 10 && matches.len == 1){
