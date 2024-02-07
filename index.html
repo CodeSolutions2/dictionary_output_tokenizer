@@ -238,9 +238,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // Tokenize Y using user input labels
 	  const unique_ylabel = [...new Set(ylabels)]; // y label should be unique, but find unique values just in case 
 	  const counted_list = [...Array(unique_ylabel.length).keys()].map((x) => x);
-	  const y_assignment = unique_ylabel.reduce((accumulated, current, index) => {
-		  return Object.assign(accumulated, { [current]: counted_list[index] });
-	  }, {});
+	  // const y_assignment = unique_ylabel.reduce((accumulated, current, index) => { return Object.assign(accumulated, { [current]: counted_list[index] }); }, {});
+	  const y_assignment = new Map(unique_ylabel.map((key, index) => [key, index]));
 	  
 	  outp.innerHTML += 'y_assignment.keys(): ' + y_assignment.keys() + "<br/>";
 	  outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
