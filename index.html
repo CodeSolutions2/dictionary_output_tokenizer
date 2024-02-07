@@ -242,7 +242,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // OR
 	  const y_assignment = counted_list.map(x => ({[unique_ylabel[x]]: x}));
 	  
-	  outp.innerHTML += 'y_assignment.keys(): ' + y_assignment["business"] + "<br/>";
+	  outp.innerHTML += 'y_assignment["business"]: ' + y_assignment["business"] + "<br/>";  // undefined
+	  outp.innerHTML += 'y_assignment[business]: ' + y_assignment[business] + "<br/>";  // undefined
 	  outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
 	  // ---------------------------
 	  
@@ -294,7 +295,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // ---------------------------
 		 // Clean text procedure
 		 // ---------------------------
-		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, ''); //.replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
+		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '\s').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');  
 		Y = Object.values(rowdata.ys).toString().toLowerCase();
 		  
 		// Make text lower case		  
@@ -340,11 +341,11 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  let matches1 = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
 		  outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
 		  
-		  let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
-		  let matches2 = regexp.exec(y_labels);
+		  //let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
+		  let matches2 = (`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`).exec(y_labels);
 		  outp.innerHTML += 'matches2: ' + matches2 + "<br/>";
 		  
-		  let matches3 = y_labels.match(regexp)
+		  let matches3 = y_labels.match(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)
 		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
 		  // ---------------------------
@@ -352,6 +353,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // Split X string on space 
 
 		  outp.innerHTML += 'y_assignment[Y]: ' + y_assignment[Y] + "<br/>";
+
+		  outp.innerHTML += 'X.split(" ").length: ' + X.split(" ").length + "<br/>";
 		  
 		  if (X.split(" ").length > 10 && matches.length == 1){
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
