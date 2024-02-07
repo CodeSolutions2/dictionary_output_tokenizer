@@ -10,10 +10,10 @@
 
 <!-- [Step 0] Train model -->
 <label for="train_dataset_url_label" style="display:block">Enter train dataset location url - url can be Github or GCP storage: (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv)</label>
-<input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" size="500" style="display:block">
+<input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" size="200" style="display:block">
 <br><br>
 <label for="y_datasetLabels_label" style="display:block">Enter the y dataset labels: (ie: sport,business,politics,entertainment,tech)</label>
-<input type="text" value="" placeholder="y dataset labels" id="y_datasetLabels" rows="1" cols="500" size="500" style="display:block">
+<input type="text" value="" placeholder="y dataset labels" id="y_datasetLabels" rows="1" cols="500" size="200" style="display:block">
 <br>
 <button id="train_model" onclick="train_model()" style="display:block">train_model</button>
 
@@ -289,8 +289,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // ---------------------------
 		 // Clean text procedure
 		 // ---------------------------
-		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');  
-		  //.replace(/(?<=\\s)[A-Za-z]{1,2}(?=\\s)/g, '')
+		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/(?<=\\s)[A-Za-z]{1,2}(?=\\s)/g, '');  
+		  //
+		  //.replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '')
 		Y = Object.values(rowdata.ys).toString().toLowerCase();
 		  
 		// Make text lower case		  
@@ -338,29 +339,29 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // let matches1 = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
 		  // outp.innerHTML += 'matches1: ' + matches1 + "<br/>";
 
-		  //is not a function
+		  // exec is not a function
 		  //let regexp = `/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`;
 		  // let matches2 = (`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`).exec(y_labels);
 		  // outp.innerHTML += 'matches2: ' + matches2 + "<br/>";
-
-
-			  
+  
 		  // null
-		  let matches3 = y_labels.match(`/(?<=,${Y})(.*?)(?=,)/g`);
-		  outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
-
-		  let matches4 = y_labels.match(`/${Y}/g`);
-		  outp.innerHTML += 'matches4: ' + matches4 + "<br/>";
+		  // let matches3 = y_labels.match(`/(?<=,${Y})(.*?)(?=,)/g`);
+		  // outp.innerHTML += 'matches3: ' + matches3 + "<br/>";
 		  
 		  // null
-		  let matches5 = y_labels.match(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`);
-		  outp.innerHTML += 'matches5: ' + matches5 + "<br/>";
+		  // let matches4 = y_labels.match(`/${Y}/g`);
+		  // outp.innerHTML += 'matches4: ' + matches4 + "<br/>";
+		  
+		  // null
+		  // let matches5 = y_labels.match(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`);
+		  // outp.innerHTML += 'matches5: ' + matches5 + "<br/>";
+
+		  let matches6 = y_labels.match('/'+Y+'/g');
+		  outp.innerHTML += 'matches6: ' + matches6 + "<br/>";
 		  
 		  // ---------------------------
 		  // Verify that data is correct
-		  // Split X string on space 
-
-		  outp.innerHTML += 'y_assignment[Y]: ' + y_assignment[Y] + "<br/>";
+		  // Split X string on space
 
 		  outp.innerHTML += 'X.split(" ").length: ' + X.split(" ").length + "<br/>";
 		  
