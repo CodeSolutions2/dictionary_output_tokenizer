@@ -230,7 +230,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // Make text lower case		  
 	  y_labels = y_labels.toLowerCase();
+	  outp.innerHTML += 'y_labels: ' + y_labels + "<br/>";
+	  
 	  let ylabels = y_labels.split(","); //.trim()
+	  outp.innerHTML += 'ylabels: ' + ylabels + "<br/>";
 
 	  // Tokenize Y using user input labels
 	  const unique_ylabel = [...new Set(ylabels)]; // y label should be unique, but find unique values just in case 
@@ -307,6 +310,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // Remove undesireable characters
 		 X = X.replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!->< \n]/g, '');
 		  // ---------------------------
+		  
+		  outp.innerHTML += 'X: ' + X + "<br/>";
+		  outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 		  // ---------------------------
                   // Using user input labels to validate X and Y values 
@@ -329,8 +335,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  //let matches = [...y_labels.matchAll(`/(?<=,${Y})(.*?)(?=,)/g`)];
 		  let matches = [...y_labels.matchAll(`/(?<=(^|,)${Y})(.*?)(?=(,|$))/g`)];
 		  outp.innerHTML += 'matches: ' + matches + "<br/>";
-		  var regex = `/(^|,)${Y}(,|$)/`;
-		  outp.innerHTML += 'matches2: ' + regex.test(y_labels) + "<br/>";
+		  //var regex = `/(^|,)${Y}(,|$)/`;
+		  //outp.innerHTML += 'matches2: ' + regex.test(y_labels) + "<br/>";
 		  
 		  // ---------------------------
 		  
