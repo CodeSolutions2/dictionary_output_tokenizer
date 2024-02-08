@@ -316,19 +316,14 @@ async function tokenize_X(xs) {
 
 
 	let xs_first2entries = xs.slice(0, 2);
-	console.log('xs_first2entries:' + xs_first2entries.length);
+	console.log('xs_first2entries:' + xs_first2entries.length);  // length should be 2
 	
 	
 	// ---------------------------
 	
 	// Concatenate the array 
-	let X_array_tot1 = xs_first2entries.flat(xs_first2entries.length);
-	console.log('X_array_tot1:' + X_array_tot1.length);
-	
-	// OR
-	
-	let X_array_tot2 = xs_first2entries.flat(Infinity);
-	console.log('X_array_tot2:' + X_array_tot2.length);
+	let X_array_tot1 = xs_first2entries.flat();
+	console.log('X_array_tot1:' + X_array_tot1.length); // length should be 1
 
 	// ---------------------------
 
@@ -336,7 +331,7 @@ async function tokenize_X(xs) {
 	
 
 	// find unique words
-	// let uniqueArray = [...new Set(X_array)];
+	let uniqueArray = [...new Set(X_array_tot1)];
 
 	// Add the <OOV> token: if the word is not in the token list assign this value
 	// uniqueArray.push('<OOV>');
