@@ -251,12 +251,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  var xs = [];
 	  var ys = [];
 
-	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", "any", "are", "because", "been", "before", "being", "below", "between", "both", "but", "could", "did", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", 
-                     "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", 
-                     "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", 
-                     "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", 
-                     "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", 
-                     "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", '</p>', '<a', 'id=', "href=", 'title=', 'class=', '</a>', '</sup>', '<p>', '</b>', '<sup'];
+	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", "any", "are", "because", "been", "before", "being", "below", "between", "both", "but", "could", "did", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", '</p>', '<a', 'id=', "href=", 'title=', 'class=', '</a>', '</sup>', '<p>', '</b>', '<sup'];
 
 	  tensors.forEach(async function(rowdata, index) {
 
@@ -345,7 +340,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		  regexp = new RegExp(`${Y}`, 'g');
 		  outp.innerHTML += 'regexp7: ' + regexp + "<br/>";
-		  let matches7 = ylabel_str.matchAll(regexp);
+		  let iterator = ylabel_str.matchAll(regexp);
+		  let matches7 = Array.from(iterator); // Convert iterator to array
 		  outp.innerHTML += 'matches7: ' + matches7 + "<br/>";
 
 		  
@@ -364,23 +360,53 @@ th {border: 1px solid black; padding: 10px 20px;}
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
 		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
-			// Tokenize X
-
-			  // Sort array of tokens by alphanumeric value
-			  // let X_array_sort = X_array.sort();
-
-			  // Sort the array of tokens by length
-			  //X_array.forEach(async function(val, ind) {
-				//if ()
-			 // }
+		       // -----------
+		       // Tokenize X
+		       // -----------
 			  
-			  // Create a dictionary of tokens with token length
-			  const tokenizer_char_len = Object.fromEntries(X_array.map((key, index) => [key, key.length]));
+		       // Way 0
+			  
+		       // Make an array of an attribute (ie: length)
+		       let len_X_array = [];
+		       X_array.forEach(async function(val, ind) { len_X_array.push(X_array.length); }  
 
-			  // Sort dictionary array by the value
-			  // Convert dictionary object to array of key-value pairs
-		  const dict_values = Object.entries(tokenizer_char_len);
-outp.innerHTML += 'dict_values: ' + dict_values + "<br/>";
+		       // Sort the attribute vector
+		       let len_X_array_sort = len_X_array.sort();
+
+		       // Put the attribute vector into a dictionary with a corresponding index
+		       const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
+
+		       // Use the dictt to lookup the index_order_of_sorted_array_by_length
+		       // let X_array_sorted = [];
+		       
+		       // OR
+			  
+		       // Make an array of zeros
+		       let X_array_sorted = [...Array(X_array.length).keys()].map((x) => 0);
+			  
+		       X_array.forEach(async function(word, ind) { 
+
+				// word is in position ind=0 of X_array
+			       
+			       key = word.length;  // the attribute to sort
+			       let ind_sorted = dictt[key]; // this gives me the index that X_array[word] should have in the output list X_array_sorted
+			       // but, word should be in position ind_sorted
+			       
+			       // X_array_sorted.push(  );
+			       // OR
+			       X_array_sorted[ind_sorted] = word;
+		       }
+
+		       // Write a dictionary, where the longer words are before shorter words
+		       const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, word.length]));
+			  
+		       // -----------
+		       
+		       // Way 1 : built in function, but many things are hidden and it does not function with sorting logic
+		       // Sort dictionary array by the value
+		       // tokenizer_char_len.sort((a, b) => a.values - b.values);
+			  
+		       // -----------
 
 
 		       // Save tokenized X values to array
