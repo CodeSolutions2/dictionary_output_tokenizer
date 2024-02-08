@@ -284,15 +284,21 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 
 	// Call X Tokenizer function
-		  
+	var xs_clean = await tokenize_X(xs);
 
+	  // OR
+
+	  // copy paste tokenizer here
 
 
 
 	  // Create a csvDataset
+	  const xTensor = tf.tensor(xs_clean);
+	  const yTensor = tf.tensor(ys);
+	  const Dataset_sequence = tf.data.Dataset.fromTensorSlices({ xs: xTensor, ys: yTensor });
 	
 	  
-	  return csvDataset_sequence
+	  return Dataset_sequence
   }
 
 	
@@ -301,86 +307,84 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 async function tokenize_X(xs) {
 
+
+	// Concatenate the array 
+
+	// Split by space
+	let X_array = X.split(" ");
+
+	// find unique words
+
+	// Add the <OOV> token: if the word is not in the token list assign this value
+	X_array.push('<OOV>');
+
+	// Construct tokenizer
+	// Way 0
+			  
+       // Make an array of an attribute (ie: length)
+       let len_X_array = [];
+       X_array.forEach(async function(val, ind) { len_X_array.push(X_array.length); });
+
+       // Sort the attribute vector
+       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+       let len_X_array_sort = len_X_array.sort();
+
+       // Put the attribute vector into a dictionary with a corresponding index
+       const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
+
+       // Use the dictt to lookup the index_order_of_sorted_array_by_length
+       // let X_array_sorted = [];
+       
+       // OR
+	  
+       // Make an array of zeros
+       let X_array_sorted = [...Array(X_array.length).keys()].map((x) => 0);
+	  
+       X_array.forEach(async function(word, ind) { 
+
+		// word is in position ind=0 of X_array
+	       
+	       key = word.length;  // the attribute to sort
+	       let ind_sorted = dictt[key]; // this gives me the index that X_array[word] should have in the output list X_array_sorted
+	       // but, word should be in position ind_sorted
+	       
+	       // X_array_sorted.push(  );
+	       // OR
+	       X_array_sorted[ind_sorted] = word;
+       });
+
+       // Write a dictionary, where word=keys are ordered from longest word to shortest word.
+       // Thus, the longest word has the smallest index, and the shortest word has the largest index.
+       const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
 	
-		       // -----------
-		       // Tokenize X
-		       // -----------
+       outp.innerHTML += 'X_array_sorted: ' + X_array_sorted + "<br/>";
 
-			// [Step 0] make a  
-			  
-		       // Way 0
-			  
-		       // Make an array of an attribute (ie: length)
-		       let len_X_array = [];
-		       X_array.forEach(async function(val, ind) { len_X_array.push(X_array.length); });
-
-		       // Sort the attribute vector
-	               // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-		       let len_X_array_sort = len_X_array.sort();
-
-		       // Put the attribute vector into a dictionary with a corresponding index
-		       const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
-
-		       // Use the dictt to lookup the index_order_of_sorted_array_by_length
-		       // let X_array_sorted = [];
-		       
-		       // OR
-			  
-		       // Make an array of zeros
-		       let X_array_sorted = [...Array(X_array.length).keys()].map((x) => 0);
-			  
-		       X_array.forEach(async function(word, ind) { 
-
-				// word is in position ind=0 of X_array
-			       
-			       key = word.length;  // the attribute to sort
-			       let ind_sorted = dictt[key]; // this gives me the index that X_array[word] should have in the output list X_array_sorted
-			       // but, word should be in position ind_sorted
-			       
-			       // X_array_sorted.push(  );
-			       // OR
-			       X_array_sorted[ind_sorted] = word;
-		       });
-
-		       // Write a dictionary, where word=keys are ordered from longest word to shortest word.
-		       // Thus, the longest word has the smallest index, and the shortest word has the largest index.
-		       const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
-			
-		       outp.innerHTML += 'X_array_sorted: ' + X_array_sorted + "<br/>";
-
-		       // -----------
-		       
-		       // Way 1 : built in function, but many things are hidden and it does not function with sorting logic
-		       // Sort dictionary array by the value
-		       // tokenizer_char_len.sort((a, b) => a.values - b.values);
-			  
-		       // OR
-			  
-		       // tokenizer_char_len.sort((a, b) => a[1] - b[1]);
-			  
-		       // -----------
-			  
-		  // [Step 1] loop over the number of words per sentence/row and assign values from the tokenizer
-			  X_array.forEach(async function(word, ind) { 
-				  
-
-			  		       });
-
-
-
-		  // Get array of tokens: Split X string on space
-		  let X_array = X.split(" ");
-		  
-		  outp.innerHTML += 'X_array before push: ' + X_array + "<br/>";
+       // -----------
+       
+       // Way 1 : built in function, but many things are hidden and it does not function with sorting logic
+       // Sort dictionary array by the value
+       // tokenizer_char_len.sort((a, b) => a.values - b.values);
+	  
+       // OR
+	  
+       // tokenizer_char_len.sort((a, b) => a[1] - b[1]);
+	  
+       // -----------
 	
-		  // Add the <OOV> token: if the word is not in the token list assign this value
-		  X_array.push('<OOV>');
-		  
-		  outp.innerHTML += 'X_array after push: ' + X_array + "<br/>";
 
-		  outp.innerHTML += 'X_array.length: ' + X_array.length + "<br/>";
-		  outp.innerHTML += '(X_array.length)-1: ' + (X_array.length)-1 +<br/>";
+	// loop over xs, and replace each word with a number
+	xs.forEach(async function(rowdata, index) {
+
+
+		
+	
+	
+	});  // end of forEach
+	
 }
+
+	
+  // -------------------------------------------------
 
 	
   async function predict_with_custom_model(y_assignment) {
