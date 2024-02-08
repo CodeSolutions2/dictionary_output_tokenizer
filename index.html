@@ -172,9 +172,12 @@ th {border: 1px solid black; padding: 10px 20px;}
     // ---------------------------
 
     // [Step 4] Clean the dataset
-    await modify_X_Y(csvDataset).then(flattenedDataset => {
+    await modify_X_Y(csvDataset).then(csvDataset_sequence => {
 
-	// [Step 5] Fit the model using the prepared Dataset
+	 // Convert the xs and ys to a flattenedDataset
+	 // const flattenedDataset = await csvDataset_sequence.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
+
+	// Fit the model using the prepared Dataset
 	   // await custom_model.fitDataset(flattenedDataset, {
 	   //   epochs: 10,
 	   //   callbacks: {
@@ -183,6 +186,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	   // });
 	    
     });
+	  
+    // ---------------------------
 
     return	
 
@@ -197,19 +202,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 
   async function modify_X_Y(csvDataset) {
-
-	  // Same output as csvDataset, so just using csvDataset directly
-	  // This is an object, and can iterate over values in the Object
-	  // const flattenedDataset = await csvDataset.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
-	  // outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
-	  // const csv_iterator_values = await flattenedDataset.iterator()
-	  
-	  // OR
-	  
-	  // This is an object, and can iterate over values in the Object
-	  // const csv_iterator = await csvDataset.iterator();
-
-	  // OR
 	  
 	  const tensors = await csvDataset.toArray();
 
@@ -227,7 +219,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  
 	  // Convert string tensor to javascript tensor, Make text lower case		  
 	  ylabel_str = ylabel_str.toString().toLowerCase();
-	  outp.innerHTML += 'ylabel_str: ' + ylabel_str + "<br/>";
+	  // outp.innerHTML += 'ylabel_str: ' + ylabel_str + "<br/>";
 	  
 	  let ylabel_vec = ylabel_str.split(","); //.trim()
 	  // outp.innerHTML += 'ylabel_vec: ' + ylabel_vec + "<br/>";
@@ -254,27 +246,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", "any", "are", "because", "been", "before", "being", "below", "between", "both", "but", "could", "did", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", '</p>', '<a', 'id=', "href=", 'title=', 'class=', '</a>', '</sup>', '<p>', '</b>', '<sup'];
 
 	  tensors.forEach(async function(rowdata, index) {
-
-		// Try 0: Works!
-		// outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
-		// outp.innerHTML += 'index: ' + index + "<br/>";
-
-		// Initially determined the name of the dictionary keys and values - valueNames: xs,ys
-		// if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
-
-		// X = tf.tensor(Object.values(rowdata.xs));
-		// Y = tf.tensor(Object.values(rowdata.ys));
-
-		// OR
 		
-		// The value of X and Y does not change per rowdata
-		// X = await Object.values(rowdata.xs).toString();
-		// Y = await Object.values(rowdata.ys).toString();
-
-		 // Convert string tensor to javascript tensor
-		 // X = X.toString();
-		 // Y = Y.toString();
-
 		 // ---------------------------
 		 // Clean text procedure
 		 // ---------------------------
@@ -285,11 +257,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		 // Remove undesireable words 
 		 // Maybe memory intensive - **** run after everything works ****
 		 // undesireable_words.forEach(function(word2remove, index) {X = X.replace(`/\b${word2remove}\b/g`, '');}
-
 		  // ---------------------------
-		  
-		  outp.innerHTML += 'X: ' + X + "<br/>";
-		  outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 		  // ---------------------------
                   // Using user input labels to validate X and Y values 
@@ -301,28 +269,44 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // outp.innerHTML += 'matches7.length: ' + matches7.length + "<br/>";  // matches7.length: 1
 
 		  // ---------------------------
-		  // Verify that data is correct
+		  // Verify that data is correct, and only keep correct X and Y data
+		  if (X.length-1 > 10 && matches7.length == 1){
+		       outp.innerHTML += 'X: ' + X + "<br/>";
+		       outp.innerHTML += 'Y: ' + Y + "<br/>";
 
-		  // Get array of tokens: Split X string on space
-		  let X_array = X.split(" ");
+		       // Save non-tokenized X values and tokenized Y values to array
+		       xs.push(X);
+		       ys.push(y_assignment[Y]);
+		  }
+
+	  });  // end of forEach
+
+
+
+	// Call X Tokenizer function
 		  
-		  outp.innerHTML += 'X_array before push: ' + X_array + "<br/>";
+
+
+
+
+	  // Create a csvDataset
 	
-		  // Add the <OOV> token: if the word is not in the token list assign this value
-		  X_array.push('<OOV>');
-		  
-		  outp.innerHTML += 'X_array after push: ' + X_array + "<br/>";
+	  
+	  return csvDataset_sequence
+  }
 
-		  outp.innerHTML += 'X_array.length: ' + X_array.length +<br/>";
-		  outp.innerHTML += '(X_array.length)-1: ' + (X_array.length)-1 +<br/>";
-		  
-		  if (X_array.length-1 > 10 && matches7.length == 1){
-		       // outp.innerHTML += 'X: ' + X + "<br/>";
-		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
+	
+  // -------------------------------------------------
 
+
+async function tokenize_X(xs) {
+
+	
 		       // -----------
 		       // Tokenize X
 		       // -----------
+
+			// [Step 0] make a  
 			  
 		       // Way 0
 			  
@@ -331,6 +315,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		       X_array.forEach(async function(val, ind) { len_X_array.push(X_array.length); });
 
 		       // Sort the attribute vector
+	               // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
 		       let len_X_array_sort = len_X_array.sort();
 
 		       // Put the attribute vector into a dictionary with a corresponding index
@@ -357,8 +342,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 			       X_array_sorted[ind_sorted] = word;
 		       });
 
-		       // Write a dictionary, where the longer words are before shorter words
-		       const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, word.length]));
+		       // Write a dictionary, where word=keys are ordered from longest word to shortest word.
+		       // Thus, the longest word has the smallest index, and the shortest word has the largest index.
+		       const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
 			
 		       outp.innerHTML += 'X_array_sorted: ' + X_array_sorted + "<br/>";
 
@@ -368,46 +354,33 @@ th {border: 1px solid black; padding: 10px 20px;}
 		       // Sort dictionary array by the value
 		       // tokenizer_char_len.sort((a, b) => a.values - b.values);
 			  
+		       // OR
+			  
+		       // tokenizer_char_len.sort((a, b) => a[1] - b[1]);
+			  
 		       // -----------
+			  
+		  // [Step 1] loop over the number of words per sentence/row and assign values from the tokenizer
+			  X_array.forEach(async function(word, ind) { 
+				  
+
+			  		       });
 
 
-		       // Save tokenized X values to array
-		       xs.push(X);
-		       ys.push(y_assignment[Y]);
-		  }
 
+		  // Get array of tokens: Split X string on space
+		  let X_array = X.split(" ");
 		  
-	// OR
-
-	// Try 1: 
-	//await csv_iterator.next().then(row => {
-
-	      // row is [object Object] for Try 1 and 2
-	     // outp.innerHTML += 'row: ' + row + "<br/>";
-		  
-	//});  // end of await csv_iterator.next().then(row =>
-		  
-	// OR
-
-	// Try 2: Works like Try 1
-	// await csv_iterator_values.next().then(row => {
-		
-	      // row is [object Object] for Try 1 and 2
-	     // outp.innerHTML += 'row: ' + row + "<br/>";
-		  
-	//});  // end of await csv_iterator.next().then(row =>
-
-
-	  });  // end of forEach
-
-	  
-	// Convert the xs and ys to a flattenedDataset
-	  
-	  return {xs: xs, ys: ys};
-  }
-
+		  outp.innerHTML += 'X_array before push: ' + X_array + "<br/>";
 	
-  // -------------------------------------------------
+		  // Add the <OOV> token: if the word is not in the token list assign this value
+		  X_array.push('<OOV>');
+		  
+		  outp.innerHTML += 'X_array after push: ' + X_array + "<br/>";
+
+		  outp.innerHTML += 'X_array.length: ' + X_array.length + "<br/>";
+		  outp.innerHTML += '(X_array.length)-1: ' + (X_array.length)-1 +<br/>";
+}
 
 	
   async function predict_with_custom_model(y_assignment) {
