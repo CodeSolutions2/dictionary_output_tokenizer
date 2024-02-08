@@ -281,7 +281,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  });  // end of forEach
 
 
-
+	// ---------------------------
+	  
 	  // Call X Tokenizer function
 	  var xs_clean = await tokenize_X(xs);
 
@@ -289,14 +290,20 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  // copy paste tokenizer here
 
-
-
-	  // Create a csvDataset
-	  const xTensor = tf.tensor(xs_clean);
-	  const yTensor = tf.tensor(ys);
-	  const Dataset_sequence = tf.data.Dataset.fromTensorSlices({ xs: xTensor, ys: yTensor });
+	// ---------------------------
 	  
-	  outp.innerHTML += 'Dataset_sequence: ' + Dataset_sequence + "<br/>";
+	  // Create a csvDataset
+	  // put x_clean and ys arrays in to a list of dictionaries per row with the same keys
+	  // data should look like : [{a: 1, b: 11}, {a: 2, b: 12}, {a: 3, b: 13}, ...]
+	  let data = [];
+	  xs_clean.forEach(async function(xs_val, ind) {
+		data.push({xs: xs_val, ys: ys[ind]});
+	  });  // end of forEach
+	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
+	  
+	  // print dataset
+	  await c.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
+	  
 	  
 	  return Dataset_sequence
   }
@@ -309,7 +316,7 @@ async function tokenize_X(xs) {
 
 
 	let xs_first2entries = xs.slice(0, 2);
-	outp.innerHTML += 'xs_first2entries: ' + xs_first2entries + "<br/>";
+	outp.innerHTML += 'xs_first2entries.length: ' + xs_first2entries.length + "<br/>";
 	
 	// ---------------------------
 	
@@ -326,12 +333,12 @@ async function tokenize_X(xs) {
 	// OR
 	
 	let X_array_tot = xs_first2entries.flat(xs_first2entries.length);
-	outp.innerHTML += 'X_array_tot: ' + X_array_tot + "<br/>";
+	outp.innerHTML += 'X_array_tot.length: ' + X_array_tot.length + "<br/>";
 	
 	// OR
 	
 	let X_array_tot2 = xs_first2entries.flat(Infinity);
-	outp.innerHTML += 'X_array_tot2: ' + X_array_tot2 + "<br/>";
+	outp.innerHTML += 'X_array_tot2.length: ' + X_array_tot2.length + "<br/>";
 
 	// ---------------------------
 
