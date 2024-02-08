@@ -302,7 +302,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
 	  
 	  // print dataset
-	  await c.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
+	  await Dataset_sequence.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
 	  
 	  
 	  return Dataset_sequence
