@@ -300,8 +300,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  regexp = new RegExp(`${Y}`, 'g');
 		  iterator = ylabel_str.matchAll(regexp);
 		  let matches7 = Array.from(iterator); // Convert iterator to array
-		  outp.innerHTML += 'matches7: ' + matches7 + "<br/>";
-		  outp.innerHTML += 'matches7.length: ' + matches7.length + "<br/>";
+		  // outp.innerHTML += 'matches7: ' + matches7 + "<br/>";  // matches7: business
+		  // outp.innerHTML += 'matches7.length: ' + matches7.length + "<br/>";  // matches7.length: 1
 
 		  // ---------------------------
 		  // Verify that data is correct
@@ -314,7 +314,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		  outp.innerHTML += 'X_array.length-1: ' + X_array.length-1 + "<br/>"; // Correct
 		  
-		  if (X_array.length-1 > 10 && matches4 == Y){
+		  if (X_array.length-1 > 10 && matches7.length == 1){
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
 		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
@@ -357,7 +357,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		       // Write a dictionary, where the longer words are before shorter words
 		       const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, word.length]));
-			  
+			  outp.innerHTML += 'tokenizer_char_len: ' + tokenizer_char_len + "<br/>";
 		       // -----------
 		       
 		       // Way 1 : built in function, but many things are hidden and it does not function with sorting logic
