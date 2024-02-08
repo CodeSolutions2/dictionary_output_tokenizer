@@ -294,9 +294,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // ---------------------------
                   // Using user input labels to validate X and Y values 
 		  // ---------------------------
-		  
-		  // Search to determine if user inputted y is in list
-		  // outp.innerHTML += 'ylabel_str: ' + ylabel_str + "<br/>";
 		  regexp = new RegExp(`${Y}`, 'g');
 		  iterator = ylabel_str.matchAll(regexp);
 		  let matches7 = Array.from(iterator); // Convert iterator to array
@@ -309,10 +306,15 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // Get array of tokens: Split X string on space
 		  let X_array = X.split(" ");
 		  
+		  outp.innerHTML += 'X_array before push: ' + X_array + "<br/>";
+	
 		  // Add the <OOV> token: if the word is not in the token list assign this value
 		  X_array.push('<OOV>');
+		  
+		  outp.innerHTML += 'X_array after push: ' + X_array + "<br/>";
 
-		  outp.innerHTML += 'X_array.length-1: ' + X_array.length-1 + "<br/>"; // Correct
+		  outp.innerHTML += 'X_array.length: ' + X_array.length +<br/>";
+		  outp.innerHTML += '(X_array.length)-1: ' + (X_array.length)-1 +<br/>";
 		  
 		  if (X_array.length-1 > 10 && matches7.length == 1){
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
@@ -357,7 +359,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		       // Write a dictionary, where the longer words are before shorter words
 		       const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, word.length]));
-			  outp.innerHTML += 'tokenizer_char_len: ' + tokenizer_char_len + "<br/>";
+			
+		       outp.innerHTML += 'X_array_sorted: ' + X_array_sorted + "<br/>";
+
 		       // -----------
 		       
 		       // Way 1 : built in function, but many things are hidden and it does not function with sorting logic
