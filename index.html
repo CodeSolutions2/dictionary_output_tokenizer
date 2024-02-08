@@ -233,7 +233,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  // outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
 	  // ---------------------------
 	  
-	  
           // ---------------------------
           // Read data from csv object, clean each row, validate if X and Y are correct, tokenize X, 
 	  // save tokenized X and Y to a flattenedDataset
@@ -296,7 +295,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  const xTensor = tf.tensor(xs_clean);
 	  const yTensor = tf.tensor(ys);
 	  const Dataset_sequence = tf.data.Dataset.fromTensorSlices({ xs: xTensor, ys: yTensor });
-	
+	  
+	  outp.innerHTML += 'Dataset_sequence: ' + Dataset_sequence + "<br/>";
 	  
 	  return Dataset_sequence
   }
@@ -402,6 +402,11 @@ async function tokenize_X(xs) {
 	// xs.forEach(async function(rowdata, index) {
 
 	// });  // end of forEach
+
+
+	let xs_clean = xs;
+	
+	return xs_clean;
 	
 }
 
