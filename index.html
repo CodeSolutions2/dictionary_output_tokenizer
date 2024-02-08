@@ -343,22 +343,49 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  let matches6 = ylabel_str.match(regexp);
 		  outp.innerHTML += 'matches6: ' + matches6 + "<br/>";
 
+		  regexp = new RegExp(`${Y}`, 'g');
+		  outp.innerHTML += 'regexp7: ' + regexp + "<br/>";
+		  let matches7 = ylabel_str.matchAll(regexp);
+		  outp.innerHTML += 'matches7: ' + matches7 + "<br/>";
+
 		  
 		  // ---------------------------
 		  // Verify that data is correct
-		  // Split X string on space
 
-		  outp.innerHTML += 'X.split(" ").length: ' + X.split(" ").length + "<br/>"; // Correct
+		  // Get array of tokens: Split X string on space
+		  let X_array = X.split(" ");
 		  
-		  if (X.split(" ").length > 10 && matches4 == Y){
+		  // Add the <OOV> token: if the word is not in the token list assign this value
+		  X_array.push('<OOV>');
+
+		  outp.innerHTML += 'X_array.length-1: ' + X_array.length-1 + "<br/>"; // Correct
+		  
+		  if (X_array.length-1 > 10 && matches4 == Y){
 		       // outp.innerHTML += 'X: ' + X + "<br/>";
 		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 			// Tokenize X
 
+			  // Sort array of tokens by alphanumeric value
+			  // let X_array_sort = X_array.sort();
+
+			  // Sort the array of tokens by length
+			  //X_array.forEach(async function(val, ind) {
+				//if ()
+			 // }
+			  
+			  // Create a dictionary of tokens with token length
+			  const tokenizer_char_len = Object.fromEntries(X_array.map((key, index) => [key, key.length]));
+
+			  // Sort dictionary array by the value
+			  // Convert dictionary object to array of key-value pairs
+		  const dict_values = Object.entries(tokenizer_char_len);
+outp.innerHTML += 'dict_values: ' + dict_values + "<br/>";
+
+
 		       // Save tokenized X values to array
 		       xs.push(X);
-		       ys.push(y_assignment[Y]);
+		       ys.push(y_assignment[matches4]);
 		  }
 
 		  
