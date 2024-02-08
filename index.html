@@ -302,7 +302,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
 	  
 	  // print dataset
-	  await Dataset_sequence.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
+	  // await Dataset_sequence.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
 	  
 	  
 	  return Dataset_sequence
@@ -316,15 +316,16 @@ async function tokenize_X(xs) {
 
 
 	let xs_first2entries = xs.slice(0, 2);
-	outp.innerHTML += 'xs_first2entries.length: ' + xs_first2entries.length + "<br/>";
+	console.log(xs_first2entries);
+	
 	
 	// ---------------------------
 	
 	// Concatenate the array 
 	
-	// let X_array_tot = [];
-	// xs.forEach(async function(sentence, ind) { 
-	// 	let wordArr = sentence.split(" ");
+	let X_array_tot = [];
+	xs.forEach(async function(sentence, ind) { 
+		let wordArr = sentence.split(" ");
 	// 	wordArr.forEach(async function(word, ind) { 
 		// 	X_array_tot.push(word);
 	// 	});
@@ -333,12 +334,14 @@ async function tokenize_X(xs) {
 	// OR
 	
 	let X_array_tot = xs_first2entries.flat(xs_first2entries.length);
-	outp.innerHTML += 'X_array_tot.length: ' + X_array_tot.length + "<br/>";
+	console.log(X_array_tot);
+	// outp.innerHTML += 'X_array_tot.length: ' + X_array_tot.length + "<br/>";
 	
 	// OR
 	
 	let X_array_tot2 = xs_first2entries.flat(Infinity);
-	outp.innerHTML += 'X_array_tot2.length: ' + X_array_tot2.length + "<br/>";
+	console.log(X_array_tot2);
+	// outp.innerHTML += 'X_array_tot2.length: ' + X_array_tot2.length + "<br/>";
 
 	// ---------------------------
 
