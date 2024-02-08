@@ -270,8 +270,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  // ---------------------------
 		  // Verify that data is correct, and only keep correct X and Y data
 		  if (X.length-1 > 10 && matches7.length == 1){
-		       outp.innerHTML += 'X: ' + X + "<br/>";
-		       outp.innerHTML += 'Y: ' + Y + "<br/>";
+		       // outp.innerHTML += 'X: ' + X + "<br/>";
+		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
 
 		       // Save non-tokenized X values and tokenized Y values to array
 		       xs.push(X);
@@ -316,33 +316,19 @@ async function tokenize_X(xs) {
 
 
 	let xs_first2entries = xs.slice(0, 2);
-	console.log('xs_first2entries:' + xs_first2entries);
+	console.log('xs_first2entries:' + xs_first2entries.length);
 	
 	
 	// ---------------------------
 	
 	// Concatenate the array 
-	
-	let X_array_tot0 = [];
-	xs_first2entries.forEach(async function(sentence, ind) { 
-		let wordArr = sentence.split(" ");
-		wordArr.forEach(async function(word, ind) { 
-			X_array_tot0.push(word);
-		});
-	});
-	
-	console.log('X_array_tot0:' + X_array_tot0);
-
-	
-	// OR
-	
 	let X_array_tot1 = xs_first2entries.flat(xs_first2entries.length);
-	console.log('X_array_tot1:' + X_array_tot1);
+	console.log('X_array_tot1:' + X_array_tot1.length);
 	
 	// OR
 	
 	let X_array_tot2 = xs_first2entries.flat(Infinity);
-	console.log('X_array_tot2:' + X_array_tot2);
+	console.log('X_array_tot2:' + X_array_tot2.length);
 
 	// ---------------------------
 
