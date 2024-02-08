@@ -316,32 +316,33 @@ async function tokenize_X(xs) {
 
 
 	let xs_first2entries = xs.slice(0, 2);
-	console.log(xs_first2entries);
+	console.log('xs_first2entries:' + xs_first2entries);
 	
 	
 	// ---------------------------
 	
 	// Concatenate the array 
 	
-	let X_array_tot = [];
-	xs.forEach(async function(sentence, ind) { 
+	let X_array_tot0 = [];
+	xs_first2entries.forEach(async function(sentence, ind) { 
 		let wordArr = sentence.split(" ");
-	// 	wordArr.forEach(async function(word, ind) { 
-		// 	X_array_tot.push(word);
-	// 	});
-	//  });
+		wordArr.forEach(async function(word, ind) { 
+			X_array_tot0.push(word);
+		});
+	});
+	
+	console.log('X_array_tot0:' + X_array_tot0);
 
+	
 	// OR
 	
-	let X_array_tot = xs_first2entries.flat(xs_first2entries.length);
-	console.log(X_array_tot);
-	// outp.innerHTML += 'X_array_tot.length: ' + X_array_tot.length + "<br/>";
+	let X_array_tot1 = xs_first2entries.flat(xs_first2entries.length);
+	console.log('X_array_tot1:' + X_array_tot1);
 	
 	// OR
 	
 	let X_array_tot2 = xs_first2entries.flat(Infinity);
-	console.log(X_array_tot2);
-	// outp.innerHTML += 'X_array_tot2.length: ' + X_array_tot2.length + "<br/>";
+	console.log('X_array_tot2:' + X_array_tot2);
 
 	// ---------------------------
 
