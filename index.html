@@ -283,8 +283,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 
 
-	// Call X Tokenizer function
-	var xs_clean = await tokenize_X(xs);
+	  // Call X Tokenizer function
+	  var xs_clean = await tokenize_X(xs);
 
 	  // OR
 
@@ -308,29 +308,55 @@ th {border: 1px solid black; padding: 10px 20px;}
 async function tokenize_X(xs) {
 
 
+	let xs_first2entries = xs.slice(0, 2);
+	outp.innerHTML += 'xs_first2entries: ' + xs_first2entries + "<br/>";
+	
+	// ---------------------------
+	
 	// Concatenate the array 
+	
+	// let X_array_tot = [];
+	// xs.forEach(async function(sentence, ind) { 
+	// 	let wordArr = sentence.split(" ");
+	// 	wordArr.forEach(async function(word, ind) { 
+		// 	X_array_tot.push(word);
+	// 	});
+	//  });
+
+	// OR
+	
+	let X_array_tot = xs_first2entries.flat(xs_first2entries.length);
+	outp.innerHTML += 'X_array_tot: ' + X_array_tot + "<br/>";
+	
+	// OR
+	
+	let X_array_tot2 = xs_first2entries.flat(Infinity);
+	outp.innerHTML += 'X_array_tot2: ' + X_array_tot2 + "<br/>";
+
+	// ---------------------------
 
 	// Split by space
-	let X_array = X.split(" ");
+	
 
 	// find unique words
+	// let uniqueArray = [...new Set(X_array)];
 
 	// Add the <OOV> token: if the word is not in the token list assign this value
-	X_array.push('<OOV>');
+	// uniqueArray.push('<OOV>');
 
 	// Construct tokenizer
 	// Way 0
 			  
        // Make an array of an attribute (ie: length)
-       let len_X_array = [];
-       X_array.forEach(async function(val, ind) { len_X_array.push(X_array.length); });
+      // let len_X_array = [];
+       // X_array.forEach(async function(val, ind) { len_X_array.push(X_array.length); });
 
        // Sort the attribute vector
        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-       let len_X_array_sort = len_X_array.sort();
+       // let len_X_array_sort = len_X_array.sort();
 
        // Put the attribute vector into a dictionary with a corresponding index
-       const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
+      //  const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
 
        // Use the dictt to lookup the index_order_of_sorted_array_by_length
        // let X_array_sorted = [];
@@ -338,26 +364,26 @@ async function tokenize_X(xs) {
        // OR
 	  
        // Make an array of zeros
-       let X_array_sorted = [...Array(X_array.length).keys()].map((x) => 0);
+      //  let X_array_sorted = [...Array(X_array.length).keys()].map((x) => 0);
 	  
-       X_array.forEach(async function(word, ind) { 
+      //  X_array.forEach(async function(word, ind) { 
 
 		// word is in position ind=0 of X_array
 	       
-	       key = word.length;  // the attribute to sort
-	       let ind_sorted = dictt[key]; // this gives me the index that X_array[word] should have in the output list X_array_sorted
+	       // key = word.length;  // the attribute to sort
+	      //  let ind_sorted = dictt[key]; // this gives me the index that X_array[word] should have in the output list X_array_sorted
 	       // but, word should be in position ind_sorted
 	       
 	       // X_array_sorted.push(  );
 	       // OR
-	       X_array_sorted[ind_sorted] = word;
-       });
+	       // X_array_sorted[ind_sorted] = word;
+     //   });
 
        // Write a dictionary, where word=keys are ordered from longest word to shortest word.
        // Thus, the longest word has the smallest index, and the shortest word has the largest index.
-       const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
+       // const tokenizer_char_len = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
 	
-       outp.innerHTML += 'X_array_sorted: ' + X_array_sorted + "<br/>";
+       // outp.innerHTML += 'X_array_sorted: ' + X_array_sorted + "<br/>";
 
        // -----------
        
@@ -373,13 +399,9 @@ async function tokenize_X(xs) {
 	
 
 	// loop over xs, and replace each word with a number
-	xs.forEach(async function(rowdata, index) {
+	// xs.forEach(async function(rowdata, index) {
 
-
-		
-	
-	
-	});  // end of forEach
+	// });  // end of forEach
 	
 }
 
