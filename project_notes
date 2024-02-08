@@ -1,0 +1,66 @@
+// Try 0: Works!
+		// outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
+		// outp.innerHTML += 'index: ' + index + "<br/>";
+
+		// Initially determined the name of the dictionary keys and values - valueNames: xs,ys
+		// if (index == 0) { const valueNames = Object.keys(rowdata); outp.innerHTML += 'valueNames: ' + valueNames + "<br/>";}
+
+		// X = tf.tensor(Object.values(rowdata.xs));
+		// Y = tf.tensor(Object.values(rowdata.ys));
+
+		// OR
+		
+		// The value of X and Y does not change per rowdata
+		// X = await Object.values(rowdata.xs).toString();
+		// Y = await Object.values(rowdata.ys).toString();
+
+		 // Convert string tensor to javascript tensor
+		 // X = X.toString();
+		 // Y = Y.toString();
+
+
+  // -------------------------------------------------
+// How to read rows from a csvDataset
+  // -------------------------------------------------
+
+// Way 0 
+// This is an object, and can iterate over values in the Object
+const csv_iterator = await csvDataset.iterator();
+	  
+	  const tensors = await csvDataset.toArray();
+tensors.forEach(async function(rowdata, index) {
+
+	await csv_iterator.next().then(row => {
+
+	      // row is [object Object] for Try 1 and 2
+	     // outp.innerHTML += 'row: ' + row + "<br/>";
+		  
+	});  // end of await csv_iterator.next().then(row =>
+
+});  // end of forEach
+
+
+  // -------------------------------------------------
+
+
+// Way 1
+// Same output as csvDataset, so just using csvDataset directly
+// This is an object, and can iterate over values in the Object
+const flattenedDataset = await csvDataset.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
+// outp.innerHTML += 'flattenedDataset: ' +  flattenedDataset + "<br/>";
+const csv_iterator_values = await flattenedDataset.iterator()
+   
+// This is an object, and can iterate over values in the Object
+const csv_iterator = await csvDataset.iterator();
+	  
+const tensors = await csvDataset.toArray();
+tensors.forEach(async function(rowdata, index) {
+
+await csv_iterator_values.next().then(row => {
+		
+	      // row is [object Object] for Try 1 and 2
+	     // outp.innerHTML += 'row: ' + row + "<br/>";
+		  
+	});  // end of await csv_iterator.next().then(row =>
+
+});  // end of forEach
