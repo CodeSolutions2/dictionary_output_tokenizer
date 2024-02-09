@@ -47,7 +47,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	
   const outp = document.getElementById('output');
 
-  var url_vec = [];  // This is a global variable, and I start referencing it in get_train_dataset
+  var csvDataset = [];  // This is a global variable
 
   var tokenizer = 0;  // This is a global variable, that will be reassigned after button push
   var maxlen = 0;  // This is a global variable, that will be reassigned after button push
@@ -57,7 +57,7 @@ th {border: 1px solid black; padding: 10px 20px;}
   // -------------------------------------------------
 
 	
-  async function get_csvDataset() {
+  async function get_csvDataset(csvDataset) {
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv
 	// https://storage.googleapis.com/textclassification-w-labeled-data/train_dataset0.csv
@@ -71,10 +71,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 	// console.log("domain_name:" + domain_name);
 
 	  var url_vec = [];
-	 // var url_vec1 = [];
-
-
-	  
 	
 	if (domain_name == 'github.com'){
 		const repoOwner = out[3];
@@ -98,7 +94,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
     // Make a Dataset  
     // X and y (dataset object)
-    const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
+    csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
     console.log("csvDataset: " + csvDataset);  // csvDataset: [object Object]
 		
 
@@ -163,9 +159,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 		var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
 		var options = {method : 'get', headers: {'Access-Control-Allow-Origin': '*'}, mode: 'no-cors'};
 
-		const csvDataset = await fetch(url, options).then(res => res).then(res => {   
-			const csvDataset = tf.data.csv(res.text(), { columnConfigs: { Y: { isLabel: true } } });
-			return csvDataset; }).catch(error => { outp.innerHTML += error; });
+		csvDataset = await fetch(url, options).then(res => res).then(res => {   
+			const out = tf.data.csv(res.text(), { columnConfigs: { Y: { isLabel: true } } });
+			console.log("out: " + out);
+			return out; }).catch(error => { outp.innerHTML += error; });
 		
 	} else {
 		outp.innerHTML = 'Please enter a GitHub repository or Google Cloud Platform Storage URL';
@@ -197,7 +194,7 @@ async function find_class_names(ylabel_str) {
     // ---------------------------
 
     // [Step 0] Read dataset from location to tensorflow csvDataset object
-    var csvDataset = await get_csvDataset();
+    csvDataset = await get_csvDataset();  // Update global variable
 
     // ---------------------------
 	  
