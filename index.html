@@ -57,7 +57,7 @@ th {border: 1px solid black; padding: 10px 20px;}
   // -------------------------------------------------
 
 	
-  async function get_train_datasetURL() {
+  async function get_csvDataset() {
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv
 	// https://storage.googleapis.com/textclassification-w-labeled-data/train_dataset0.csv
@@ -72,6 +72,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  var url_vec = [];
 	 // var url_vec1 = [];
+
+
+	  
 	
 	if (domain_name == 'github.com'){
 		const repoOwner = out[3];
@@ -87,10 +90,22 @@ th {border: 1px solid black; padding: 10px 20px;}
 		    });
 		  }).catch(error => { outp.innerHTML += error; });
 
+		console.log("url_vec:" + url_vec);
+		
+    // Select the first dataset from the url list
+    const csvUrl = url_vec[0];
+    console.log("csvUrl: " + csvUrl);
+
+    // Make a Dataset  
+    // X and y (dataset object)
+    const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
+    console.log("csvDataset: " + csvDataset);  // csvDataset: [object Object]
+		
+
 	} else if (domain_name == 'storage.googleapis.com') {
 
-		// const BUCKET_NAME = out[3];
-		// const fileName = out[4];
+	   //    const BUCKET_NAME = out[3];
+	//  const fileName = out[4];
 		// var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
 
 		// var options = {method : 'get', headers: {'Content-Type': "application/json", 'Access-Control-Allow-Origin': '*'}, mode: 'cors'};
@@ -110,52 +125,53 @@ th {border: 1px solid black; padding: 10px 20px;}
 		// OR
 
 		 // Create <form> element to submit parameters to endpoint.
-        var form = document.createElement('form');
+    //     var form = document.createElement('form');
 
-        form.setAttribute('method', 'GET'); 
-        var url = 'https://storage.googleapis.com/textclassification-w-labeled-data';
-        form.setAttribute('action', url);
+       // form.setAttribute('method', 'GET'); 
+     //   var url = 'https://storage.googleapis.com/textclassification-w-labeled-data';
+   //      form.setAttribute('action', url);
 
         // Parameters to pass to endpoint.
-        var params = {'key': 'train_dataset0.csv'};
+  //       var params = {'key': 'train_dataset0.csv'};
 
         // Add form parameters as hidden input values.
-        for (var p in params) {
-          var input = document.createElement('input');
-
-          // input.setAttribute('type', 'visible');  // hidden
-          // input.setAttribute('name', p);
-          // input.setAttribute('value', params[p]);
-          // OR
-          // input.innerHTML = '<input type="visible" name='+p+' value='+params[p]+'>';
-          // OR
-          input.innerHTML = '<input style="display:none;" name=' +p+ 'value=' +params[p]+ '>';
+    //     for (var p in params) {
+     //      var input = document.createElement('input');
+     //      input.innerHTML = '<input style="display:none;" name=' +p+ 'value=' +params[p]+ '>';
 
 		// https://storage.googleapis.com/textclassification-w-labeled-data?keytype%3D%22text%22=train_dataset0.csv
 		// https://storage.googleapis.com/textclassification-w-labeled-data?keyvalue%3Dtrain_dataset0.csv=
           
-          form.appendChild(input);
-        }
+ //          form.appendChild(input);
+ //        }
         // Add form to page and submit it to open the endpoint.
-        document.body.appendChild(form);
+  //       document.body.appendChild(form);
 
-        form.submit();
+   //      form.submit();
 		
-        url_vec.push( url + '/' + params['key'] );
+    //     url_vec.push( url + '/' + params['key'] );
 
         // Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://storage.googleapis.com/textclassification-w-labeled-data/train_dataset0.csv. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200
-		
+
+		// console.log("url_vec:" + url_vec);
+
+
+		// OR
+
+		const BUCKET_NAME = out[3];
+		const fileName = out[4];
+		var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
+		var options = {method : 'get', headers: {'Access-Control-Allow-Origin': '*'}, mode: 'no-cors'};
+
+		const csvDataset = await fetch(url, options).then(res => res).then(res => {   
+			const csvDataset = tf.data.csv(res.text(), { columnConfigs: { Y: { isLabel: true } } });
+			return csvDataset; }).catch(error => { outp.innerHTML += error; });
 		
 	} else {
 		outp.innerHTML = 'Please enter a GitHub repository or Google Cloud Platform Storage URL';
 	}
-
-
-	  console.log("url_vec:" + url_vec);
-
-	 //  console.log("url_vec1:" + url_vec1);
  
-	return url_vec;
+	return csvDataset;
   }
 
 	
@@ -180,29 +196,9 @@ async function find_class_names(ylabel_str) {
 	  
     // ---------------------------
 
-    // [Step 0] Read in a list of urls that are .csv or .txt files
-    
-    var url_vec = await get_train_datasetURL();
+    // [Step 0] Read dataset from location to tensorflow csvDataset object
+    var csvDataset = await get_csvDataset();
 
-    // ---------------------------
-	  
-    // [Step 1] Select a url from the url list
-	  
-    // url_vec.forEach(function(csvUrl, index) {
-    // Does not make sense to train the model for every dataset found.
-    // It makes more sense to train the model on one seleccted dataset, then test it with predictions.
-
-    const csvUrl = url_vec[0];
-    console.log("csvUrl: " + csvUrl);
-
-    // ---------------------------
-
-    // [Step 2] Make a Dataset
-	  
-    // X and y (dataset object)
-    const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
-    console.log("csvDataset: " + csvDataset);  // csvDataset: [object Object]
-	    
     // ---------------------------
 	  
     // Number of columns
@@ -211,12 +207,6 @@ async function find_class_names(ylabel_str) {
 
     // const column_names = (await csvDataset.columnNames());
     // outp.innerHTML += 'column_names: ' + column_names + "<br/>";
-	  
-    // ---------------------------
-	  
-	  
-    // });  // end of forEach
-
 
     // ---------------------------
 
