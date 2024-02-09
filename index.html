@@ -471,35 +471,24 @@ async function find_class_names(ylabel_str) {
 	// -----------
 	// Way 1
 	// -----------
-       var dict_temp = Object.fromEntries(uniqueArray.map((word, index) => [word, len_X_array[index]] ));
 
-       var tokenizer1 = dict_temp.sort((a, b) => a[1] - b[1]);   // sort((a, b) => a.values - b.values);
+	  // Sorting array of objects: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+	  const items = [];
+	  uniqueArray.forEach(async function(word, ind) { 
+		item.push({ name: word, value: word.length });
+	  }
+	
+	// sort by value
+	var tokenizer1 = items.sort((a, b) => a.value - b.value);
        console.log('tokenizer1:' + tokenizer1);
 
-	// Way 0: push the key into an array
-	let X_array_sorted = [];
-	tokenizer1.forEach(async function(rowdata, ind) {
 
-		console.log('rowdata:' + rowdata);
-		
-		let key = Object.keys(rowdata);
-		console.log('key:' + key);
-		
-		// Way 0: 
-		X_array_sorted.push(key);
-		
-		// Way 1: Modify the existing dictionary, where the value is the index 
-		tokenizer1[key] = ind;
+	uniqueArray.forEach(async function(randomrow, ind) {
+		tokenizer1['value'] = ind;
 	});
 
 	  console.log('tokenizer1 X_array_sorted:' + X_array_sorted);
 	  
-	// Way 0
-	var tokenizer2 = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
-	
-
-
-	  // Choose one of the tokenizers to update the global variable
 
 	  return tokenizer1;
   }
