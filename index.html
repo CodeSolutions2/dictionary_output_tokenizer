@@ -65,8 +65,13 @@ th {border: 1px solid black; padding: 10px 20px;}
 	const datasetUrl = document.getElementById("train_dataset_url").value;
 
 	let out = datasetUrl.split("/");
+	  console.log("out:" + out);
 	
 	let domain_name = out[2];
+	console.log("domain_name:" + domain_name);
+
+	  var url_vec = [];
+	  var url_vec1 = [];
 	
 	if (domain_name == 'github.com'){
 		const repoOwner = out[3];
@@ -77,7 +82,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		    await fetch(url).then(res => res.json()).then(data => {
 		    data.forEach(file => {
 		      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
-		        
+		         
 		        //outp.innerHTML += "Filename=" + file.name + ", file url=" + file.download_url + "<br/>";
 			url_vec.push(file.download_url);
 		      }
@@ -85,12 +90,34 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  }).catch(error => { outp.innerHTML += error; });
 
 	} else if (domain_name == 'storage.googleapis.com') {
+
+		const projectID = out[3];
+		const BUCKET_NAME = out[4];
+		const fileName = out[5];
+
+		var url = `https://storage.googleapis.com/${BUCKET_NAME}/${fileName}`;
+		// var url = `https://storage.googleapis.com/${projectID}/${BUCKET_NAME}/${fileName}`;
+		
+		await fetch(url).then(res => res.json()).then(data => {
+		    data.forEach(file => {
+		      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
+			url_vec1.push(file.download_url);
+		      }
+		    });
+		  }).catch(error => { outp.innerHTML += error; });
+		
+		// OR
+		
 		url_vec.push(datasetUrl);
 		
 	} else {
 		outp.innerHTML = 'Please enter a GitHub repository or Google Cloud Platform Storage URL';
 	}
-	
+
+
+	  console.log("url_vec:" + url_vec);
+
+	  console.log("url_vec1:" + url_vec1);
  
 	return url_vec;
   }
@@ -147,6 +174,7 @@ async function find_num_of_classes() {
     // It makes more sense to train the model on one seleccted dataset, then test it with predictions.
 
     const csvUrl = url_vec[0];
+    console.log("csvUrl: " + csvUrl);
 
     // ---------------------------
 
