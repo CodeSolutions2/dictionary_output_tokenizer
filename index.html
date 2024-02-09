@@ -128,14 +128,8 @@ th {border: 1px solid black; padding: 10px 20px;}
   // -------------------------------------------------
 
 
-async function find_num_of_classes() {
-	// Obtain desired labels from user
-	var ylabel_str = document.getElementById("y_datasetLabels").value;
-	  
-	// Convert string tensor to javascript tensor, Make text lower case		  
-	ylabel_str = ylabel_str.toString().toLowerCase();
-	// outp.innerHTML += 'ylabel_str: ' + ylabel_str + "<br/>";
-	  
+async function find_num_of_classes(ylabel_str) {
+	
 	let ylabel_vec = ylabel_str.split(","); //.trim()
 	// outp.innerHTML += 'ylabel_vec: ' + ylabel_vec + "<br/>";
 
@@ -151,12 +145,6 @@ async function find_num_of_classes() {
 
 	
   async function train_model() {
-   
-   // ---------------------------
-
-   // Modify num_of_classes global variable
-   num_of_classes = await find_num_of_classes();
-   console.log("num_of_classes: " + num_of_classes);
 	  
     // ---------------------------
 
@@ -296,7 +284,14 @@ async function find_num_of_classes() {
 	  // ---------------------------
 	  // Handling desired y labels
 	  // ---------------------------
-	  num_of_classes = await find_num_of_classes();
+	  // Obtain desired labels from user
+	  var ylabel_str = document.getElementById("y_datasetLabels").value;
+	  
+	  // Convert string tensor to javascript tensor, Make text lower case		  
+	  ylabel_str = ylabel_str.toString().toLowerCase();
+	  
+	  num_of_classes = await find_num_of_classes(ylabel_str);
+	  console.log("num_of_classes: " + num_of_classes);
 	  
 	  // Tokenize Y using user input labels
 	  const y_assignment = Object.fromEntries(num_of_classes.map((key, index) => [key, index]));
