@@ -475,7 +475,7 @@ async function find_class_names(ylabel_str) {
 	  // Sorting array of objects: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
 	  const items = [];
 	  uniqueArray.forEach(async function(word, ind) { 
-		item.push({ name: word, value: word.length });
+		items.push({ name: word, value: word.length });
 	  });
 	
 	// sort by value
