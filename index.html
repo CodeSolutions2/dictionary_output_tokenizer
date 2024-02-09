@@ -93,10 +93,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	} else if (domain_name == 'storage.googleapis.com') {
 
-		const BUCKET_NAME = out[3];
-		const fileName = out[4];
-
-		var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
+		// const BUCKET_NAME = out[3];
+		// const fileName = out[4];
+		// var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
 
 		// var options = {method : 'get', headers: {'Content-Type': "application/json", 'Access-Control-Allow-Origin': '*'}, mode: 'cors'};
 		
@@ -110,7 +109,41 @@ th {border: 1px solid black; padding: 10px 20px;}
 		
 		// OR
 		
-		url_vec.push(datasetUrl);
+		// url_vec.push(datasetUrl);
+
+		// OR
+
+		 // Create <form> element to submit parameters to endpoint.
+        var form = document.createElement('form');
+
+        form.setAttribute('method', 'GET'); 
+        var url = 'https://storage.googleapis.com/textclassification-w-labeled-data';
+        form.setAttribute('action', url);
+
+        // Parameters to pass to endpoint.
+        var params = {'key': 'train_dataset0.csv'};
+
+        // Add form parameters as hidden input values.
+        for (var p in params) {
+          var input = document.createElement('input');
+
+          // input.setAttribute('type', 'visible');  // hidden
+          // input.setAttribute('name', p);
+          // input.setAttribute('value', params[p]);
+          // OR
+          // input.innerHTML = '<input type="visible" name='+p+' value='+params[p]+'>';
+          // OR
+          input.innerHTML = '<input style="display:none;" name='+p+' type='text' value='+params[p]+'>';
+          
+          form.appendChild(input);
+        }
+        // Add form to page and submit it to open the endpoint.
+        document.body.appendChild(form);
+
+        form.submit();
+		
+        url_vec.push( url + '/' + params['key'] );
+		
 		
 	} else {
 		outp.innerHTML = 'Please enter a GitHub repository or Google Cloud Platform Storage URL';
@@ -323,7 +356,7 @@ async function find_num_of_classes(ylabel_str) {
 		  
 		 // Remove undesireable words 
 		 // Maybe memory intensive - **** run after everything works ****
-		 // undesireable_words.forEach(function(word2remove, index) {X = X.replace(`/\b${word2remove}\b/g`, '');}
+		 // undesireable_words.forEach(function(word2remove, index) {X = X.replace(/\b${word2remove}\b/g, '');}
 		  // ---------------------------
 
 		  // ---------------------------
@@ -473,7 +506,6 @@ async function tokenize_X(xs) {
 	// console.log('X_array_tot1:' + X_array_tot1.length); // length should be 1, outputs X_array_tot1:3
 
 	// console.log('get type X_array_tot1 :' + typeof X_array_tot1); // get type X_array_tot1 :object
-	// console.log('get type X_array_tot1[0] :' + typeof X_array_tot1[0]); // get type X_array_tot1[0] :string
 
 	// Try 1
 
@@ -492,13 +524,20 @@ async function tokenize_X(xs) {
 	});
 
 	final_str = final_str[0];  // remove array to obtain string with accumulated text
+
+	console.log('final_str[0] :' + final_str[0]); 
+
+	console.log('final_str :' + final_str);
 	
 	// ---------------------------
-
+	
+	console.log('get type final_str :' + typeof final_str); 
+	console.log('get type final_str[0] :' + typeof final_str[0]); 
+	
 	// Replace any multiple spaces from accumulatted string with only a single space
-	final_str = final_str.replace(/\s+/g, ' ');
+	final_str = final_str.toString().replace(/\s+/g, ' ');
 
-	// .toString()
+	// EXAMPLE   X = X.replace(/\{(.*?)\}/g, '');
 	
 	// ---------------------------
 
@@ -540,7 +579,13 @@ async function tokenize_X(xs) {
 			let result = tokenizer[val1] ?? tokenizer['<OOV>'];
 
 			// Replace all [val1 occurences] in the [string val], with the [token value result]
-			val = val.replace(val1, result);
+			// val = val.replace(val1, result);
+			// X = X.replace(/\b${val1}\b/g, '');
+
+			regexp = new RegExp(`\b${val1}\b`, 'g');
+			val = val.replace(regexp, result);
+
+			
 		});  // end of forEach
 
 		// Convert string to integer array
