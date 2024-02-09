@@ -414,7 +414,7 @@ async function find_class_names(ylabel_str) {
   // -------------------------------------------------
 
 	
-  async function create_tokenizer(uniqueArray) {
+  async function create_tokenizer() {
 
 	console.log('uniqueArray:' + uniqueArray);
 	  
@@ -422,7 +422,7 @@ async function find_class_names(ylabel_str) {
 	
 	// Make an array of an attribute (ie: length)
 	let len_X_array = [];
-	uniqueArray.forEach(async function(val, ind) { len_X_array.push(uniqueArray.length); });
+	uniqueArray.forEach(async function(word, ind) { len_X_array.push(word.length); });
 	console.log('len_X_array:' + len_X_array);
 
        // Sort the attribute vector
