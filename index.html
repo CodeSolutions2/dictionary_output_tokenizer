@@ -416,44 +416,47 @@ async function find_class_names(ylabel_str) {
 	
   async function create_tokenizer(uniqueArray) {
 
-	console.log('uniqueArray:' + uniqueArray);
+	// console.log('uniqueArray:' + uniqueArray);
 	  
 	// Sort the uniqueArray by length, output a dictionary of tokens 
 	
 	// Make an array of an attribute (ie: length)
 	let len_X_array = [];
 	uniqueArray.forEach(async function(word, ind) { len_X_array.push(word.length); });
-	console.log('len_X_array:' + len_X_array);
+	// console.log('len_X_array:' + len_X_array);
 
+
+
+	// -----------
+	// Way 0 : words with the same length will be assigned the same index
+	// -----------
        // Sort the attribute vector
        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-       let len_X_array_sort = len_X_array.sort();
-       console.log('len_X_array_sort:' + len_X_array_sort);
+       // let len_X_array_sort = len_X_array.sort();
+       // console.log('len_X_array_sort:' + len_X_array_sort);
 
        // Put the attribute vector into a dictionary with a corresponding index
-       const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
+       // const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
 
        // Make an array of zeros
-       let X_array_sorted = [...Array(uniqueArray.length).keys()].map((x) => 0);
+      //  let X_array_sorted = [...Array(uniqueArray.length).keys()].map((x) => 0);
 	  
-       uniqueArray.forEach(async function(word, ind) { 
+      //  uniqueArray.forEach(async function(word, ind) { 
 
 		// word is in position ind=0 of X_array
-	        let key = word.length;  // the attribute to sort
+	//         let key = word.length;  // the attribute to sort
 	       
 	       // this gives me the index that X_array[word] should have in the output list X_array_sorted
-	       let ind_sorted = dictt[key];
+	//        let ind_sorted = dictt[key];
 
 	       // Print first 10 to see if correct
-	       if (ind < 10){ console.log('word:' + word); console.log('key:' + key); console.log('ind_sorted:' + ind_sorted); }
+	//        if (ind < 10){ console.log('word:' + word); console.log('key:' + key); console.log('ind_sorted:' + ind_sorted); }
 	       
 	       // but, word should be in position ind_sorted
-	       X_array_sorted[ind_sorted] = word;
-
-	       
-       });
+	//        X_array_sorted[ind_sorted] = word;
+	//  });
        
-       console.log('tokenizer0_X_array_sorted:' + X_array_sorted);
+      //  console.log('tokenizer0_X_array_sorted:' + X_array_sorted);
 
        // Write a dictionary, where word=keys are ordered from longest word to shortest word.
        // Thus, the longest word has the smallest index, and the shortest word has the largest index.
@@ -461,18 +464,20 @@ async function find_class_names(ylabel_str) {
        var tokenizer0 = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
 	  
        // -----------
-       
-       // Way 1 : built in function, but many things are hidden and it does not function with sorting logic
-       // Sort dictionary array by the value
-       // tokenizer_char_len.sort((a, b) => a.values - b.values);
+ 
 	  
        // OR
 	  
-       var tokenizer1 = len_X_array.sort((a, b) => a[1] - b[1]);
+	// -----------
+	// Way 1
+	// -----------
+       var dict_temp = Object.fromEntries(uniqueArray.map((word, index) => [word, len_X_array[index]] ));
+
+       var tokenizer1 = dict_temp.sort((a, b) => a[1] - b[1]);   // sort((a, b) => a.values - b.values);
        console.log('tokenizer1:' + tokenizer1);
 
 	// Way 0: push the key into an array
-	X_array_sorted = [];
+	let X_array_sorted = [];
 	tokenizer1.forEach(async function(rowdata, ind) {
 
 		console.log('rowdata:' + rowdata);
@@ -495,9 +500,8 @@ async function find_class_names(ylabel_str) {
 
 
 	  // Choose one of the tokenizers to update the global variable
-	  tokenizer = tokenizer0;
 
-	  return tokenizer;
+	  return tokenizer1;
   }
 
 	
