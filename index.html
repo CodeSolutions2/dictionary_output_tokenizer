@@ -62,6 +62,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv
 	// https://storage.googleapis.com/textclassification-w-labeled-data/train_dataset0.csv
+	  
 	const datasetUrl = document.getElementById("train_dataset_url").value;
 
 	let out = datasetUrl.split("/");
@@ -226,6 +227,7 @@ async function find_num_of_classes() {
 	    // ---------------------------
 
 	    // Save the model if I can
+	    const saveResults = await custom_model.save('localstorage://my-model-1');
 	    
 	    
     });  // end of modify_X_Y(csvDataset)
@@ -575,6 +577,8 @@ async function tokenize_X(xs) {
 
 	
   async function predict_with_custom_model(y_assignment) {
+
+	  const loadedModel = await tf.loadLayersModel('localstorage://my-model-1');
     
     var pred_vec = [['', '', ''],['row', 'prediction', 'probability']]; 
 
@@ -594,7 +598,7 @@ async function tokenize_X(xs) {
     sequence_array.forEach(async function(seq, ind) {
 	  
 	    // Call the custom_model 
-	    const result = custom_model.predict(seq) ;
+	    const result = loadedModel.predict(seq) ;
 
 	    // Get index of maximum softmax probability 
 	    const index = result.as1D().argMax().dataSync()[0];
