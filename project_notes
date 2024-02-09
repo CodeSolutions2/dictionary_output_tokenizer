@@ -113,3 +113,40 @@ gcloud storage buckets add-iam-policy-binding gs://$BUCKET_NAME --member=allUser
 
 # ---------------------------------------------
 
+touch cors.json
+
+echo '[{"origin": ["https://yourdomain.com"],"responseHeader": ["Content-Type"],"method": ["GET", "HEAD"],"maxAgeSeconds": 3600}]' > cors.json
+
+# OR
+
+%%bash --err null
+cat > cors.json <<EOF
+[
+    {
+      "origin": ["https://CodeSolutions2.github.io"],
+      "responseHeader": ["Content-Type"],
+      "method": ["GET", "HEAD"],
+      "maxAgeSeconds": 3600
+    }
+]
+EOF
+
+# Set CORS settings
+gsutil cors set cors.json gs://$BUCKET_NAME
+
+# ---------------------------------------------
+
+# View saved CORS settings
+gsutil cors get gs://$BUCKET_NAME
+
+# ---------------------------------------------
+
+
+https://cloud.google.com/storage/docs/gsutil/commands/cors
+
+https://stackoverflow.com/questions/66050356/unable-to-fix-cors-policy-on-google-cloud-storage?rq=3
+
+https://stackoverflow.com/questions/51615809/tensorflow-model-server-access-control-allow-origin?rq=3
+
+https://stackoverflow.com/questions/57118200/tensorflowjs-google-storage-cors-error-with-tf-loadlayersmodel
+
