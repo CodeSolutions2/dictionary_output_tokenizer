@@ -51,9 +51,8 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   var tokenizer = 0;  // This is a global variable, that will be reassigned after button push
   var maxlen = 0;  // This is a global variable, that will be reassigned after button push
-  var num_of_classes = 0; // This is a global variable, that will be reassigned after button push
-
-	var custom_model = 0; 
+  var class_names = []; // This is a global variable, that will be reassigned after button push
+  var custom_model = 0; 
 	
   // -------------------------------------------------
 
@@ -66,10 +65,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 	const datasetUrl = document.getElementById("train_dataset_url").value;
 
 	let out = datasetUrl.split("/");
-	  console.log("out:" + out);
+	// console.log("out:" + out);
 	
 	let domain_name = out[2];
-	console.log("domain_name:" + domain_name);
+	// console.log("domain_name:" + domain_name);
 
 	  var url_vec = [];
 	 // var url_vec1 = [];
@@ -79,13 +78,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 		const repoName = out[4];
 		
 		var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
-		    //
 		
 		    await fetch(url).then(res => res.json()).then(data => {
 		    data.forEach(file => {
 		      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
-		         
-		        //outp.innerHTML += "Filename=" + file.name + ", file url=" + file.download_url + "<br/>";
 			url_vec.push(file.download_url);
 		      }
 		    });
@@ -136,6 +132,7 @@ th {border: 1px solid black; padding: 10px 20px;}
           input.innerHTML = '<input style="display:none;" name=' +p+ 'value=' +params[p]+ '>';
 
 		// https://storage.googleapis.com/textclassification-w-labeled-data?keytype%3D%22text%22=train_dataset0.csv
+		// https://storage.googleapis.com/textclassification-w-labeled-data?keyvalue%3Dtrain_dataset0.csv=
           
           form.appendChild(input);
         }
@@ -165,16 +162,14 @@ th {border: 1px solid black; padding: 10px 20px;}
   // -------------------------------------------------
 
 
-async function find_num_of_classes(ylabel_str) {
+async function find_class_names(ylabel_str) {
 	
-	let ylabel_vec = ylabel_str.split(","); //.trim()
-	// outp.innerHTML += 'ylabel_vec: ' + ylabel_vec + "<br/>";
+	let ylabel_vec = ylabel_str.split(",");
 
 	// y label should be unique, but find unique values just in case
-	num_of_classes = [...new Set(ylabel_vec)];
-	// outp.innerHTML += 'num_of_classes: ' + num_of_classes + "<br/>";
+	class_names = [...new Set(ylabel_vec)];
 
-	 return num_of_classes;
+	 return class_names;
  }
 
 	
@@ -188,7 +183,6 @@ async function find_num_of_classes(ylabel_str) {
     // [Step 0] Read in a list of urls that are .csv or .txt files
     
     var url_vec = await get_train_datasetURL();
-    // outp.innerHTML += 'url_vec: ' + url_vec + "<br/>";
 
     // ---------------------------
 	  
@@ -281,9 +275,15 @@ async function find_num_of_classes(ylabel_str) {
 
     // Way 1: load model layers using sequential
     const NUM_WORDS = tokenizer.length;
+    console.log("NUM_WORDS: " + NUM_WORDS);
+	 
     const EMBEDDING_DIM = 256;
+	 
     const MAXLEN = maxlen;
-    const NUM_OF_CLASSES = num_of_classes;  // num_of_classes should be a global variable
+    console.log("MAXLEN: " + MAXLEN);
+	  
+    const NUM_OF_CLASSES = class_names.length;
+    console.log("NUM_OF_CLASSES: " + NUM_OF_CLASSES);
 	 
     const custom_model = tf.sequential();
     custom_model.add( tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN) );
@@ -327,11 +327,11 @@ async function find_num_of_classes(ylabel_str) {
 	  // Convert string tensor to javascript tensor, Make text lower case		  
 	  ylabel_str = ylabel_str.toString().toLowerCase();
 	  
-	  num_of_classes = await find_num_of_classes(ylabel_str);
-	  console.log("num_of_classes: " + num_of_classes);
+	  var class_names = await find_class_names(ylabel_str);
+	  console.log("class_names: " + class_names);
 	  
 	  // Tokenize Y using user input labels
-	  const y_assignment = Object.fromEntries(num_of_classes.map((key, index) => [key, index]));
+	  const y_assignment = Object.fromEntries(class_names.map((key, index) => [key, index]));
 	  
 	  // outp.innerHTML += 'y_assignment["business"]: ' + y_assignment['business'] + "<br/>";  // correct
 	  // outp.innerHTML += 'y_assignment.keys(): ' + y_assignment.keys() + "<br/>";
@@ -421,39 +421,45 @@ async function find_num_of_classes(ylabel_str) {
 
 	
   async function create_tokenizer(uniqueArray) {
-	
+
+	console.log('uniqueArray:' + uniqueArray);
+	  
 	// Sort the uniqueArray by length, output a dictionary of tokens 
-	// Way 0
-			  
-       // Make an array of an attribute (ie: length)
+	
+	// Make an array of an attribute (ie: length)
 	let len_X_array = [];
 	uniqueArray.forEach(async function(val, ind) { len_X_array.push(uniqueArray.length); });
+	console.log('len_X_array:' + len_X_array);
 
        // Sort the attribute vector
        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
        let len_X_array_sort = len_X_array.sort();
+       console.log('len_X_array_sort:' + len_X_array_sort);
 
        // Put the attribute vector into a dictionary with a corresponding index
        const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
 
-       // Use the dictt to lookup the index_order_of_sorted_array_by_length
-       // let X_array_sorted = [];
-       
-       // OR
-	  
        // Make an array of zeros
        let X_array_sorted = [...Array(uniqueArray.length).keys()].map((x) => 0);
 	  
        uniqueArray.forEach(async function(word, ind) { 
 
 		// word is in position ind=0 of X_array
-	        key = word.length;  // the attribute to sort
-	        let ind_sorted = dictt[key]; // this gives me the index that X_array[word] should have in the output list X_array_sorted
+	        let key = word.length;  // the attribute to sort
+	       
+	       // this gives me the index that X_array[word] should have in the output list X_array_sorted
+	       let ind_sorted = dictt[key];
+
+	       // Print first 10 to see if correct
+	       if (ind < 10){ console.log('word:' + word); console.log('key:' + key); console.log('ind_sorted:' + ind_sorted); }
+	       
 	       // but, word should be in position ind_sorted
 	       X_array_sorted[ind_sorted] = word;
+
+	       
        });
        
-       console.log('tokenizer0 X_array_sorted:' + X_array_sorted);
+       console.log('tokenizer0_X_array_sorted:' + X_array_sorted);
 
        // Write a dictionary, where word=keys are ordered from longest word to shortest word.
        // Thus, the longest word has the smallest index, and the shortest word has the largest index.
@@ -535,7 +541,7 @@ async function tokenize_X(xs) {
 
 	// Split the accumulatted string
 	let final_arr = final_str.split(" ");
-	console.log('final_arr.length :' + final_arr.length);
+	console.log('final_arr.length :' + final_arr.length); // final_arr.length :2807
 
 	// ---------------------------
 
@@ -545,7 +551,7 @@ async function tokenize_X(xs) {
 	// Add the <OOV> token: if the word is not in the token list assign this value
 	uniqueArray.push('<OOV>');
 
-	console.log('uniqueArray.length :' + uniqueArray.length);
+	console.log('uniqueArray.length :' + uniqueArray.length); // uniqueArray.length :1241
 
 	// ---------------------------
 
