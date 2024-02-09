@@ -71,7 +71,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	console.log("domain_name:" + domain_name);
 
 	  var url_vec = [];
-	  var url_vec1 = [];
+	 // var url_vec1 = [];
 	
 	if (domain_name == 'github.com'){
 		const repoOwner = out[3];
@@ -97,15 +97,15 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
 
-		var options = {method : 'get', headers: {'Content-Type': "application/json", 'Access-Control-Allow-Origin': '*'}, mode: 'cors'};
+		// var options = {method : 'get', headers: {'Content-Type': "application/json", 'Access-Control-Allow-Origin': '*'}, mode: 'cors'};
 		
-		await fetch(url, options).then(res => res.json()).then(data => {
-		    data.forEach(file => {
-		      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
-			url_vec1.push(file.download_url);
-		      }
-		    });
-		  }).catch(error => { outp.innerHTML += error; });
+		// await fetch(url, options).then(res => res.json()).then(data => {
+		//     data.forEach(file => {
+		 //      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
+			// url_vec1.push(file.download_url);
+		 //      }
+		  //   });
+		//   }).catch(error => { outp.innerHTML += error; });
 		
 		// OR
 		
@@ -118,7 +118,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	  console.log("url_vec:" + url_vec);
 
-	  console.log("url_vec1:" + url_vec1);
+	 //  console.log("url_vec1:" + url_vec1);
  
 	return url_vec;
   }
@@ -147,8 +147,6 @@ async function find_num_of_classes() {
 
 	
   // -------------------------------------------------
-
-
 
 	
   async function train_model() {
@@ -184,9 +182,6 @@ async function find_num_of_classes() {
     // X and y (dataset object)
     const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
     // outp.innerHTML += 'csvDataset: ' +  csvDataset + "<br/>";  // csvDataset: [object Object]
-
-    // print dataset
-    await csvDataset.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
 	    
     // ---------------------------
 	  
