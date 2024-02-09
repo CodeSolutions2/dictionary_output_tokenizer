@@ -50,7 +50,10 @@ th {border: 1px solid black; padding: 10px 20px;}
   var url_vec = [];  // This is a global variable, and I start referencing it in get_train_dataset
 
   var tokenizer = 0;  // This is a global variable, that will be reassigned after button push
+  var maxlen = 0;  // This is a global variable, that will be reassigned after button push
   var num_of_classes = 0; // This is a global variable, that will be reassigned after button push
+
+	var custom_model = 0; 
 	
   // -------------------------------------------------
 
@@ -58,21 +61,16 @@ th {border: 1px solid black; padding: 10px 20px;}
   async function get_train_datasetURL() {
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv
-	// https://storage.googleapis.com/BUCKET_NAME/train_dataset.csv
+	// https://storage.googleapis.com/textclassification-w-labeled-data/train_dataset0.csv
 	const datasetUrl = document.getElementById("train_dataset_url").value;
 
-	let out = datasetUrl.split("/")
-
-	// outp.innerHTML += "out: " + out + "<br/>";
+	let out = datasetUrl.split("/");
 	
 	let domain_name = out[2];
 	
 	if (domain_name == 'github.com'){
 		const repoOwner = out[3];
 		const repoName = out[4];
-
-		// outp.innerHTML += "repoOwner: " + repoOwner + "<br/>";
-		// outp.innerHTML += "repoName: " + repoName + "<br/>";
 		
 		var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
 		    //var options = {method : 'get', headers: headers, mode: 'no-cors'};
@@ -97,17 +95,41 @@ th {border: 1px solid black; padding: 10px 20px;}
 	return url_vec;
   }
 
-	gcloud projects update project-2-report-hacked-acc --name="general"
-	project-2-report-hacked-acc
+	
   // -------------------------------------------------
+
+
+async function find_num_of_classes() {
+	// Obtain desired labels from user
+	var ylabel_str = document.getElementById("y_datasetLabels").value;
+	  
+	// Convert string tensor to javascript tensor, Make text lower case		  
+	ylabel_str = ylabel_str.toString().toLowerCase();
+	// outp.innerHTML += 'ylabel_str: ' + ylabel_str + "<br/>";
+	  
+	let ylabel_vec = ylabel_str.split(","); //.trim()
+	// outp.innerHTML += 'ylabel_vec: ' + ylabel_vec + "<br/>";
+
+	// y label should be unique, but find unique values just in case
+	num_of_classes = [...new Set(ylabel_vec)];
+	// outp.innerHTML += 'num_of_classes: ' + num_of_classes + "<br/>";
+
+	 return num_of_classes;
+ }
+
+	
+  // -------------------------------------------------
+
+
 
 	
   async function train_model() {
-
-	      // ---------------------------
+   
+   // ---------------------------
 
    // Modify num_of_classes global variable
-
+   num_of_classes = await find_num_of_classes();
+   console.log("num_of_classes: " + num_of_classes);
 	  
     // ---------------------------
 
@@ -133,6 +155,9 @@ th {border: 1px solid black; padding: 10px 20px;}
     // X and y (dataset object)
     const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
     // outp.innerHTML += 'csvDataset: ' +  csvDataset + "<br/>";  // csvDataset: [object Object]
+
+    // print dataset
+    await csvDataset.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
 	    
     // ---------------------------
 	  
@@ -154,20 +179,32 @@ th {border: 1px solid black; padding: 10px 20px;}
     // [Step 3] Clean the dataset
     await modify_X_Y(csvDataset).then(csvDataset_sequence => {
 
+	    // ---------------------------
+		    
+	    // Convert the xs and ys to a flattenedDataset
+	    const flattenedDataset = await csvDataset_sequence.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
 
-	    
-	 // Convert the xs and ys to a flattenedDataset
-	 const flattenedDataset = await csvDataset_sequence.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
+	    // ---------------------------
 
-	// Fit the model using the prepared Dataset
-	await custom_model.fitDataset(flattenedDataset, {
-	    epochs: 10,
-	    callbacks: {
-		    onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
-	    }
-	});
+	    // Load the model
+	    custom_model = await make_and_compile_custom_model();
 	    
-    });
+	    // ---------------------------
+	    
+	    // Fit the model using the prepared Dataset
+	    await custom_model.fitDataset(flattenedDataset, {
+		    epochs: 10,
+		    callbacks: {
+			    onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
+		    }
+	    });
+
+	    // ---------------------------
+
+	    // Save the model if I can
+	    
+	    
+    });  // end of modify_X_Y(csvDataset)
 	  
     // ---------------------------
 
@@ -178,26 +215,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 	
   // -------------------------------------------------
 
- async function find_num_of_classes() {
-	// Obtain desired labels from user
-	var ylabel_str = document.getElementById("y_datasetLabels").value;
-	  
-	// Convert string tensor to javascript tensor, Make text lower case		  
-	ylabel_str = ylabel_str.toString().toLowerCase();
-	// outp.innerHTML += 'ylabel_str: ' + ylabel_str + "<br/>";
-	  
-	let ylabel_vec = ylabel_str.split(","); //.trim()
-	// outp.innerHTML += 'ylabel_vec: ' + ylabel_vec + "<br/>";
-
-	// y label should be unique, but find unique values just in case
-	num_of_classes = [...new Set(ylabel_vec)];
-	outp.innerHTML += 'num_of_classes: ' + num_of_classes + "<br/>";
-
-	 return num_of_classes;
- }
-
-	
-  // -------------------------------------------------
+ 
 
 	
  async function make_and_compile_custom_model() {
@@ -214,7 +232,7 @@ th {border: 1px solid black; padding: 10px 20px;}
     // Way 1: load model layers using sequential
     const NUM_WORDS = tokenizer.length;
     const EMBEDDING_DIM = 256;
-    const MAXLEN = tf.max(seq);
+    const MAXLEN = maxlen;
     const NUM_OF_CLASSES = num_of_classes;  // num_of_classes should be a global variable
 	 
     const custom_model = tf.sequential();
@@ -238,7 +256,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 
   async function modify_X_Y(csvDataset) {
-	  
+
+	  // ---------------------------
+	  // Module 0: input=csvDataset, output=xs, ys
+	  // ---------------------------
 	  const tensors = await csvDataset.toArray();
 
 	  // tensors.length: 10
@@ -306,6 +327,9 @@ th {border: 1px solid black; padding: 10px 20px;}
 		  }
 
 	  });  // end of forEach
+	  // ---------------------------
+	  //  Module 0 END : input=csvDataset, output=xs, ys
+	  // ---------------------------
 
 
 	// ---------------------------
@@ -419,11 +443,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 
 async function tokenize_X(xs) {
-
-
-	//let xs_first2entries = xs.slice(0, 3);
-	//console.log('xs_first2entries:' + xs_first2entries.length);  // length should be 3
-	
 	
 	// ---------------------------
 	
@@ -496,7 +515,7 @@ async function tokenize_X(xs) {
 		
 		sen_arr.forEach(async function(val1, ind1) {
 			// Directly call the tokenizer, if the word does not exist put the number for '<OOV>' token
-			const result = tokenizer1[val1] ?? tokenizer1['<OOV>'];
+			const result = tokenizer[val1] ?? tokenizer['<OOV>'];
 
 			// Replace all [val1 occurences] in the [string val], with the [token value result]
 			val = val.replace(val1, result);
@@ -513,11 +532,21 @@ async function tokenize_X(xs) {
 		xs_seq.push(seq_arr_int);
 		
 	});  // end of forEach
+
+
+	// Update the global variable of sen_arr, to initialize the model
+	maxlen = await update_MAXLEN(sen_arr_len);
 	
 	return xs_seq;
 	
 }
 
+
+  // -------------------------------------------------
+
+  async function update_MAXLEN(sen_arr_len) {
+	return tf.max(sen_arr_len);
+  }
 	
   // -------------------------------------------------
 
