@@ -159,10 +159,16 @@ th {border: 1px solid black; padding: 10px 20px;}
 		var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
 		var options = {method : 'get', headers: {'Access-Control-Allow-Origin': '*'}, mode: 'no-cors'};
 
-		csvDataset = await fetch(url, options).then(res => res).then(res => {   
-			const out = tf.data.csv(res.text(), { columnConfigs: { Y: { isLabel: true } } });
-			console.log("out: " + out);
-			return out; }).catch(error => { outp.innerHTML += error; });
+		// csvDataset = await fetch(url, options).then(res => res).then(res => {   
+		// 	const out = tf.data.csv(res.text(), { columnConfigs: { Y: { isLabel: true } } });
+		// 	console.log("out: " + out.toString() );
+		// 	return out; }).catch(error => { outp.innerHTML += error; });
+
+		// OR
+
+		const response = await fetch(csvUrl, { mode: 'no-cors' });
+		const data = await response.text();
+		csvDataset = tf.data.csv(data, { columnConfigs: { Y: { isLabel: true } } });
 		
 	} else {
 		outp.innerHTML = 'Please enter a GitHub repository or Google Cloud Platform Storage URL';
