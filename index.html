@@ -452,14 +452,14 @@ async function find_num_of_classes(ylabel_str) {
 	       // but, word should be in position ind_sorted
 	       X_array_sorted[ind_sorted] = word;
        });
+       
+       console.log('tokenizer0 X_array_sorted:' + X_array_sorted);
 
        // Write a dictionary, where word=keys are ordered from longest word to shortest word.
        // Thus, the longest word has the smallest index, and the shortest word has the largest index.
 	
        var tokenizer0 = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
-
-	console.log('tokenizer0:' + tokenizer0);
-	
+	  
        // -----------
        
        // Way 1 : built in function, but many things are hidden and it does not function with sorting logic
@@ -475,6 +475,8 @@ async function find_num_of_classes(ylabel_str) {
 	X_array_sorted = [];
 	tokenizer1.forEach(async function(rowdata, ind) {
 
+		console.log('rowdata:' + rowdata);
+		
 		let key = Object.keys(rowdata);
 		console.log('key:' + key);
 		
@@ -485,14 +487,17 @@ async function find_num_of_classes(ylabel_str) {
 		tokenizer1[key] = ind;
 	});
 
+	  console.log('tokenizer1 X_array_sorted:' + X_array_sorted);
+	  
 	// Way 0
 	var tokenizer2 = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
-	console.log('tokenizer2:' + tokenizer2);
+	
 
 
 	  // Choose one of the tokenizers to update the global variable
-	  tokenizer = tokenizer1;
+	  tokenizer = tokenizer0;
 
+	  return tokenizer;
   }
 
 	
@@ -503,50 +508,34 @@ async function tokenize_X(xs) {
 	
 	// ---------------------------
 	
-	// Concatenate the array 
-
-	// Try 0: Not useful
-	// let X_array_tot1 = xs_first2entries.flat();
-	// console.log('X_array_tot1:' + X_array_tot1.length); // length should be 1, outputs X_array_tot1:3
-
-	// console.log('get type X_array_tot1 :' + typeof X_array_tot1); // get type X_array_tot1 :object
-
-	// Try 1
-
+	// Concatenate the array contents into a long text string
+	
 	// Initialize with first array
-	// let final_str = xs[0];
-	// OR 
 	let final_str = xs.slice(0,1);
-	console.log('final_str 1st part:' + final_str);
+	// console.log('final_str 1st part:' + final_str);
 
-	let xs_rest = xs.slice(1, xs.length);
-	console.log('xs_rest:' + xs_rest.length);
+	let xs_rest = xs.slice(1, xs.length); // 9 [Correct]
+	// console.log('xs_rest:' + xs_rest.length);
 	
 	xs_rest.forEach(async function(val, ind) { 
 		final_str = final_str.concat(val); // string
-		console.log('index: ' + ind + ', final_str type :' + typeof final_str); 
-		//final_str = [final_str]; // make combined strings an array
+		// console.log('index: ' + ind + ', final_str type :' + typeof final_str); 
 	});
 
 	final_str = final_str.toString();
-	console.log('final_str accumulated type :' + typeof final_str);
-	console.log('final_str accumulated :' + final_str);
+	// console.log('final_str accumulated type :' + typeof final_str); // final_str accumulated type :string [Correct]
 	
 	// ---------------------------
 	
 	// Replace any multiple spaces from accumulatted string with only a single space
-	final_str = final_str.toString().replace(/\s+/g, ' ');
-
-	// EXAMPLE   X = X.replace(/\{(.*?)\}/g, '');
+	final_str = final_str.replace(/\s+/g, ' ');
+	console.log('final_str accumulated :' + final_str);
 	
 	// ---------------------------
 
 	// Split the accumulatted string
 	let final_arr = final_str.split(" ");
-	
-	// ---------------------------
-	
-	// console.log('get type out :' + typeof out);  // get type out :string
+	console.log('final_arr.length :' + final_arr.length);
 
 	// ---------------------------
 
@@ -555,6 +544,8 @@ async function tokenize_X(xs) {
 
 	// Add the <OOV> token: if the word is not in the token list assign this value
 	uniqueArray.push('<OOV>');
+
+	console.log('uniqueArray.length :' + uniqueArray.length);
 
 	// ---------------------------
 
