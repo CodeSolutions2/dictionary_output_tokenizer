@@ -133,7 +133,7 @@ th {border: 1px solid black; padding: 10px 20px;}
           // OR
           // input.innerHTML = '<input type="visible" name='+p+' value='+params[p]+'>';
           // OR
-          input.innerHTML = '<input style="display:none;" name='+p+' type='text' value='+params[p]+'>';
+          input.innerHTML = '<input style="display:none;" name=' +p+ 'type="text" value=' +params[p]+ '>';
           
           form.appendChild(input);
         }
@@ -143,6 +143,8 @@ th {border: 1px solid black; padding: 10px 20px;}
         form.submit();
 		
         url_vec.push( url + '/' + params['key'] );
+
+        // Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://storage.googleapis.com/textclassification-w-labeled-data/train_dataset0.csv. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200
 		
 		
 	} else {
@@ -203,7 +205,7 @@ async function find_num_of_classes(ylabel_str) {
 	  
     // X and y (dataset object)
     const csvDataset = await tf.data.csv(csvUrl, { columnConfigs: { Y: {isLabel: true} } });
-    // outp.innerHTML += 'csvDataset: ' +  csvDataset + "<br/>";  // csvDataset: [object Object]
+    console.log("csvDataset: " + csvDataset);  // csvDataset: [object Object]
 	    
     // ---------------------------
 	  
