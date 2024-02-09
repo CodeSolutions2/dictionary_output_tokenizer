@@ -79,6 +79,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		
 		var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
 		    //var options = {method : 'get', headers: headers, mode: 'no-cors'};
+		
 		    await fetch(url).then(res => res.json()).then(data => {
 		    data.forEach(file => {
 		      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
@@ -91,12 +92,10 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 	} else if (domain_name == 'storage.googleapis.com') {
 
-		const projectID = out[3];
-		const BUCKET_NAME = out[4];
-		const fileName = out[5];
+		const BUCKET_NAME = out[3];
+		const fileName = out[4];
 
-		var url = `https://storage.googleapis.com/${BUCKET_NAME}/${fileName}`;
-		// var url = `https://storage.googleapis.com/${projectID}/${BUCKET_NAME}/${fileName}`;
+		var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
 		
 		await fetch(url).then(res => res.json()).then(data => {
 		    data.forEach(file => {
