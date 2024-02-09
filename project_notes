@@ -40,7 +40,7 @@ tensors.forEach(async function(rowdata, index) {
 });  // end of forEach
 
 
-  // -------------------------------------------------
+// -------------------------------------------------
 
 
 // Way 1
@@ -64,3 +64,52 @@ await csv_iterator_values.next().then(row => {
 	});  // end of await csv_iterator.next().then(row =>
 
 });  // end of forEach
+
+
+// -------------------------------------------------
+
+# ---------------------------------------------
+# Set up dataset in STORAGE
+# ---------------------------------------------
+PROJECT_ID="text-pr0cessing"
+# ---------------------------------------------
+gcloud projects create $PROJECT_ID
+# ---------------------------------------------
+gcloud config set project $PROJECT_ID
+# ---------------------------------------------
+# Enable project billing
+# Obtain ACCOUNT_ID
+gcloud alpha billing accounts list
+
+ACCOUNT_ID=""
+
+# Enable project billing
+gcloud alpha billing accounts projects link $PROJECT_ID --billing-account=$ACCOUNT_ID
+
+# View details about billing account
+gcloud beta billing accounts describe $ACCOUNT_ID
+
+# ---------------------------------------------
+
+# Create Storage Bucket
+BUCKET_NAME="textclassification-w-labeled-data"
+
+LOCATION="europe-west9"
+gcloud storage buckets create gs://$BUCKET_NAME --project=$PROJECT_ID \
+                                                --default-storage-class=STANDARD \
+                                                --location=$LOCATION \
+                                                --uniform-bucket-level-access
+
+
+git clone https://github.com/CodeSolutions2/text_classification_w_labels.git
+
+# Upload file to storage
+gcloud storage cp train_dataset0.csv gs://$BUCKET_NAME
+
+gcloud storage ls --recursive gs://$BUCKET_NAME/**
+
+# Make all objects in a bucket publicly readable
+gcloud storage buckets add-iam-policy-binding gs://$BUCKET_NAME --member=allUsers --role=roles/storage.objectViewer
+
+# ---------------------------------------------
+
