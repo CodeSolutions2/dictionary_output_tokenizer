@@ -495,8 +495,10 @@ async function tokenize_X(xs) {
 	
 	// ---------------------------
 
-	// Remove any space multiple spaces from accumulatted string
-	final_str = final_str.replace(/\s+/g);
+	// Replace any multiple spaces from accumulatted string with only a single space
+	final_str = final_str.replace(/\s+/g, ' ');
+
+	// .toString()
 	
 	// ---------------------------
 
@@ -535,7 +537,7 @@ async function tokenize_X(xs) {
 		
 		sen_arr.forEach(async function(val1, ind1) {
 			// Directly call the tokenizer, if the word does not exist put the number for '<OOV>' token
-			const result = tokenizer[val1] ?? tokenizer['<OOV>'];
+			let result = tokenizer[val1] ?? tokenizer['<OOV>'];
 
 			// Replace all [val1 occurences] in the [string val], with the [token value result]
 			val = val.replace(val1, result);
