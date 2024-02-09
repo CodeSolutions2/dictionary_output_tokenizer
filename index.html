@@ -476,19 +476,16 @@ async function find_class_names(ylabel_str) {
 	  const items = [];
 	  uniqueArray.forEach(async function(word, ind) { 
 		item.push({ name: word, value: word.length });
-	  }
+	  });
 	
 	// sort by value
-	var tokenizer1 = items.sort((a, b) => a.value - b.value));
+	var tokenizer1 = items.sort((a, b) => a.value - b.value);
        console.log('tokenizer1:' + tokenizer1);
 
-
 	uniqueArray.forEach(async function(randomrow, ind) {
-		tokenizer1['value'] = ind;
+		tokenizer1[randomrow].value = ind;
 	});
-
-	  console.log('tokenizer1 X_array_sorted:' + X_array_sorted);
-	  
+	console.log('tokenizer1 final :' + tokenizer1);
 
 	  return tokenizer1;
   }
