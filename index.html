@@ -177,7 +177,7 @@ async function find_num_of_classes() {
     // ---------------------------
 
     // [Step 3] Clean the dataset
-    await modify_X_Y(csvDataset).then(csvDataset_sequence => {
+    await modify_X_Y(csvDataset).then(async function(csvDataset_sequence) {
 
 	    // ---------------------------
 		    
@@ -208,7 +208,6 @@ async function find_num_of_classes() {
 	  
     // ---------------------------
 
-    return	
 
   }  // end of train_model
 
