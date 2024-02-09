@@ -517,26 +517,22 @@ async function tokenize_X(xs) {
 	// let final_str = xs[0];
 	// OR 
 	let final_str = xs.slice(0,1);
-	console.log('final_str:' + final_str);
+	console.log('final_str 1st part:' + final_str);
 
 	let xs_rest = xs.slice(1, xs.length);
 	console.log('xs_rest:' + xs_rest.length);
 	
 	xs_rest.forEach(async function(val, ind) { 
-		final_str.concat(val); // string
-		final_str = [final_str]; // make combined strings an array
+		final_str = final_str.concat(val); // string
+		console.log('index: ' + ind + ', final_str type :' + typeof final_str); 
+		//final_str = [final_str]; // make combined strings an array
 	});
 
-	final_str = final_str[0];  // remove array to obtain string with accumulated text
-
-	console.log('final_str[0] :' + final_str[0]); 
-
-	console.log('final_str :' + final_str);
+	final_str = final_str.toString();
+	console.log('final_str accumulated type :' + typeof final_str);
+	console.log('final_str accumulated :' + final_str);
 	
 	// ---------------------------
-	
-	console.log('get type final_str :' + typeof final_str); 
-	console.log('get type final_str[0] :' + typeof final_str[0]); 
 	
 	// Replace any multiple spaces from accumulatted string with only a single space
 	final_str = final_str.toString().replace(/\s+/g, ' ');
