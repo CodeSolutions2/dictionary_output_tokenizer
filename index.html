@@ -496,12 +496,24 @@ async function find_class_names(ylabel_str) {
 
 	// Print first 5 of tokenizer2
 	for (var i=0; i<5;i++){
-		console.log('tokenizer2[i].name.toString(): ' + tokenizer2[i].name.toString() + ', tokenizer2[i].value: ' + tokenizer2[i].value);
+
+		// Get keys and values
+		console.log('tokenizer2.keys(): ' + tokenizer2.keys())
+		console.log('tokenizer2.values(): ' + tokenizer2.values())
+
+		// tokenizer2[i].name.toString(): [object Object], tokenizer2[i].value: 0
+		// console.log('tokenizer2[i].name.toString(): ' + tokenizer2[i].name.toString() + ', tokenizer2[i].value: ' + tokenizer2[i].value);
 	}
 
 	// Print first 5 of tokenizer_final
 	for (var i=0; i<5;i++){
-		console.log('tokenizer_final["name"]: ' + tokenizer_final["name"] + ', tokenizer_final["value"]: ' + tokenizer_final["value"]);
+
+		// Get keys and values
+		console.log('tokenizer_final.keys(): ' + tokenizer_final.keys())
+		console.log('tokenizer_final.values(): ' + tokenizer_final.values())
+		
+		// tokenizer_final["name"]: 200, tokenizer_final["value"]: 300
+		// console.log('tokenizer_final["name"]: ' + tokenizer_final["name"] + ', tokenizer_final["value"]: ' + tokenizer_final["value"]);
 	}
 
 	  return tokenizer_final;
