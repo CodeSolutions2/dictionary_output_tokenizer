@@ -498,20 +498,22 @@ async function find_class_names(ylabel_str) {
 	tokenizer2.forEach(async function(rowdata, ind) { 
 
 		// Get keys and values
-		console.log( 'Get keys of dictionary: ' + Object.keys(rowdata).toString() )
+		// Get keys of dictionary: name,value
+		console.log( 'Get keys of dictionary: ' + Object.keys(rowdata).toString() );
 
-		// tokenizer2[i].name.toString(): [object Object], tokenizer2[i].value: 0
-		// console.log('tokenizer2[i].name.toString(): ' + tokenizer2[i].name.toString() + ', tokenizer2[i].value: ' + tokenizer2[i].value);
+		if (ind < 5){
+			key = Object.values(rowdata.name).toString();
+			value = Object.values(rowdata.value).toString();
+			console.log( 'key: ' + key + ', value:' + value );
+		}
+
 	});
 
 	// Print first 5 of tokenizer_final
 	tokenizer_final.forEach(async function(rowdata, ind) { 
 
 		// Get keys and values
-		console.log( 'Get keys of dictionary: ' + Object.keys(rowdata).toString() )
-		
-		// tokenizer_final["name"]: 200, tokenizer_final["value"]: 300
-		// console.log('tokenizer_final["name"]: ' + tokenizer_final["name"] + ', tokenizer_final["value"]: ' + tokenizer_final["value"]);
+		console.log( 'Get keys of dictionary: ' + Object.keys(rowdata).toString() );
 	});
 
 	  return tokenizer_final;
