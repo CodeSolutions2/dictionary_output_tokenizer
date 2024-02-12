@@ -423,7 +423,6 @@ async function find_class_names(ylabel_str) {
 	// Make an array of an attribute (ie: length)
 	let len_X_array = [];
 	uniqueArray.forEach(async function(word, ind) { len_X_array.push(word.length); });
-	// console.log('len_X_array:' + len_X_array);
 
 
 
@@ -471,12 +470,11 @@ async function find_class_names(ylabel_str) {
 	// -----------
 	// Way 1
 	// -----------
-
-	  // Sorting array of objects: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-	  const items = [];
-	  uniqueArray.forEach(async function(word, ind) { 
+	// Sorting array of objects: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+	const items = [];
+	uniqueArray.forEach(async function(word, ind) { 
 		items.push({ name: word, value: word.length });
-	  });
+	});
 	
 	// sort by value
 	var sorted_dict = items.sort((a, b) => a.value - b.value);
@@ -484,7 +482,7 @@ async function find_class_names(ylabel_str) {
 
 	// Way 0: use the tokenizer to make an x_arr, and then create
 	x_arr = [];
-	  var tokenizer2 = sorted_dict;
+	var tokenizer2 = sorted_dict;
 	sorted_dict.forEach(async function(row, ind) {
 		x_arr.push( row.name );
 
@@ -496,8 +494,17 @@ async function find_class_names(ylabel_str) {
 
 	const tokenizer_final = Object.fromEntries(x_arr.map((word, index) => [word, index]));
 
+	// Print first 5 of tokenizer2
+	for (var i=0; i<5;i++){
+		console.log('tokenizer2[i].name: ' + tokenizer2[i].name + ', tokenizer2[i].value: ' + tokenizer2[i].value);
+	}
 
-	  return tokenizer1;
+	// Print first 5 of tokenizer_final
+	for (var i=0; i<5;i++){
+		console.log('tokenizer_final[i].name: ' + tokenizer_final[i].name + ', tokenizer_final[i].value: ' + tokenizer_final[i].value);
+	}
+
+	  return tokenizer_final;
   }
 
 	
