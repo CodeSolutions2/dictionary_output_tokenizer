@@ -479,13 +479,23 @@ async function find_class_names(ylabel_str) {
 	  });
 	
 	// sort by value
-	var tokenizer1 = items.sort((a, b) => a.value - b.value);
-       console.log('tokenizer1:' + tokenizer1);
+	var sorted_dict = items.sort((a, b) => a.value - b.value);
+	console.log('sorted_dict:' + sorted_dict);
 
-	uniqueArray.forEach(async function(randomrow, ind) {
-		tokenizer1[randomrow].value = ind;
+	// Way 0: use the tokenizer to make an x_arr, and then create
+	x_arr = [];
+	  var tokenizer2 = sorted_dict;
+	sorted_dict.forEach(async function(row, ind) {
+		x_arr.push( row.name );
+
+		// OR
+
+		// Way 1: 
+		tokenizer2[ind] = {name: row, value: ind};
 	});
-	console.log('tokenizer1 final :' + tokenizer1);
+
+	const tokenizer_final = Object.fromEntries(x_arr.map((word, index) => [word, index]));
+
 
 	  return tokenizer1;
   }
