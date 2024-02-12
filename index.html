@@ -475,25 +475,36 @@ async function find_class_names(ylabel_str) {
 	uniqueArray.forEach(async function(word, ind) { 
 		items.push({ name: word, value: word.length });
 	});
+
+	// ------------------------------------------
 	
 	// sort by value
 	var sorted_dict = items.sort((a, b) => a.value - b.value);
 	console.log('sorted_dict:' + sorted_dict);
 
+	// Print first 5 of tokenizer_final
+	sorted_dict.forEach(async function(rowdata, ind) { 
+
+		// Get keys and values
+		console.log( 'sorted_dict: Get keys of dictionary: ' + Object.keys(rowdata).toString() );
+	});
+
+	// ------------------------------------------
+
 	// Way 0: use the tokenizer to make an x_arr, and then create
-	x_arr = [];
 	var tokenizer2 = sorted_dict;
-	sorted_dict.forEach(async function(row, ind) {
-		x_arr.push( row.name );
+	tokenizer2.forEach(async function(row, ind) {
 
-		// OR
+		// tokenizer2[ind] = {name: row, value: ind}; // Incorrect: assigns name and value to the key only
 
-		// Way 1: 
-		tokenizer2[ind] = {name: row, value: ind};
+		Object.values(row.name) = row;
+		Object.values(row.value) = ind;
 	});
 
 	const tokenizer_final = Object.fromEntries(x_arr.map((word, index) => [word, index]));
 
+	// ------------------------------------------
+	  
 	// Print first 5 of tokenizer2
 	tokenizer2.forEach(async function(rowdata, ind) { 
 
@@ -509,12 +520,7 @@ async function find_class_names(ylabel_str) {
 
 	});
 
-	// Print first 5 of tokenizer_final
-	tokenizer_final.forEach(async function(rowdata, ind) { 
-
-		// Get keys and values
-		console.log( 'Get keys of dictionary: ' + Object.keys(rowdata).toString() );
-	});
+	
 
 	  return tokenizer_final;
   }
