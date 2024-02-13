@@ -460,6 +460,7 @@ async function find_class_names(ylabel_str) {
 	
   // -------------------------------------------------
 
+	
   async function create_tokenizer_dict(uniqueArray) {
 
 	// ------------------------------------------
@@ -494,7 +495,7 @@ async function find_class_names(ylabel_str) {
 	// ------------------------------------------
 	  
 
-	  return out_final;
+	 // return out_final;
   }
 
 	
@@ -632,7 +633,10 @@ async function tokenize_X(xs) {
 
 	// ---------------------------
 
-        tokenizer = await create_tokenizer(uniqueArray);
+        tokenizer = await create_tokenizer_array_w_dict_per_row(uniqueArray);
+
+        await create_tokenizer_dict(uniqueArray);
+	
 	
        // ---------------------------
 
