@@ -1,3 +1,14 @@
+// Index
+
+Tokenizer
+
+
+
+
+
+
+
+
 // Try 0: Works!
 		// outp.innerHTML += 'rowdata: ' + rowdata + "<br/>";
 		// outp.innerHTML += 'index: ' + index + "<br/>";
@@ -149,4 +160,61 @@ https://stackoverflow.com/questions/66050356/unable-to-fix-cors-policy-on-google
 https://stackoverflow.com/questions/51615809/tensorflow-model-server-access-control-allow-origin?rq=3
 
 https://stackoverflow.com/questions/57118200/tensorflowjs-google-storage-cors-error-with-tf-loadlayersmodel
+
+
+
+
+
+
+
+// ---------------------------------------------
+// Tokenizer
+// ---------------------------------------------
+  
+// Make an array with word length
+let len_X_array = [];
+uniqueArray.forEach(async function(word, ind) { len_X_array.push(word.length); });
+
+console.log("len_X_array: " + len_X_array);
+
+// ---------------------------------------------
+
+
+// -----------
+// Way 0 : words with the same length will be assigned the same index
+// -----------
+// Sort the attribute vector
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+// let len_X_array_sort = len_X_array.sort();
+// console.log('len_X_array_sort:' + len_X_array_sort);
+
+// Put the attribute vector into a dictionary with a corresponding index
+// const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
+
+// Make an array of zeros
+//  let X_array_sorted = [...Array(uniqueArray.length).keys()].map((x) => 0);
+  
+//  uniqueArray.forEach(async function(word, ind) { 
+
+	// word is in position ind=0 of X_array
+//         let key = word.length;  // the attribute to sort
+       
+       // this gives me the index that X_array[word] should have in the output list X_array_sorted
+//        let ind_sorted = dictt[key];
+
+       // Print first 10 to see if correct
+//        if (ind < 10){ console.log('word:' + word); console.log('key:' + key); console.log('ind_sorted:' + ind_sorted); }
+       
+       // but, word should be in position ind_sorted
+//        X_array_sorted[ind_sorted] = word;
+//  });
+
+//  console.log('tokenizer0_X_array_sorted:' + X_array_sorted);
+
+// Write a dictionary, where word=keys are ordered from longest word to shortest word.
+// Thus, the longest word has the smallest index, and the shortest word has the largest index.
+
+// var tokenizer0 = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
+  
+// ---------------------------------------------
 
