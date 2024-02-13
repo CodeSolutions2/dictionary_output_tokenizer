@@ -424,14 +424,14 @@ async function find_class_names(ylabel_str) {
 		console.log( 'list_the_keys_of_the_dict: ' + list_the_keys_of_the_dict );
 		// This returns: name,value
 
-		let key = Object.values(row.name).toString();   // This prints the dictionary key per row
+		let key = Object.values(row.name);   // This prints the dictionary key per row
 		// OR
-		let key1 = array[ind];
+		let key1 = array[ind].toString();
 		
-		let value = Object.values(row.value).toString(); // This prints the dictionary value per row
+		let value = Object.values(row.value); // This prints the dictionary value per row
 
 		// Print the first 5 key and value pairs
-		if (ind < 5){ console.log( 'key: ' + key + 'key1: ' + key1 + ', value:' + value ); }
+		if (ind < 5){ console.log( 'key: ' + key + ', key1: ' + key1 + ', value:' + value ); }
 		
 	});
 
@@ -444,8 +444,13 @@ async function find_class_names(ylabel_str) {
   async function create_tokenizer(uniqueArray) {
 
 	// ------------------------------------------
-	  
-	console.log("uniqueArray: " + uniqueArray);
+
+	// Print the first 5 rows of an array
+	uniqueArray.forEach(async function(row, ind) {
+		// Print the first 5 key and value pairs
+		if (ind < 5){ console.log( 'uniqueArray['+ ind + ']: ' + row ); }
+		
+	});
 	  
 	// ------------------------------------------
 
@@ -465,7 +470,7 @@ async function find_class_names(ylabel_str) {
 	
 	// [1] Sort an array, containing a dictionary per row, where all the rows are sorted by the dictionary key called value in ascending order.
 	// Sorting array of objects: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-	var ascending_sorted_array = items.sort((a, b) => a.value - b.value);
+	var ascending_sorted_array = array_w_dictionary_rows.sort((a, b) => a.value - b.value);
 	
 	// ------------------------------------------
 	  
