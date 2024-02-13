@@ -493,36 +493,33 @@ async function find_class_names(ylabel_str) {
 
 	// Way 0: use the tokenizer to make an x_arr, and then create
 	var tokenizer2 = sorted_dict;
+	  
 	tokenizer2.forEach(async function(row, ind) {
 
-		// tokenizer2[ind] = {name: row, value: ind}; // Incorrect: assigns name and value to the key only
+		// Print the available keys of the dictionary
+		// let list_the_keys_of_the_dict = Object.keys(rowdata).toString();
+		// console.log( 'list_the_keys_of_the_dict: ' + list_the_keys_of_the_dict );
+		// This returns: name,value
 
-		Object.values(row.name) = row;
-		Object.values(row.value) = ind;
+		// tokenizer2[ind] = {name: row, value: ind}; // This assigns name and value to the key using the number
+
+		let key = Object.values(row.name).toString();   // This prints the dictionary key per row 
+		let value = Object.values(row.value).toString(); // This prints the dictionary value per row
+
+		// Print the first 5 key and value pairs
+		if (ind < 5){ console.log( 'key: ' + key + ', value:' + value ); }
+		
+		// Want to reassign the dictionary value, using the key, per row
+		tokenizer2[key] = ind;
 	});
 
-	const tokenizer_final = Object.fromEntries(x_arr.map((word, index) => [word, index]));
+	//const tokenizer_final = Object.fromEntries(x_arr.map((word, index) => [word, index]));
 
 	// ------------------------------------------
 	  
-	// Print first 5 of tokenizer2
-	tokenizer2.forEach(async function(rowdata, ind) { 
-
-		// Get keys and values
-		// Get keys of dictionary: name,value
-		console.log( 'Get keys of dictionary: ' + Object.keys(rowdata).toString() );
-
-		if (ind < 5){
-			key = Object.values(rowdata.name).toString();
-			value = Object.values(rowdata.value).toString();
-			console.log( 'key: ' + key + ', value:' + value );
-		}
-
-	});
-
 	
 
-	  return tokenizer_final;
+	  return tokenizer2;
   }
 
 	
