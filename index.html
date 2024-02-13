@@ -49,7 +49,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   var csvDataset = [];  // This is a global variable
 
-  var tokenizer = 0;  // This is a global variable, that will be reassigned after button push
+  var tokenizer = {};  // This is a global variable, that will be reassigned after button push
   var maxlen = 0;  // This is a global variable, that will be reassigned after button push
   var class_names = []; // This is a global variable, that will be reassigned after button push
   var custom_model = 0; 
@@ -226,6 +226,7 @@ async function find_class_names(ylabel_str) {
 
 	    // Load the model
 	    custom_model = await make_and_compile_custom_model();
+	    console.log("custom_model: " + custom_model);
 	    
 	    // ---------------------------
 	    
@@ -287,6 +288,7 @@ async function find_class_names(ylabel_str) {
     // OR
 
     // Way 2: load model layers using functional API (tf.LayersModel)
+	console.log('here');
 	  
     // ---------------------------
 
@@ -388,10 +390,6 @@ async function find_class_names(ylabel_str) {
 	  // Call X Tokenizer function
 	  var xs_seq = await tokenize_X(xs);
 
-	  // OR
-
-	  // copy paste tokenizer here
-
 	// ---------------------------
 	  
 	  // Create a csvDataset
@@ -431,7 +429,7 @@ async function find_class_names(ylabel_str) {
   // -------------------------------------------------
 
 	
-  async function create_tokenizer_dict(uniqueArray) {
+  async function create_tokenizer_dict(uniqueArray, tokenizer) {
 
 	// ------------------------------------------
 
@@ -463,13 +461,13 @@ async function find_class_names(ylabel_str) {
   
 	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
-	const tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
+	tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
 
 	// ------------------------------------------
 
-	// Print the first 5 rows of the array, array_w_dictionary_rows
-	console.log('print_a_dictionary:');
-	print_a_dictionary(tokenizer);
+	// [2] Print the first 5 rows of the array, array_w_dictionary_rows
+	// console.log('print_a_dictionary:');
+	// print_a_dictionary(tokenizer);
 
 	// ------------------------------------------
 
@@ -526,7 +524,9 @@ async function tokenize_X(xs) {
 
 	// ---------------------------
 
-   var tokenizer = await create_tokenizer_dict(uniqueArray);
+	// Looks OK for now
+	// Things to maybe concerned about: 0) there are commas after each word but maybe it is how it is printed to screen, 1) 3 words have two words joinned together by a comma
+	tokenizer = await create_tokenizer_dict(uniqueArray, tokenizer);
 	
 	// ---------------------------
 
@@ -543,6 +543,7 @@ async function tokenize_X(xs) {
 		sen_arr_len.push(sen_arr.length);
 		
 		sen_arr.forEach(async function(val1, ind1) {
+			
 			// Directly call the tokenizer, if the word does not exist put the number for '<OOV>' token
 			let result = tokenizer[val1] ?? tokenizer['<OOV>'];
 
@@ -552,17 +553,17 @@ async function tokenize_X(xs) {
 
 			regexp = new RegExp(`\b${val1}\b`, 'g');
 			val = val.replace(regexp, result);
-
 			
 		});  // end of forEach
 
 		// Convert string to integer array
 		let seq_arr = val.split(" ");
 		let seq_arr_int = [];
-		seq_arr.forEach(async function(val, ind) {
-			seq_arr_int.push(Number(val));
-		});
+		seq_arr.forEach(async function(val, ind) { seq_arr_int.push(Number(val)); });
 
+		// Print each sentence sequence
+		console.log("seq_arr_int: " + seq_arr_int);
+		
 		// Save output sequence per row
 		xs_seq.push(seq_arr_int);
 		
