@@ -461,7 +461,7 @@ async function find_class_names(ylabel_str) {
   
 	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
-	tokenizer = Object.fromEntries(arr.map((word, index) => [word index]));
+	tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
 
 	// ------------------------------------------
 
