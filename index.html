@@ -519,7 +519,6 @@ async function tokenize_X(xs) {
 
 	// Add the <OOV> token: if the word is not in the token list assign this value
 	uniqueArray.push('<OOV>');
-
 	console.log('uniqueArray.length :' + uniqueArray.length); // uniqueArray.length :1241
 
 	// ---------------------------
@@ -527,10 +526,28 @@ async function tokenize_X(xs) {
 	// Looks OK for now
 	// Things to maybe concerned about: 0) there are commas after each word but maybe it is how it is printed to screen, 1) 3 words have two words joinned together by a comma
 	tokenizer = await create_tokenizer_dict(uniqueArray, tokenizer);
+
+
+	// Problem0: do not know how to output the length of tokenizer to update the global variable, for loading the model in the next step
 	
 	// ---------------------------
 
-	// Apply tokenizer to sentences, to obtain sequences
+	// Apply tokenizer to sentences
+	// var xs_seq = await apply_tokenizer_to_sentences(xs, tokenizer);
+
+	
+	// ---------------------------
+	
+	// Update the global variable of sen_arr, to initialize the model
+	maxlen = await update_MAXLEN(sen_arr_len);
+	
+	return "done";
+}
+
+
+async function apply_tokenizer_to_sentences(xs, tokenizer){
+
+// Apply tokenizer to sentences, to obtain sequences
 	sen_arr_len = [];
 	xs_seq = [];
 	
@@ -569,14 +586,9 @@ async function tokenize_X(xs) {
 		
 	});  // end of forEach
 
-
-	// Update the global variable of sen_arr, to initialize the model
-	maxlen = await update_MAXLEN(sen_arr_len);
-	
 	return xs_seq;
-	
 }
-
+	
 
   // -------------------------------------------------
 
