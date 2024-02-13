@@ -410,52 +410,19 @@ async function find_class_names(ylabel_str) {
 	  return Dataset_sequence
   }
 
-	
-  // -------------------------------------------------
-
-	
-  async function print_an_array_containing_a_dictionary(array) {
-	  
-	// Print the first 5 rows of an array, where each row contains a dictionary
-	array.forEach(async function(row, ind) {
-		
-		// Print the available keys of the dictionary
-		let list_the_keys_of_the_dict = Object.keys(row).toString();
-		console.log( 'list_the_keys_of_the_dict: ' + list_the_keys_of_the_dict );
-		// This returns: name,value
-
-		// It is CORRECT sort of, but it prints commas in between each letter
-		let key = Object.values(row.name);   // It should print the dictionary key per array row
-		// OR
-		let key1 = array[ind].toString();  // It prints [Object] object
-
-		// It is INCORRECT, it prints nothing
-		let value = Object.values(row.value); // It should print the dictionary value per array row
-
-		// Print the first 5 key and value pairs
-		if (ind < 5){ console.log( 'key: ' + key + ', key1: ' + key1 + ', value:' + value ); }
-		
-	});
-
-  }
-
 
   // -------------------------------------------------
 
 	
   async function print_a_dictionary(dictt) {
 	  
-	// Print the first 5 keys of a dictionary
+	// Print the first XX keys of a dictionary
 	var dictt_keys = Object.keys(dictt);
 
-	for (var i=0; i<5; i++) {
+	for (var i=0; i<dictt_keys.length; i++) {
 		let key = dictt_keys[i];
 		let value = dictt[key];
-
-		console.log('key: ' + 
-			    key + 
-			    ', value:' + 
-			    value);
+		console.log('key: ' + key +  ', value:' +  value);
 	}
 
   }
@@ -466,14 +433,6 @@ async function find_class_names(ylabel_str) {
 	
   async function create_tokenizer_dict(uniqueArray) {
 
-	// ------------------------------------------
-
-	// Print the first 5 rows of an array
-	uniqueArray.forEach(async function(row, ind) {
-		// Print the first 5 key and value pairs
-		if (ind < 5){ console.log( 'uniqueArray['+ ind + ']: ' + row ); }
-	});
-	  
 	// ------------------------------------------
 
 	// [0] Sort uniqueArray by an attribute (ie: length)
@@ -501,8 +460,7 @@ async function find_class_names(ylabel_str) {
 	}
 	  
 	// ------------------------------------------
-
-	  
+  
 	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
 	const tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
@@ -515,94 +473,9 @@ async function find_class_names(ylabel_str) {
 
 	// ------------------------------------------
 
-	 // return tokenizer;
+	 return tokenizer;
   }
-
 	
-  // -------------------------------------------------
-
-	
-  async function create_tokenizer_array_w_dict_per_row(uniqueArray) {
-
-	// ------------------------------------------
-
-	// Print the first 5 rows of an array
-	uniqueArray.forEach(async function(row, ind) {
-		// Print the first 5 key and value pairs
-		if (ind < 5){ console.log( 'uniqueArray['+ ind + ']: ' + row ); }
-		
-	});
-	  
-	// ------------------------------------------
-
-	// [0] Make an array, where each row is a dictionary where the keys are called name and value; name=word and value=word.length
-	var array_w_dictionary_rows = [];
-	uniqueArray.forEach(async function(word, ind) { 
-		array_w_dictionary_rows.push({ name: word, value: word.length });
-	});
-
-	// ------------------------------------------
-
-	// Print the first 5 rows of the array, array_w_dictionary_rows
-	console.log('array_w_dictionary_rows:');
-	print_an_array_containing_a_dictionary(array_w_dictionary_rows);
-	  
-	// ------------------------------------------
-	
-	// [1] Sort an array, containing a dictionary per row, where all the rows are sorted by the dictionary key called value in ascending order.
-	// Sorting array of objects: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-	var ascending_sorted_array = array_w_dictionary_rows.sort((a, b) => a.value - b.value);
-	
-	// ------------------------------------------
-	  
-	// Print the first 5 rows of the array, ascending_sorted_array
-	console.log('ascending_sorted_array:');
-	print_an_array_containing_a_dictionary(ascending_sorted_array);
-
-	// ------------------------------------------
-
-	// [2] Make the array be sorted in descending order, where all the rows are sorted by the dictionary key called value in descending order.
-	var descending_sorted_array_w_dictionary_per_row = ascending_sorted_array.reverse();
-	  
-	// ------------------------------------------
-	  
-	// Print the first 5 rows of the array, descending_sorted_array_w_dictionary_per_row
-	console.log('descending_sorted_array_w_dictionary_per_row:');
-	print_an_array_containing_a_dictionary(descending_sorted_array_w_dictionary_per_row);
-
-	// ------------------------------------------
-
-	// [3] Reassign the number in the dictionary key called value, to a increasing count, per row of the descending sorted array
-	var out_final = [];
-	descending_sorted_array_w_dictionary_per_row.forEach(async function(row, ind) {
-
-		let key = Object.values(row.name).toString();   // This prints the dictionary key per row 
-		// let value = Object.values(row.value).toString(); // This prints the dictionary value per row
-
-		// ---------------------
-		
-		// Try 0
-		// descending_sorted_array_w_dictionary_per_row[ind] = {name: key, value: ind}; // This assigns name and value to the key using the number ind
-
-		// Try 1
-		// Want to reassign the dictionary value, using the key, per row
-		// out_final[key] = ind;
-
-		// Try 2
-		
-		out_final.push({name: key, value: ind})
-	});
-
-	// ------------------------------------------
-
-	// Print the first 5 rows of the array, out_final
-	console.log('out_final:');
-	print_an_array_containing_a_dictionary(out_final);
-
-	// ------------------------------------------
-
-	  return out_final;
-  }
 
 	
   // -------------------------------------------------
@@ -633,7 +506,7 @@ async function tokenize_X(xs) {
 	
 	// Replace any multiple spaces from accumulatted string with only a single space
 	final_str = final_str.replace(/\s+/g, ' ');
-	console.log('final_str accumulated :' + final_str);
+	// console.log('final_str accumulated :' + final_str);
 	
 	// ---------------------------
 
@@ -653,9 +526,9 @@ async function tokenize_X(xs) {
 
 	// ---------------------------
 
-        await create_tokenizer_dict(uniqueArray);
+   var tokenizer = await create_tokenizer_dict(uniqueArray);
 	
-       // ---------------------------
+	// ---------------------------
 
 	// Apply tokenizer to sentences, to obtain sequences
 	sen_arr_len = [];
