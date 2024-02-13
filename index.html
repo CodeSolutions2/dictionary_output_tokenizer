@@ -414,112 +414,110 @@ async function find_class_names(ylabel_str) {
   // -------------------------------------------------
 
 	
-  async function create_tokenizer(uniqueArray) {
-
-	// console.log('uniqueArray:' + uniqueArray);
+  async function print_an_array_containing_a_dictionary(array) {
 	  
-	// Sort the uniqueArray by length, output a dictionary of tokens 
-	
-	// Make an array of an attribute (ie: length)
-	let len_X_array = [];
-	uniqueArray.forEach(async function(word, ind) { len_X_array.push(word.length); });
-
-
-
-	// -----------
-	// Way 0 : words with the same length will be assigned the same index
-	// -----------
-       // Sort the attribute vector
-       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-       // let len_X_array_sort = len_X_array.sort();
-       // console.log('len_X_array_sort:' + len_X_array_sort);
-
-       // Put the attribute vector into a dictionary with a corresponding index
-       // const dictt = Object.fromEntries(len_X_array_sort.map((atr2sort, index) => [atr2sort, index]));
-
-       // Make an array of zeros
-      //  let X_array_sorted = [...Array(uniqueArray.length).keys()].map((x) => 0);
-	  
-      //  uniqueArray.forEach(async function(word, ind) { 
-
-		// word is in position ind=0 of X_array
-	//         let key = word.length;  // the attribute to sort
-	       
-	       // this gives me the index that X_array[word] should have in the output list X_array_sorted
-	//        let ind_sorted = dictt[key];
-
-	       // Print first 10 to see if correct
-	//        if (ind < 10){ console.log('word:' + word); console.log('key:' + key); console.log('ind_sorted:' + ind_sorted); }
-	       
-	       // but, word should be in position ind_sorted
-	//        X_array_sorted[ind_sorted] = word;
-	//  });
-       
-      //  console.log('tokenizer0_X_array_sorted:' + X_array_sorted);
-
-       // Write a dictionary, where word=keys are ordered from longest word to shortest word.
-       // Thus, the longest word has the smallest index, and the shortest word has the largest index.
-	
-       // var tokenizer0 = Object.fromEntries(X_array_sorted.map((word, index) => [word, index]));
-	  
-       // -----------
- 
-	  
-       // OR
-	  
-	// -----------
-	// Way 1
-	// -----------
-	// Sorting array of objects: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-	const items = [];
-	uniqueArray.forEach(async function(word, ind) { 
-		items.push({ name: word, value: word.length });
-	});
-
-	// ------------------------------------------
-	
-	// sort by value
-	var sorted_dict = items.sort((a, b) => a.value - b.value);
-	console.log('sorted_dict:' + sorted_dict);
-
-	// Print first 5 of tokenizer_final
-	sorted_dict.forEach(async function(rowdata, ind) { 
-
-		// Get keys and values
-		console.log( 'sorted_dict: Get keys of dictionary: ' + Object.keys(rowdata).toString() );
-	});
-
-	// ------------------------------------------
-
-	// Way 0: use the tokenizer to make an x_arr, and then create
-	var tokenizer2 = sorted_dict;
-	  
-	tokenizer2.forEach(async function(row, ind) {
-
+	// Print the first 5 rows of a dictionary
+	array.forEach(async function(row, ind) {
+		
 		// Print the available keys of the dictionary
-		// let list_the_keys_of_the_dict = Object.keys(rowdata).toString();
-		// console.log( 'list_the_keys_of_the_dict: ' + list_the_keys_of_the_dict );
+		let list_the_keys_of_the_dict = Object.keys(row).toString();
+		console.log( 'list_the_keys_of_the_dict: ' + list_the_keys_of_the_dict );
 		// This returns: name,value
 
-		// tokenizer2[ind] = {name: row, value: ind}; // This assigns name and value to the key using the number
-
-		let key = Object.values(row.name).toString();   // This prints the dictionary key per row 
+		let key = Object.values(row.name).toString();   // This prints the dictionary key per row
+		// OR
+		let key1 = array[ind];
+		
 		let value = Object.values(row.value).toString(); // This prints the dictionary value per row
 
 		// Print the first 5 key and value pairs
-		if (ind < 5){ console.log( 'key: ' + key + ', value:' + value ); }
+		if (ind < 5){ console.log( 'key: ' + key + 'key1: ' + key1 + ', value:' + value ); }
 		
-		// Want to reassign the dictionary value, using the key, per row
-		tokenizer2[key] = ind;
 	});
 
-	//const tokenizer_final = Object.fromEntries(x_arr.map((word, index) => [word, index]));
+  }
+
+	
+  // -------------------------------------------------
+
+	
+  async function create_tokenizer(uniqueArray) {
+
+	// ------------------------------------------
+	  
+	console.log("uniqueArray: " + uniqueArray);
+	  
+	// ------------------------------------------
+
+	// [0] Make an array, where each row is a dictionary where the keys are called name and value; name=word and value=word.length
+	var array_w_dictionary_rows = [];
+	uniqueArray.forEach(async function(word, ind) { 
+		array_w_dictionary_rows.push({ name: word, value: word.length });
+	});
+
+	// ------------------------------------------
+
+	// Print the first 5 rows of the array, array_w_dictionary_rows
+	console.log('array_w_dictionary_rows:');
+	print_an_array_containing_a_dictionary(array_w_dictionary_rows)
+	  
+	// ------------------------------------------
+	
+	// [1] Sort an array, containing a dictionary per row, where all the rows are sorted by the dictionary key called value in ascending order.
+	// Sorting array of objects: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+	var ascending_sorted_array = items.sort((a, b) => a.value - b.value);
+	
+	// ------------------------------------------
+	  
+	// Print the first 5 rows of the array, ascending_sorted_array
+	console.log('ascending_sorted_array:');
+	print_an_array_containing_a_dictionary(ascending_sorted_array)
+
+	// ------------------------------------------
+
+	// [2] Make the array be sorted in descending order, where all the rows are sorted by the dictionary key called value in descending order.
+	var descending_sorted_array_w_dictionary_per_row = ascending_sorted_array;
+	  
+	// ------------------------------------------
+	  
+	// Print the first 5 rows of the array, descending_sorted_array_w_dictionary_per_row
+	console.log('descending_sorted_array_w_dictionary_per_row:');
+	print_an_array_containing_a_dictionary(descending_sorted_array_w_dictionary_per_row)
+
+	// ------------------------------------------
+
+	// [3] Reassign the number in the dictionary key called value, to a increasing count, per row of the descending sorted array
+	var out_final = [];
+	descending_sorted_array_w_dictionary_per_row.forEach(async function(row, ind) {
+
+		let key = Object.values(row.name).toString();   // This prints the dictionary key per row 
+		// let value = Object.values(row.value).toString(); // This prints the dictionary value per row
+
+		// ---------------------
+		
+		// Try 0
+		// descending_sorted_array_w_dictionary_per_row[ind] = {name: key, value: ind}; // This assigns name and value to the key using the number ind
+
+		// Try 1
+		// Want to reassign the dictionary value, using the key, per row
+		// out_final[key] = ind;
+
+		// Try 2
+		
+		out_final.push({name: key, value: ind})
+	});
+
+	// ------------------------------------------
+
+	// Print the first 5 rows of the array, out_final
+	console.log('out_final:');
+	print_an_array_containing_a_dictionary(out_final)
 
 	// ------------------------------------------
 	  
 	
 
-	  return tokenizer2;
+	  return out_final;
   }
 
 	
