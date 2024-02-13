@@ -472,33 +472,50 @@ async function find_class_names(ylabel_str) {
 	uniqueArray.forEach(async function(row, ind) {
 		// Print the first 5 key and value pairs
 		if (ind < 5){ console.log( 'uniqueArray['+ ind + ']: ' + row ); }
-		
 	});
 	  
 	// ------------------------------------------
 
-	// [0] Make a dictionary where each key is a word in uniqueArray, and each value is word.length
+	// [0] Sort uniqueArray by an attribute (ie: length)
+	let arr = uniqueArray;
+	c = 0;
+	while (c != arr.length-1) {
+		 c = 0;
+		  for (var i=0; i<arr.length-1; i++) {
+			let cur = arr[i];
+			  let next = arr[i+1];
+			  let cur_value = cur.length;
+			  let next_value = next.length;
+			  
+			  if (cur_value < next_value) {
+				  temp_cur = arr[i]
+				  temp_next = arr[i+1]
+				  arr[i+1] = temp_cur
+				  arr[i] = temp_next
+			  } else {
+				  //this will be some value from 1 to arr.length-1
+				  c = c + 1;
+				  // c = arr.length-1 means that sorting is finished
+			  }
+		  }
+	}
+	  
+	// ------------------------------------------
+
+	  
+	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
-	const dictt = Object.fromEntries(uniqueArray.map((word, index) => [word, word.length]));
+	const tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
 
 	// ------------------------------------------
 
 	// Print the first 5 rows of the array, array_w_dictionary_rows
 	console.log('print_a_dictionary:');
-	print_a_dictionary(dictt);
+	print_a_dictionary(tokenizer);
 
 	// ------------------------------------------
 
-	// [1] Sort the dictionary by the value of each key
-	  
-	  
-	// ------------------------------------------
-
-
-	// ------------------------------------------
-	  
-
-	 // return out_final;
+	 // return tokenizer;
   }
 
 	
@@ -636,10 +653,7 @@ async function tokenize_X(xs) {
 
 	// ---------------------------
 
-        tokenizer = await create_tokenizer_array_w_dict_per_row(uniqueArray);
-
         await create_tokenizer_dict(uniqueArray);
-	
 	
        // ---------------------------
 
