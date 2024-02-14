@@ -539,12 +539,9 @@ async function tokenize_X(xs) {
 
 	// Apply tokenizer to sentences
 	var xs_seq = await apply_tokenizer_to_sentences(xs, tokenizer);
-
+	console.log("xs_seq: " + xs_seq);
 	
 	// ---------------------------
-	
-	// Update the global variable of sen_arr, to initialize the model
-	maxlen = await update_MAXLEN(sen_arr_len);
 	
 	return xs_seq;
 }
@@ -553,12 +550,10 @@ async function tokenize_X(xs) {
 async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 	// Apply tokenizer to sentences, to obtain sequences
-	sen_arr_len = [];
-	xs_seq = [];
-
-	// console.log("confirm xs: " + xs);
-	
 	xs.forEach(async function(val, ind) {
+
+		// Initialize
+		if (ind == 0) { sen_arr_len = []; xs_seq = []; }
 
 		// console.log("val original: " + val);
 		
@@ -601,9 +596,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 		// Convert string_array to integer array
 		let seq_arr_int = [];
-		seq_arr.forEach(async function(val, ind) { 
-			seq_arr_int.push(Number(val));
-		});
+		seq_arr.forEach(async function(val, ind) { seq_arr_int.push(Number(val)); });
 		// console.log("seq_arr_int: " + seq_arr_int);
 		
 		// Save output sequence per row
@@ -611,7 +604,8 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		
 	});  // end of forEach
 
-	console.log("xs_seq: " + xs_seq);
+	// Update the global variable of sen_arr, to initialize the model
+	maxlen = await update_MAXLEN(sen_arr_len);
 	
 	return xs_seq;
 }
