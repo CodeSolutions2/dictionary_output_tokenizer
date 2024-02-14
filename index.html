@@ -592,7 +592,7 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
 		
 		if (ind == 0){
-			console.log("Number(out[1]): " + Number(out[1]));
+			console.log("maxlen_local: " + maxlen_local);
 			console.log("row: " + row);
 			console.log("row.length: " + row.length);
 			console.log("array_of_zeros: " + array_of_zeros);
