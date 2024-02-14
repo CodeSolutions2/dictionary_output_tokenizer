@@ -540,6 +540,7 @@ async function tokenize_X(xs) {
 	// Apply tokenizer to sentences
 	var xs_seq = await apply_tokenizer_to_sentences(xs, tokenizer);
 	console.log("xs_seq: " + xs_seq);
+	console.log("xs_seq.length : " + xs_seq.length);
 	
 	// ---------------------------
 	
@@ -606,6 +607,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 	// Update the global variable of sen_arr, to initialize the model
 	maxlen = await update_MAXLEN(sen_arr_len);
+	console.log("maxlen: " + maxlen);
 	
 	return xs_seq;
 }
