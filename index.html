@@ -521,19 +521,19 @@ async function tokenize_X(xs) {
 
 	// Pad the sentences such that each sequence is [1, maxlen], or xs_seq is size [num_of_rows, maxlen]
 	let xs_seq = out[0];
-	// let xs_seq_pad = [];
-	// xs_seq.forEach(async function(row, ind) {
+	let xs_seq_pad = [];
+	xs_seq.forEach(async function(row, ind) {
 
 		// post pad zeros
 		// Using Array.from
-	// 	let amount2pad = row.length - maxlen;
-	// 	console.log("amount2pad: " + amount2pad);
-	// 	let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
+		let amount2pad = row.length - maxlen;
+		console.log("amount2pad: " + amount2pad);
+		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
 		
-	// 	if (ind == 0){
-	// 		console.log("type ofrow: " + typeof row);
-		//	console.log("array_of_zeros: " + typeof array_of_zeros);
-		// }
+		if (ind == 0){
+			console.log("type ofrow: " + typeof row);
+			console.log("array_of_zeros: " + typeof array_of_zeros);
+		}
 		
 	// 	xs_seq_pad.push( row.concat(array_of_zeros); );
 	// });
