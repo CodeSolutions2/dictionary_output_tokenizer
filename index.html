@@ -500,7 +500,7 @@ async function tokenize_X(xs) {
 	// ---------------------------
 
 	// Apply tokenizer to sentences
-	// Return both variables as an array: out = [xs_seq, sen_arr_len]
+	// Return both variables as an array: out = [xs_seq, maxlen]
 	let out = await apply_tokenizer_to_sentences(xs, tokenizer);
 	// console.log("xs_seq: " + xs_seq); // CORRECT
 	// console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
@@ -508,7 +508,8 @@ async function tokenize_X(xs) {
 	// ---------------------------
 
 	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "maxlen = Math.max(sen_arr_len);" because this call means that the variable is local to this function.
-	maxlen = await update_MAXLEN(out[1]);
+	// maxlen = await update_MAXLEN(out[1]);
+	maxlen = await { out[1] };
 	console.log("maxlen: " + maxlen);  // CORRECT, maxlen: Tensor 500
 
 	// ---------------------------
@@ -531,7 +532,7 @@ async function tokenize_X(xs) {
 async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 	// Apply tokenizer to sentences, to obtain sequences
-	let sen_arr_len = [];
+	let maxlen = 0;
 	let xs_seq = [];
 	
 	xs.forEach(async function(val, ind) {
@@ -548,8 +549,9 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		// console.log("sen_arr: " + sen_arr);
 		
 		// Obtain the length of array for model training variable MAXLEN
-		sen_arr_len.push(sen_arr.length);
-		// console.log("sen_arr_len: " + sen_arr_len);
+		if (maxlen < sen_arr.length) {
+			maxlen = sen_arr.length;
+		}
 
 		sen_arr.forEach(async function(val1, ind1) {
 			
@@ -583,21 +585,9 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		xs_seq.push(seq_arr_int);
 		
 	});  // end of forEach
-
-	// Update the global variable of sen_arr, to initialize the model
-	// maxlen = await update_MAXLEN(sen_arr_len);
-	// console.log("maxlen: " + maxlen);
-	// Here calling update_MAXLEN does not assign maxlen (maxlen: Tensor NaN)
 	
-	return [xs_seq, sen_arr_len];
+	return [xs_seq, maxlen];
 }
-	
-
-  // -------------------------------------------------
-
-  async function update_MAXLEN(sen_arr_len) {
-	return Math.max(sen_arr_len);
-  }
 	
   // -------------------------------------------------
 
