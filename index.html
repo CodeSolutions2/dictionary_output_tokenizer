@@ -353,22 +353,9 @@ async function find_class_names(ylabel_str) {
 	// ---------------------------
 	  
 	  // Call X Tokenizer function
-	  // out_arr = [xs_seq_pad, correctly_tokenized_rows]
-	  let out_arr = await tokenize_X(xs);
+	  let Dataset_sequence = await tokenize_X(xs, ys);
 	  
-	// ---------------------------
-	  
-	  // Create a csvDataset using ONLY the correctly tokenized rows
-	  // put x_clean and ys arrays in to a list of dictionaries per row with the same keys
-	  // data should look like : [{a: 1, b: 11}, {a: 2, b: 12}, {a: 3, b: 13}, ...]
-	  let xs_seq_pad = out_arr[0];
-	  let correctly_tokenized_rows = out_arr[1];
-	  let data = []; 
-	  correctly_tokenized_rows.forEach(async function(row, ind) { 
-		  data.push({xs: xs_seq_pad[row], ys: ys[row]}); 
-	  });
-	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
-	  console.log('Dataset_sequence: ' + Dataset_sequence);
+	  // ---------------------------	
 	  
 	  return Dataset_sequence;
   }
@@ -451,7 +438,7 @@ async function sort_an_array_by_string_attribute(str_arr){
   // -------------------------------------------------
 
 
-async function tokenize_X(xs) {
+async function tokenize_X(xs, ys) {
 	
 	// ---------------------------
 	
@@ -500,73 +487,42 @@ async function tokenize_X(xs) {
 	// ---------------------------
 	
 	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "vocab_size = Object.keys(tokenizer).length;" because this call means that the variable is local to this function.
-	vocab_size = await update_vocab_size(tokenizer);
+	vocab_size = await update_global_variable_vocab_size(tokenizer);
 	// console.log("vocab_size: " + vocab_size);
 
 	// ---------------------------
 
 	// Apply tokenizer to sentences
 	// Return both variables as an array: out = [xs_seq, maxlen, correctly_tokenized_rows]
-	let out = await apply_tokenizer_to_sentences(xs, tokenizer);
-
-	// Outputting values here are not printed in console
-	console.log("xs_seq: " + out[0]);
-	console.log("maxlen: " + out[1]);
-	console.log("correctly_tokenized_rows: " + out[2]);
-	
-	// ---------------------------
-
-	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "maxlen = Math.max(sen_arr_len);" because this call means that the variable is local to this function.
-	maxlen = await Number(out[1]);
-	console.log("maxlen: " + maxlen);  // CORRECT, maxlen: Tensor 500
+	let Dataset_sequence = await apply_tokenizer_to_sentences(xs, ys, tokenizer);
 
 	// ---------------------------
-
-	// Pad the sentences such that each sequence is [1, maxlen], or xs_seq is size [num_of_rows, maxlen]
-	let xs_seq = out[0];
-	console.log("xs_seq: " + xs_seq); // CORRECT
-	console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
 	
-	let xs_seq_pad = [];
-	xs_seq.forEach(async function(row, ind) {
-
-		// post pad zeros
-		// Using Array.from
-		let amount2pad = row.length - maxlen; // OK
-		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
-		
-		if (ind == 0){
-			console.log("Number(out[1]): " + Number(out[1]));
-			console.log("row: " + row);
-			console.log("row.length: " + row.length);
-			console.log("array_of_zeros: " + array_of_zeros);
-		}
-		
-	// 	xs_seq_pad.push( row.concat(array_of_zeros); );
-	});
-	
-	// ---------------------------
-
-	return [xs_seq, out[2]];
-	// return [xs_seq_pad, out[2]];  // [xs_seq_pad, correctly_tokenized_rows]
+	return Dataset_sequence;
 }
 
 
   // -------------------------------------------------
 
 	
-  async function update_vocab_size(tokenizer) {
+  async function update_global_variable_vocab_size(tokenizer) {
 	return Object.keys(tokenizer).length;
   }
 
+  // -------------------------------------------------
+
 	
+  async function update_global_variable_maxlen(maxlen) {
+	return maxlen;
+  }
+
 // -------------------------------------------------
 
 	
-async function apply_tokenizer_to_sentences(xs, tokenizer){
+async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 
 	// Apply tokenizer to sentences, to obtain sequences
-	let maxlen = 0;
+	let maxlen_local = 0;
 	let xs_seq = [];
 	let correctly_tokenized_rows = [];
 	
@@ -584,7 +540,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		// console.log("sen_arr: " + sen_arr);
 		
 		// Obtain the length of array for model training variable MAXLEN
-		if (maxlen < sen_arr.length) { maxlen = sen_arr.length;}
+		if (maxlen_local < sen_arr.length) { maxlen_local = sen_arr.length;}
 
 		sen_arr.forEach(async function(val1, ind1) {
 			
@@ -596,13 +552,6 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 			// Update the sentence string
 			val = val.replace(regexp, result.toString());
-
-			// Only print for first sentence
-			// if (ind == 0){
-			// 	console.log("val1: " + val1 + ", result: " + result);
-			// 	console.log("matches_in_an_array: ", matches_in_an_array);
-			// 	console.log("val transformed: " + val);
-			// }
 			
 		});  // end of sen_arr.forEach
 
@@ -625,12 +574,48 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		
 	});  // end of forEach
 
-	// Outputting values here are not printed in console
-	// console.log("xs_seq: " + xs_seq); // no output
-	// console.log("maxlen: " + maxlen); // no output
-	// console.log("correctly_tokenized_rows: " + correctly_tokenized_rows); // no output
+	// ---------------------------
+
+	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "vocab_size = Object.keys(tokenizer).length;" because this call means that the variable is local to this function.
+	maxlen = await update_global_variable_maxlen(maxlen_local);
+	// console.log("maxlen: " + maxlen);
+
 	
-	return [xs_seq, maxlen, correctly_tokenized_rows];
+	// ---------------------------
+	
+	// Pad the sentences such that each sequence is [1, maxlen_local], or xs_seq is size [num_of_rows, maxlen_local]
+	let xs_seq_pad = [];
+	xs_seq.forEach(async function(row, ind) {
+
+		// post pad zeros: Using Array.from
+		let amount2pad = row.length - maxlen_local; // OK
+		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
+		
+		if (ind == 0){
+			console.log("Number(out[1]): " + Number(out[1]));
+			console.log("row: " + row);
+			console.log("row.length: " + row.length);
+			console.log("array_of_zeros: " + array_of_zeros);
+		}
+		
+	// 	xs_seq_pad.push( row.concat(array_of_zeros); );
+	});
+
+	// ---------------------------
+	
+	  // Create a csvDataset using ONLY the correctly tokenized rows
+	  // put x_clean and ys arrays in to a list of dictionaries per row with the same keys
+	  // data should look like : [{a: 1, b: 11}, {a: 2, b: 12}, {a: 3, b: 13}, ...]
+	  let data = []; 
+	  correctly_tokenized_rows.forEach(async function(row, ind) { 
+		  data.push({xs: xs_seq_pad[row], ys: ys[row]}); 
+	  });
+	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
+	  console.log('Dataset_sequence: ' + Dataset_sequence);
+
+	// ---------------------------	
+	
+	return Dataset_sequence;
 }
 	
   // -------------------------------------------------
