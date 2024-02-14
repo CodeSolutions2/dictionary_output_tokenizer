@@ -524,19 +524,24 @@ async function tokenize_X(xs) {
 	
 	// Update global variable, not sure if this will work because I thought that one had to return the variable from a function to make global variables update. This variable is local to this function;
 	// Way 0: just writing the variable
-	vocab_size = tokenizer.length;
+	//vocab_size = tokenizer.length;
+	// NUM_WORDS: undefined
 
 	// Way 1: having the variable returned by a function
-	//vocab_size = await update_vocab_size(tokenizer);
+	vocab_size = await update_vocab_size(tokenizer);
 
 	// ---------------------------
 
 	// Apply tokenizer to sentences
-	var xs_seq = await apply_tokenizer_to_sentences(xs, tokenizer);
+	let xs_seq, let sen_arr_len = await apply_tokenizer_to_sentences(xs, tokenizer);
 	// console.log("xs_seq: " + xs_seq); // CORRECT
 	// console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
 	
 	// ---------------------------
+
+	// Update the global variable of sen_arr, to initialize the model
+	maxlen = await update_MAXLEN(sen_arr_len);
+	console.log("maxlen: " + maxlen);
 	
 	return xs_seq;
 }
@@ -556,7 +561,8 @@ async function tokenize_X(xs) {
 async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 	// Apply tokenizer to sentences, to obtain sequences
-	var sen_arr_len = []; var xs_seq = [];
+	let sen_arr_len = [];
+	let xs_seq = [];
 	
 	xs.forEach(async function(val, ind) {
 		// console.log("val original: " + val);
@@ -609,10 +615,11 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 	});  // end of forEach
 
 	// Update the global variable of sen_arr, to initialize the model
-	maxlen = await update_MAXLEN(sen_arr_len);
-	console.log("maxlen: " + maxlen);
+	// maxlen = await update_MAXLEN(sen_arr_len);
+	// console.log("maxlen: " + maxlen);
+	// Here calling update_MAXLEN does not assign maxlen (maxlen: Tensor NaN)
 	
-	return xs_seq;
+	return xs_seq, sen_arr_len;
 }
 	
 
