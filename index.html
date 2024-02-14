@@ -225,7 +225,7 @@ async function find_class_names(ylabel_str) {
 	    // ---------------------------
 
 	    // Load the model
-	    custom_model = await make_and_compile_custom_model();
+	    custom_model = await make_and_compile_custom_model(vocab_size, maxlen, class_names);
 	    console.log("custom_model: " + custom_model);
 	    
 	    // ---------------------------
