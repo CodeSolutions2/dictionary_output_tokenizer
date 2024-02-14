@@ -527,9 +527,6 @@ async function tokenize_X(xs) {
 	// Things to maybe concerned about: 0) there are commas after each word but maybe it is how it is printed to screen, 1) 3 words have two words joinned together by a comma
 	tokenizer = await create_tokenizer_dict(uniqueArray, tokenizer);
 
-
-	// Problem0: do not know how to output the length of tokenizer to update the global variable, for loading the model in the next step
-	
 	// ---------------------------
 
 	// Apply tokenizer to sentences
@@ -550,25 +547,32 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 // Apply tokenizer to sentences, to obtain sequences
 	sen_arr_len = [];
 	xs_seq = [];
+
+	console.log("confirm xs: " + xs);
 	
 	xs.forEach(async function(val, ind) {
 
-		// Get sentence array from sentence string
+		// Split the sentence string into an array
 		let sen_arr = val.split(" ");
+		console.log("sen_arr: " + sen_arr);
 
-		// Save length of each sentence to find MAXLEN of sentences, for padding the sequences
+		// Obtain the length of array
 		sen_arr_len.push(sen_arr.length);
+		console.log("sen_arr_len: " + sen_arr_len);
+
 		
 		sen_arr.forEach(async function(val1, ind1) {
 			
 			// Directly call the tokenizer, if the word does not exist put the number for '<OOV>' token
 			let result = tokenizer[val1] ?? tokenizer['<OOV>'];
+			console.log("val1: " + val1 +
+				    ", result: " + result);
 
 			// Replace all [val1 occurences] in the [string val], with the [token value result]
-			// val = val.replace(val1, result);
-			// X = X.replace(/\b${val1}\b/g, '');
-
 			regexp = new RegExp(`\b${val1}\b`, 'g');
+			console.log("regexp: ", regexp);
+
+			// Update the sentence string
 			val = val.replace(regexp, result);
 			
 		});  // end of forEach
