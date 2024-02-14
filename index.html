@@ -108,7 +108,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		
 		// await fetch(url, options).then(res => res.json()).then(data => {
 		//     data.forEach(file => {
-		 //      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
+		 //      if (file.type === 'file' && file.name.(/.(csv|txt)$/i)) {
 			// url_vec1.push(file.download_url);
 		 //      }
 		  //   });
@@ -166,7 +166,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		// OR
 
-		// The key "Y" provided in columnConfigs does not match any of the column names (<!DOCTYPE html>).
+		// The key "Y" provided in columnConfigs does not  any of the column names (<!DOCTYPE html>).
 		// const response = await fetch(url, { mode: 'no-cors' });
 		// const data = await response.text();
 		// csvDataset = tf.data.csv(data, { columnConfigs: { Y: { isLabel: true } } });
@@ -574,11 +574,16 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 				    ", result: " + result);
 
 			// Replace all [val1 occurences] in the [string val], with the [token value result]
-			regexp = new RegExp(`\b${val1}\b`, 'g');
+			regexp = new RegExp(`${val1}`, 'g');
 			console.log("regexp: ", regexp);
 
+			// Determine if regex search is working
+			iterator = val.matchAll(regexp);
+			let matches_in_an_array = Array.from(iterator); // Convert iterator to array
+			console.log("matches_in_an_array: ", matches_in_an_array);
+
 			// Update the sentence string
-			val = val.replace(regexp, result);
+			val = val.replace(regexp, result.toString());
 			console.log("val transformed: " + val);
 			
 		});  // end of forEach
