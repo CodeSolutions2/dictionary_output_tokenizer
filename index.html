@@ -548,14 +548,19 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 	sen_arr_len = [];
 	xs_seq = [];
 
-	console.log("confirm xs: " + xs);
+	// console.log("confirm xs: " + xs);
 	
 	xs.forEach(async function(val, ind) {
 
-		// Split the sentence string into an array
+		console.log("val original: " + val);
+		
+		// Replace any multiple spaces with only a single space
+		val = val.replace(/\s+/g, ' ');
+		
+		// Make the string an array
 		let sen_arr = val.split(" ");
 		console.log("sen_arr: " + sen_arr);
-
+		
 		// Obtain the length of array
 		sen_arr_len.push(sen_arr.length);
 		console.log("sen_arr_len: " + sen_arr_len);
@@ -574,6 +579,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 			// Update the sentence string
 			val = val.replace(regexp, result);
+			console.log("val transformed: " + val);
 			
 		});  // end of forEach
 
