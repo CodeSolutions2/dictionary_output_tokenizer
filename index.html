@@ -518,7 +518,7 @@ async function tokenize_X(xs) {
 
 	// ---------------------------
 	
-	let tokenizer = await create_tokenizer_dict(uniqueArray).then(async function() { 
+	let tokenizer = await create_tokenizer_dict(uniqueArray).then(async function(tokenizer) { 
 		// Way 1: having the variable returned by a function
 		vocab_size = await update_vocab_size(tokenizer);
 		console.log("vocab_size: " + vocab_size);
