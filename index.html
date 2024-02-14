@@ -588,7 +588,7 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 	xs_seq.forEach(async function(row, ind) {
 
 		// post pad zeros: Using Array.from
-		let amount2pad = row.length - maxlen_local; // OK
+		let amount2pad = maxlen_local - row.length; // OK
 		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
 		
 		if (ind == 0){
@@ -597,8 +597,7 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 			console.log("row.length: " + row.length);
 			console.log("array_of_zeros: " + array_of_zeros);
 		}
-		
-	// 	xs_seq_pad.push( row.concat(array_of_zeros); );
+		xs_seq_pad.push( row.concat(array_of_zeros); );
 	});
 
 	// ---------------------------
