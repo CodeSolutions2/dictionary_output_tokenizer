@@ -49,7 +49,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   var csvDataset = [];  // This is a global variable
 
-  var tokenizer = {};  // This is a global variable, that will be reassigned after button push
+  var vocab_size = 0;  // This is a global variable, that will be reassigned after button push
   var maxlen = 0;  // This is a global variable, that will be reassigned after button push
   var class_names = []; // This is a global variable, that will be reassigned after button push
   var custom_model = 0; 
@@ -270,8 +270,8 @@ async function find_class_names(ylabel_str) {
     // OR
 
     // Way 1: load model layers using sequential
-    const NUM_WORDS = tokenizer.length;
-    console.log("NUM_WORDS: " + tokenizer.length);
+    const NUM_WORDS = vocab_size;
+    console.log("NUM_WORDS: " + NUM_WORDS);
 	 
     const EMBEDDING_DIM = 256;
 	 
@@ -304,9 +304,6 @@ async function find_class_names(ylabel_str) {
 
   async function modify_X_Y(csvDataset) {
 
-	  // ---------------------------
-	  // Module 0: input=csvDataset, output=xs, ys
-	  // ---------------------------
 	  const tensors = await csvDataset.toArray();
 
 	  // tensors.length: 10
@@ -381,10 +378,6 @@ async function find_class_names(ylabel_str) {
 		  }
 
 	  });  // end of forEach
-	  // ---------------------------
-	  //  Module 0 END : input=csvDataset, output=xs, ys
-	  // ---------------------------
-
 
 	// ---------------------------
 	  
@@ -453,18 +446,18 @@ async function sort_an_array_by_string_attribute(str_arr){
 
   // -------------------------------------------------
 	
-  async function create_tokenizer_dict(uniqueArray, tokenizer) {
+  async function create_tokenizer_dict(uniqueArray) {
 
 	// ------------------------------------------
 
 	// [0] Sort uniqueArray by an attribute (ie: length)
-	var arr = await sort_an_array_by_string_attribute(uniqueArray);
+	let arr = await sort_an_array_by_string_attribute(uniqueArray);
 	  
 	// ------------------------------------------
   
 	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
-	tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
+	let tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
 
 	// ------------------------------------------
 
@@ -477,7 +470,6 @@ async function sort_an_array_by_string_attribute(str_arr){
 	 return tokenizer;
   }
 	
-
 	
   // -------------------------------------------------
 
@@ -525,17 +517,24 @@ async function tokenize_X(xs) {
 	console.log('uniqueArray.length :' + uniqueArray.length); // uniqueArray.length :1241
 
 	// ---------------------------
+	
+	var tokenizer = await create_tokenizer_dict(uniqueArray);
 
-	// Looks OK for now
-	// Things to maybe concerned about: 0) there are commas after each word but maybe it is how it is printed to screen, 1) 3 words have two words joinned together by a comma
-	tokenizer = await create_tokenizer_dict(uniqueArray, tokenizer);
+	// ---------------------------
+	
+	// Update global variable, not sure if this will work because I thought that one had to return the variable from a function to make global variables update. This variable is local to this function;
+	// Way 0: just writing the variable
+	vocab_size = tokenizer.length;
+
+	// Way 1: having the variable returned by a function
+	//vocab_size = await update_vocab_size(tokenizer);
 
 	// ---------------------------
 
 	// Apply tokenizer to sentences
 	var xs_seq = await apply_tokenizer_to_sentences(xs, tokenizer);
-	console.log("xs_seq: " + xs_seq);
-	console.log("xs_seq.length : " + xs_seq.length);
+	// console.log("xs_seq: " + xs_seq); // CORRECT
+	// console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
 	
 	// ---------------------------
 	
@@ -543,13 +542,24 @@ async function tokenize_X(xs) {
 }
 
 
+  // -------------------------------------------------
+
+	
+  async function update_vocab_size(tokenizer) {
+	return tokenizer.length;
+  }
+
+	
+// -------------------------------------------------
+
+	
 async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 	// Apply tokenizer to sentences, to obtain sequences
 	xs.forEach(async function(val, ind) {
 
 		// Initialize
-		if (ind == 0) { sen_arr_len = []; xs_seq = []; }
+		if (ind == 0) {var sen_arr_len = []; var xs_seq = []; }
 
 		// console.log("val original: " + val);
 		
