@@ -565,18 +565,17 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		// Replace any multiple spaces with only a single space
 		val = val.replace(/\s+/g, ' ');
 		
-		// Make the string an array
+		// Convert string to string_array
 		let sen_arr = val.split(" ");
 
-		// Sort the array by word length
+		// Sort the string_array by word length
 		sen_arr = await sort_an_array_by_string_attribute(sen_arr);
 		console.log("sen_arr: " + sen_arr);
 		
-		// Obtain the length of array
+		// Obtain the length of array for model training variable MAXLEN
 		sen_arr_len.push(sen_arr.length);
-		console.log("sen_arr_len: " + sen_arr_len);
+		// console.log("sen_arr_len: " + sen_arr_len);
 
-		
 		sen_arr.forEach(async function(val1, ind1) {
 			
 			// Directly call the tokenizer, if the word does not exist put the number for '<OOV>' token
@@ -589,27 +588,31 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 			val = val.replace(regexp, result.toString());
 
 			// Only print for first sentence
-			if (ind == 0){
-				console.log("val1: " + val1 + ", result: " + result);
-				console.log("matches_in_an_array: ", matches_in_an_array);
-				console.log("val transformed: " + val);
-			}
+			// if (ind == 0){
+			// 	console.log("val1: " + val1 + ", result: " + result);
+			// 	console.log("matches_in_an_array: ", matches_in_an_array);
+			// 	console.log("val transformed: " + val);
+			// }
 			
 		});  // end of forEach
 
-		// Convert string to integer array
+		// Convert string to string_array
 		let seq_arr = val.split(" ");
-		let seq_arr_int = [];
-		seq_arr.forEach(async function(val, ind) { seq_arr_int.push(Number(val)); });
 
-		// Print each sentence sequence
-		console.log("seq_arr_int: " + seq_arr_int);
+		// Convert string_array to integer array
+		let seq_arr_int = [];
+		seq_arr.forEach(async function(val, ind) { 
+			seq_arr_int.push(Number(val));
+		});
+		// console.log("seq_arr_int: " + seq_arr_int);
 		
 		// Save output sequence per row
 		xs_seq.push(seq_arr_int);
 		
 	});  // end of forEach
 
+	console.log("xs_seq: " + xs_seq);
+	
 	return xs_seq;
 }
 	
