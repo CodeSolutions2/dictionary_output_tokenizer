@@ -266,12 +266,12 @@ async function find_class_names(ylabel_str) {
     // OR
 
     // Way 1: load model layers using sequential
-    let NUM_WORDS = vocab_size;
+    let NUM_WORDS = Number(vocab_size);
     console.log("NUM_WORDS: " + NUM_WORDS);
 	 
     const EMBEDDING_DIM = 256;
 	 
-    let MAXLEN = maxlen;
+    let MAXLEN = Number(maxlen);
     console.log("MAXLEN: " + MAXLEN);
 	  
     let NUM_OF_CLASSES = class_names.length;
