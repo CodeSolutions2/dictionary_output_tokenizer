@@ -52,7 +52,6 @@ th {border: 1px solid black; padding: 10px 20px;}
   var vocab_size = 0;  // This is a global variable, that will be reassigned after button push
   var maxlen = 0;  // This is a global variable, that will be reassigned after button push
   var class_names = []; // This is a global variable, that will be reassigned after button push
-  var custom_model = 0; 
 	
   // -------------------------------------------------
 
@@ -224,25 +223,39 @@ async function find_class_names(ylabel_str) {
 
 	    // ---------------------------
 
-	    // Load the model
-	    custom_model = await make_and_compile_custom_model(vocab_size, maxlen, class_names);
-	    console.log("custom_model: " + custom_model);
-	    
+	    // Load the model parameters
+	    let NUM_WORDS = await Number(vocab_size);
+	    console.log("NUM_WORDS: " + NUM_WORDS);
+	 
+	    let EMBEDDING_DIM = 256;
+	 
+	    let MAXLEN = await Number(maxlen);
+	    console.log("MAXLEN: " + MAXLEN);
+	  
+	    let NUM_OF_CLASSES = await class_names.length;
+	    console.log("NUM_OF_CLASSES: " + NUM_OF_CLASSES);
+
 	    // ---------------------------
-	    
-	    // Fit the model using the prepared Dataset
+
+	    // Load the model
+	    let model = await tf.sequential({layers: [tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN), tf.layers.globalAveragePooling1d(), tf.layers.dense(NUM_OF_CLASSES, activation='softmax')]});
+
+	    await model.compile({optimizer: 'adam', loss: 'sparse_categorical_crossentropy', metrics: ["accuracy"]});
+
+	    // ---------------------------
+
+	    // Train the model
 	    await custom_model.fitDataset(flattenedDataset, {
-		    epochs: 10,
-		    callbacks: {
-			    onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
-		    }
+			    epochs: 10,
+			    callbacks: { onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); } }
 	    });
 
 	    // ---------------------------
+	
+	    // Save model to localStorage
+	    await custom_model.save('localstorage://my-model-1');
 
-	    // Save the model if I can
-	    const saveResults = await custom_model.save('localstorage://my-model-1');
-	    
+	    // ---------------------------
 	    
     });  // end of modify_X_Y(csvDataset)
 	  
@@ -255,9 +268,7 @@ async function find_class_names(ylabel_str) {
   // -------------------------------------------------
 
  
- async function make_and_compile_custom_model(vocab_size, maxlen, class_names) {
-	
-    // [Step 1] Load custom model
+ async function make_and_compile_custom_model(NUM_WORDS, EMBEDDING_DIM, MAXLEN, NUM_OF_CLASSES) {
 	  
     // Way 0: load pre-trained model
     // const MODEL_URL = 'model.json';
@@ -266,20 +277,7 @@ async function find_class_names(ylabel_str) {
     // OR
 
     // Way 1: load model layers using sequential
-    let NUM_WORDS = await Number(vocab_size);
-    console.log("NUM_WORDS: " + NUM_WORDS);
-	 
-    let EMBEDDING_DIM = 256;
-	 
-    let MAXLEN = await Number(maxlen);
-    console.log("MAXLEN: " + MAXLEN);
-	  
-    let NUM_OF_CLASSES = await class_names.length;
-    console.log("NUM_OF_CLASSES: " + NUM_OF_CLASSES);
-
-	 let inputs = [NUM_WORDS, EMBEDDING_DIM, MAXLEN, NUM_OF_CLASSES];
-	let custom_model = (inputs) => new Promise(resolve => {
-		
+    
 		// let model = tf.sequential();
 		// model.add( tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN) );
 		// model.add( tf.layers.globalAveragePooling1d() );
@@ -287,7 +285,8 @@ async function find_class_names(ylabel_str) {
 
 		// OR
 
-		let model = tf.sequential({layers: [tf.layers.embedding(inputDim=inputs[0], outputDim=inputs[1], inputLength=inputs[2]), tf.layers.globalAveragePooling1d(), tf.layers.dense(inputs[3], activation='softmax')]});
+	 // Way 2: load model layers using sequential
+		let model = tf.sequential({layers: [tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN), tf.layers.globalAveragePooling1d(), tf.layers.dense(NUM_OF_CLASSES, activation='softmax')]});
 	 
 		// Way 3: load model layers using functional API
 		// const input = tf.input({shape: [5]});
@@ -302,10 +301,6 @@ async function find_class_names(ylabel_str) {
 		model.compile({optimizer: 'adam', loss: 'sparse_categorical_crossentropy', metrics: ["accuracy"]});
 		
 		return model;
-	});
-   
-	 
-	return custom_model;
  }
 
 	
