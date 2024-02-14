@@ -508,6 +508,11 @@ async function tokenize_X(xs) {
 	// Apply tokenizer to sentences
 	// Return both variables as an array: out = [xs_seq, maxlen, correctly_tokenized_rows]
 	let out = await apply_tokenizer_to_sentences(xs, tokenizer);
+
+	// Outputting values here are not printed in console
+	console.log("xs_seq: " + out[0]);
+	console.log("maxlen: " + out[1]);
+	console.log("correctly_tokenized_rows: " + out[2]);
 	
 	// ---------------------------
 
@@ -620,10 +625,10 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		
 	});  // end of forEach
 
-	console.log("apply_tokenizer_to_sentences: ");
-	console.log("xs_seq: " + xs_seq);
-	console.log("maxlen: " + maxlen);
-	console.log("correctly_tokenized_rows: " + correctly_tokenized_rows);
+	// Outputting values here are not printed in console
+	// console.log("xs_seq: " + xs_seq); // no output
+	// console.log("maxlen: " + maxlen); // no output
+	// console.log("correctly_tokenized_rows: " + correctly_tokenized_rows); // no output
 	
 	return [xs_seq, maxlen, correctly_tokenized_rows];
 }
