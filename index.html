@@ -304,10 +304,6 @@ async function find_class_names(ylabel_str) {
 	  
 	  // Tokenize Y using user input labels
 	  const y_assignment = Object.fromEntries(class_names.map((key, index) => [key, index]));
-	  
-	  // outp.innerHTML += 'y_assignment["business"]: ' + y_assignment['business'] + "<br/>";  // correct
-	  // outp.innerHTML += 'y_assignment.keys(): ' + y_assignment.keys() + "<br/>";
-	  // outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
 	  // ---------------------------
 	  
           // ---------------------------
@@ -347,9 +343,6 @@ async function find_class_names(ylabel_str) {
 		  // ---------------------------
 		  // Verify that data is correct, and only keep correct X and Y data
 		  if (X.length-1 > 10 && matches7.length == 1){
-		       // outp.innerHTML += 'X: ' + X + "<br/>";
-		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
-
 		       // Save non-tokenized X values and tokenized Y values to array
 		       xs.push(X);
 		       ys.push(y_assignment[Y]);
@@ -361,7 +354,7 @@ async function find_class_names(ylabel_str) {
 	  
 	  // Call X Tokenizer function
 	  var xs_seq = await tokenize_X(xs);
-
+	  
 	// ---------------------------
 	  
 	  // Create a csvDataset
@@ -500,7 +493,7 @@ async function tokenize_X(xs) {
 	
 	// ---------------------------
 	
-	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "vocab_size = tokenizer.length;" because this call means that the variable is local to this function.
+	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "vocab_size = Object.keys(tokenizer).length;" because this call means that the variable is local to this function.
 	vocab_size = await update_vocab_size(tokenizer);
 	// console.log("vocab_size: " + vocab_size);
 
@@ -514,7 +507,7 @@ async function tokenize_X(xs) {
 	
 	// ---------------------------
 
-	// Update the global variable of sen_arr, to initialize the model
+	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "maxlen = Math.max(sen_arr_len);" because this call means that the variable is local to this function.
 	maxlen = await update_MAXLEN(out[1]);
 	console.log("maxlen: " + maxlen);  // CORRECT, maxlen: Tensor 500
 
@@ -603,7 +596,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
   // -------------------------------------------------
 
   async function update_MAXLEN(sen_arr_len) {
-	return tf.max(sen_arr_len);
+	return Math.max(sen_arr_len);
   }
 	
   // -------------------------------------------------
