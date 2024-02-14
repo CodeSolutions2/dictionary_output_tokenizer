@@ -224,29 +224,20 @@ async function find_class_names(ylabel_str) {
 	    // ---------------------------
 
 	    // Load the model parameters
-	    let NUM_WORDS = await Number(vocab_size);
-	    console.log("NUM_WORDS: " + NUM_WORDS);
-	 
-	    let EMBEDDING_DIM = 256;
-	 
-	    let MAXLEN = await Number(maxlen);
-	    console.log("MAXLEN: " + MAXLEN);
-	  
-	    let NUM_OF_CLASSES = await class_names.length;
-	    console.log("NUM_OF_CLASSES: " + NUM_OF_CLASSES);
+	    // out = [NUM_WORDS, EMBEDDING_DIM, MAXLEN, NUM_OF_CLASSES]
+	    let out = await synchronize_model_parameters(vocab_size, maxlen, class_names);
 
 	    // ---------------------------
 
 	    // Load the model
-	    let model = await tf.sequential({layers: [tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN), tf.layers.globalAveragePooling1d(), tf.layers.dense(NUM_OF_CLASSES, activation='softmax')]});
+	    let model = await tf.sequential({layers: [tf.layers.embedding(inputDim=out[0], outputDim=out[1], inputLength=out[2]), tf.layers.globalAveragePooling1d(), tf.layers.dense(out[3], activation='softmax')]});
 
 	    await model.compile({optimizer: 'adam', loss: 'sparse_categorical_crossentropy', metrics: ["accuracy"]});
 
 	    // ---------------------------
 
 	    // Train the model
-	    await model.fitDataset(flattenedDataset, {
-			    epochs: 10,
+	    await model.fitDataset(flattenedDataset, { epochs: 10,
 			    callbacks: { onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); } }
 	    });
 
@@ -268,39 +259,20 @@ async function find_class_names(ylabel_str) {
   // -------------------------------------------------
 
  
- async function make_and_compile_custom_model(NUM_WORDS, EMBEDDING_DIM, MAXLEN, NUM_OF_CLASSES) {
-	  
-    // Way 0: load pre-trained model
-    // const MODEL_URL = 'model.json';
-    // const custom_model = await tf.loadLayersModel(MODEL_URL);
-
-    // OR
-
-    // Way 1: load model layers using sequential
-    
-		// let model = tf.sequential();
-		// model.add( tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN) );
-		// model.add( tf.layers.globalAveragePooling1d() );
-		// model.add( tf.layers.dense(NUM_OF_CLASSES, activation='softmax') );
-
-		// OR
-
-	 // Way 2: load model layers using sequential
-		let model = tf.sequential({layers: [tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN), tf.layers.globalAveragePooling1d(), tf.layers.dense(NUM_OF_CLASSES, activation='softmax')]});
+ async function synchronize_model_parameters(vocab_size, maxlen, class_names) {
 	 
-		// Way 3: load model layers using functional API
-		// const input = tf.input({shape: [5]});
-	 // let Layer0 = tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN);
-	 // let Layer1 = tf.layers.globalAveragePooling1d();
-	 // let Layer2 = tf.layers.dense(NUM_OF_CLASSES, activation='softmax');
-		// const output = Layer2.apply(Layer1.apply(Layer0.apply(input)));
-	 // const model = tf.model({inputs: input, outputs: output});
-	
-		// ---------------------------
-
-		model.compile({optimizer: 'adam', loss: 'sparse_categorical_crossentropy', metrics: ["accuracy"]});
-		
-		return model;
+	  let NUM_WORDS = await Number(vocab_size);
+	  console.log("NUM_WORDS: " + NUM_WORDS);
+	 
+	  let EMBEDDING_DIM = 256;
+	 
+	  let MAXLEN = await Number(maxlen);
+	  console.log("MAXLEN: " + MAXLEN);
+	  
+	  let NUM_OF_CLASSES = await class_names.length;
+	  console.log("NUM_OF_CLASSES: " + NUM_OF_CLASSES);
+	 
+	return [NUM_WORDS, EMBEDDING_DIM, MAXLEN, NUM_OF_CLASSES];
  }
 
 	
