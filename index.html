@@ -533,7 +533,13 @@ async function tokenize_X(xs) {
 	// ---------------------------
 
 	// Apply tokenizer to sentences
-	let xs_seq, sen_arr_len = await apply_tokenizer_to_sentences(xs, tokenizer);
+	// Way 0: ok but can not assign sen_arr_len
+	let xs_seq = await apply_tokenizer_to_sentences(xs, tokenizer);
+	
+	// Way 1: TypeError: xs_seq is undefined
+	// let xs_seq, sen_arr_len = await apply_tokenizer_to_sentences(xs, tokenizer);
+
+	
 	// console.log("xs_seq: " + xs_seq); // CORRECT
 	// console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
 	
@@ -561,7 +567,7 @@ async function tokenize_X(xs) {
 async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 	// Apply tokenizer to sentences, to obtain sequences
-	let sen_arr_len = [];
+	var sen_arr_len = [];
 	let xs_seq = [];
 	
 	xs.forEach(async function(val, ind) {
