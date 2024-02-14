@@ -353,18 +353,23 @@ async function find_class_names(ylabel_str) {
 	// ---------------------------
 	  
 	  // Call X Tokenizer function
-	  var xs_seq = await tokenize_X(xs);
+	  // out_arr = [xs_seq, correctly_tokenized_rows]
+	  let out_arr = await tokenize_X(xs);
 	  
 	// ---------------------------
 	  
-	  // Create a csvDataset
+	  // Create a csvDataset using ONLY the correctly tokenized rows
 	  // put x_clean and ys arrays in to a list of dictionaries per row with the same keys
 	  // data should look like : [{a: 1, b: 11}, {a: 2, b: 12}, {a: 3, b: 13}, ...]
-	  let data = []; xs_seq.forEach(async function(row, ind) { data.push({xs: row, ys: ys[ind]}); });
+	  let xs_seq = out_arr[0];
+	  let data = []; 
+	  out_arr[1].forEach(async function(row, ind) { 
+		  data.push({xs: xs_seq[row], ys: ys[row]}); 
+	  });
 	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
 	  console.log('Dataset_sequence: ' + Dataset_sequence);
 	  
-	  return Dataset_sequence
+	  return Dataset_sequence;
   }
 
 
@@ -500,7 +505,7 @@ async function tokenize_X(xs) {
 	// ---------------------------
 
 	// Apply tokenizer to sentences
-	// Return both variables as an array: out = [xs_seq, maxlen]
+	// Return both variables as an array: out = [xs_seq, maxlen, correctly_tokenized_rows]
 	let out = await apply_tokenizer_to_sentences(xs, tokenizer);
 	// console.log("xs_seq: " + xs_seq); // CORRECT
 	// console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
@@ -508,13 +513,22 @@ async function tokenize_X(xs) {
 	// ---------------------------
 
 	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "maxlen = Math.max(sen_arr_len);" because this call means that the variable is local to this function.
-	// maxlen = await update_MAXLEN(out[1]);
 	maxlen = await Number(out[1]);
 	console.log("maxlen: " + maxlen);  // CORRECT, maxlen: Tensor 500
 
 	// ---------------------------
+
+	// Pad the sentences such that each sequence is [1, maxlen], or xs_seq is size [num_of_rows, maxlen]
+	let xs_seq = [];
+	out[0].forEach(async function(xs_intarr, ind) {
+		// post pad zeros
+		const pad = [...Array(xs_intarr.length-maxlen).keys()].map((x) => 0);
+		xs_seq.push(xs_intarr.concat(pad););
+	});
 	
-	return out[0];
+	// ---------------------------
+	
+	return [xs_seq, out[2]];  // [xs_seq, correctly_tokenized_rows]
 }
 
 
@@ -534,6 +548,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 	// Apply tokenizer to sentences, to obtain sequences
 	let maxlen = 0;
 	let xs_seq = [];
+	let correctly_tokenized_rows = [];
 	
 	xs.forEach(async function(val, ind) {
 		// console.log("val original: " + val);
@@ -571,7 +586,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 			// 	console.log("val transformed: " + val);
 			// }
 			
-		});  // end of forEach
+		});  // end of sen_arr.forEach
 
 		// Convert string to string_array
 		let seq_arr = val.split(" ");
@@ -580,13 +595,19 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		let seq_arr_int = [];
 		seq_arr.forEach(async function(val, ind) { seq_arr_int.push(Number(val)); });
 		// console.log("seq_arr_int: " + seq_arr_int);
-		
-		// Save output sequence per row
+
+		// Check for incorrect replacement due to browser speed
+		if (Math.max(seq_arr_int) <= (vocab_size-1)) {
+			// Save the row number that was correctly tokenized
+			correctly_tokenized_rows.push(ind);
+		}
+				
+		// Save output sequence per row, replacement is correct
 		xs_seq.push(seq_arr_int);
 		
 	});  // end of forEach
 	
-	return [xs_seq, maxlen];
+	return [xs_seq, maxlen, correctly_tokenized_rows];
 }
 	
   // -------------------------------------------------
