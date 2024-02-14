@@ -597,7 +597,11 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 			console.log("row.length: " + row.length);
 			console.log("array_of_zeros: " + array_of_zeros);
 		}
-		xs_seq_pad.push( row.concat(array_of_zeros); );
+		
+		let concatenated_array0 = array_of_zeros.concat(array_of_zeros);
+		let concatenated_array1 = row.concat(array_of_zeros);
+		
+		xs_seq_pad.push( concatenated_array1 );
 	});
 
 	// ---------------------------
