@@ -353,7 +353,7 @@ async function find_class_names(ylabel_str) {
 	// ---------------------------
 	  
 	  // Call X Tokenizer function
-	  // out_arr = [xs_seq, correctly_tokenized_rows]
+	  // out_arr = [xs_seq_pad, correctly_tokenized_rows]
 	  let out_arr = await tokenize_X(xs);
 	  
 	// ---------------------------
@@ -361,10 +361,11 @@ async function find_class_names(ylabel_str) {
 	  // Create a csvDataset using ONLY the correctly tokenized rows
 	  // put x_clean and ys arrays in to a list of dictionaries per row with the same keys
 	  // data should look like : [{a: 1, b: 11}, {a: 2, b: 12}, {a: 3, b: 13}, ...]
-	  let xs_seq = out_arr[0];
+	  let xs_seq_pad = out_arr[0];
+	  let correctly_tokenized_rows = out_arr[1];
 	  let data = []; 
-	  out_arr[1].forEach(async function(row, ind) { 
-		  data.push({xs: xs_seq[row], ys: ys[row]}); 
+	  correctly_tokenized_rows.forEach(async function(row, ind) { 
+		  data.push({xs: xs_seq_pad[row], ys: ys[row]}); 
 	  });
 	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
 	  console.log('Dataset_sequence: ' + Dataset_sequence);
@@ -519,16 +520,17 @@ async function tokenize_X(xs) {
 	// ---------------------------
 
 	// Pad the sentences such that each sequence is [1, maxlen], or xs_seq is size [num_of_rows, maxlen]
-	let xs_seq = [];
-	out[0].forEach(async function(xs_intarr, ind) {
+	let xs_seq = out[0];
+	let xs_seq_pad = [];
+	xs_seq.forEach(async function(row, ind) {
 		// post pad zeros
-		const pad = [...Array(xs_intarr.length-maxlen).keys()].map((x) => 0);
-		xs_seq.push(xs_intarr.concat(pad););
+		let pad = [...Array(row.length-maxlen).keys()].map((x) => 0);
+		xs_seq_pad.push(row.concat(pad););
 	});
 	
 	// ---------------------------
 	
-	return [xs_seq, out[2]];  // [xs_seq, correctly_tokenized_rows]
+	return [xs_seq_pad, out[2]];  // [xs_seq_pad, correctly_tokenized_rows]
 }
 
 
