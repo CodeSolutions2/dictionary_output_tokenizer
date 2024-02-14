@@ -508,8 +508,6 @@ async function tokenize_X(xs) {
 	// Apply tokenizer to sentences
 	// Return both variables as an array: out = [xs_seq, maxlen, correctly_tokenized_rows]
 	let out = await apply_tokenizer_to_sentences(xs, tokenizer);
-	// console.log("xs_seq: " + xs_seq); // CORRECT
-	// console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
 	
 	// ---------------------------
 
@@ -521,6 +519,9 @@ async function tokenize_X(xs) {
 
 	// Pad the sentences such that each sequence is [1, maxlen], or xs_seq is size [num_of_rows, maxlen]
 	let xs_seq = out[0];
+	console.log("xs_seq: " + xs_seq); // CORRECT
+	console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
+	
 	let xs_seq_pad = [];
 	xs_seq.forEach(async function(row, ind) {
 
@@ -578,9 +579,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		// console.log("sen_arr: " + sen_arr);
 		
 		// Obtain the length of array for model training variable MAXLEN
-		if (maxlen < sen_arr.length) {
-			maxlen = sen_arr.length;
-		}
+		if (maxlen < sen_arr.length) { maxlen = sen_arr.length;}
 
 		sen_arr.forEach(async function(val1, ind1) {
 			
@@ -620,6 +619,11 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 		xs_seq.push(seq_arr_int);
 		
 	});  // end of forEach
+
+	console.log("apply_tokenizer_to_sentences: ");
+	console.log("xs_seq: " + xs_seq);
+	console.log("maxlen: " + maxlen);
+	console.log("correctly_tokenized_rows: " + correctly_tokenized_rows);
 	
 	return [xs_seq, maxlen, correctly_tokenized_rows];
 }
