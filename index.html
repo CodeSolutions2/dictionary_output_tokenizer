@@ -552,7 +552,7 @@ async function tokenize_X(xs) {
 
 async function apply_tokenizer_to_sentences(xs, tokenizer){
 
-// Apply tokenizer to sentences, to obtain sequences
+	// Apply tokenizer to sentences, to obtain sequences
 	sen_arr_len = [];
 	xs_seq = [];
 
@@ -560,7 +560,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 	
 	xs.forEach(async function(val, ind) {
 
-		console.log("val original: " + val);
+		// console.log("val original: " + val);
 		
 		// Replace any multiple spaces with only a single space
 		val = val.replace(/\s+/g, ' ');
@@ -570,7 +570,7 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 		// Sort the string_array by word length
 		sen_arr = await sort_an_array_by_string_attribute(sen_arr);
-		console.log("sen_arr: " + sen_arr);
+		// console.log("sen_arr: " + sen_arr);
 		
 		// Obtain the length of array for model training variable MAXLEN
 		sen_arr_len.push(sen_arr.length);
