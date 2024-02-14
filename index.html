@@ -270,15 +270,15 @@ async function find_class_names(ylabel_str) {
     // OR
 
     // Way 1: load model layers using sequential
-    const NUM_WORDS = vocab_size;
+    let NUM_WORDS = vocab_size;
     console.log("NUM_WORDS: " + NUM_WORDS);
 	 
     const EMBEDDING_DIM = 256;
 	 
-    const MAXLEN = maxlen;
+    let MAXLEN = maxlen;
     console.log("MAXLEN: " + MAXLEN);
 	  
-    const NUM_OF_CLASSES = class_names.length;
+    let NUM_OF_CLASSES = class_names.length;
     console.log("NUM_OF_CLASSES: " + NUM_OF_CLASSES);
 	 
     const custom_model = tf.sequential();
@@ -518,7 +518,7 @@ async function tokenize_X(xs) {
 
 	// ---------------------------
 	
-	var tokenizer = await create_tokenizer_dict(uniqueArray);
+	let tokenizer = await create_tokenizer_dict(uniqueArray);
 
 	// ---------------------------
 	
@@ -529,16 +529,13 @@ async function tokenize_X(xs) {
 
 	// Way 1: having the variable returned by a function
 	vocab_size = await update_vocab_size(tokenizer);
+	console.log("vocab_size: " + vocab_size);
 
 	// ---------------------------
 
 	// Apply tokenizer to sentences
-	// Way 0: out = [xs_seq, sen_arr_len]
+	// Return both variables as an array: out = [xs_seq, sen_arr_len]
 	let out = await apply_tokenizer_to_sentences(xs, tokenizer);
-	
-	// Way 1: TypeError: xs_seq is undefined
-	// let xs_seq, sen_arr_len = await apply_tokenizer_to_sentences(xs, tokenizer);
-	
 	// console.log("xs_seq: " + xs_seq); // CORRECT
 	// console.log("xs_seq.length : " + xs_seq.length); // CORRECT, xs_seq.length : 10
 	
@@ -546,7 +543,7 @@ async function tokenize_X(xs) {
 
 	// Update the global variable of sen_arr, to initialize the model
 	maxlen = await update_MAXLEN(out[1]);
-	console.log("maxlen: " + maxlen);
+	// console.log("maxlen: " + maxlen);  // CORRECT, maxlen: Tensor 500
 
 	// ---------------------------
 	
@@ -628,9 +625,6 @@ async function apply_tokenizer_to_sentences(xs, tokenizer){
 	
 	return [xs_seq, sen_arr_len];
 }
-
-
-  // -------------------------------------------------
 	
 
   // -------------------------------------------------
