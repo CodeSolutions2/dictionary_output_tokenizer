@@ -245,7 +245,7 @@ async function find_class_names(ylabel_str) {
 	    // ---------------------------
 
 	    // Train the model
-	    await custom_model.fitDataset(flattenedDataset, {
+	    await model.fitDataset(flattenedDataset, {
 			    epochs: 10,
 			    callbacks: { onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); } }
 	    });
@@ -253,7 +253,7 @@ async function find_class_names(ylabel_str) {
 	    // ---------------------------
 	
 	    // Save model to localStorage
-	    await custom_model.save('localstorage://my-model-1');
+	    await model.save('localstorage://my-model-1');
 
 	    // ---------------------------
 	    
