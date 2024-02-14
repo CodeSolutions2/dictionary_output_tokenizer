@@ -523,9 +523,19 @@ async function tokenize_X(xs) {
 	let xs_seq = out[0];
 	let xs_seq_pad = [];
 	xs_seq.forEach(async function(row, ind) {
+
 		// post pad zeros
-		let pad = [...Array(row.length-maxlen).keys()].map((x) => 0);
-		xs_seq_pad.push(row.concat(pad););
+		// Using Array.from
+		let amount2pad = row.length - maxlen;
+		console.log("amount2pad: " + amount2pad);
+		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
+		
+		if (ind == 0){
+			console.log("type ofrow: " + typeof row);
+			console.log("array_of_zeros: " + typeof array_of_zeros);
+		}
+		
+		xs_seq_pad.push( row.concat(array_of_zeros); );
 	});
 	
 	// ---------------------------
