@@ -56,7 +56,6 @@ th {border: 1px solid black; padding: 10px 20px;}
 	
   // -------------------------------------------------
 
-	
   async function get_csvDataset(csvDataset) {
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv
@@ -150,7 +149,6 @@ th {border: 1px solid black; padding: 10px 20px;}
         // Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://storage.googleapis.com/textclassification-w-labeled-data/train_dataset0.csv. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200
 
 		// console.log("url_vec:" + url_vec);
-
 
 		// OR
 
@@ -257,8 +255,6 @@ async function find_class_names(ylabel_str) {
   // -------------------------------------------------
 
  
-
-	
  async function make_and_compile_custom_model() {
 	
     // [Step 1] Load custom model
@@ -522,13 +518,9 @@ async function tokenize_X(xs) {
 	
 	// ---------------------------
 	
-	// Update global variable, not sure if this will work because I thought that one had to return the variable from a function to make global variables update. This variable is local to this function;
-	// Way 0: just writing the variable
-	vocab_size = tokenizer.length;
-
-	// Way 1: having the variable returned by a function
-	// vocab_size = await update_vocab_size(tokenizer);
-	console.log("vocab_size: " + vocab_size);
+	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "vocab_size = tokenizer.length;" because this call means that the variable is local to this function.
+	vocab_size = await update_vocab_size(tokenizer);
+	// console.log("vocab_size: " + vocab_size);
 
 	// ---------------------------
 
