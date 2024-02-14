@@ -217,6 +217,8 @@ async function find_class_names(ylabel_str) {
     // [Step 3] Clean the dataset
     await modify_X_Y(csvDataset).then(async function(csvDataset_sequence) {
 
+	    console.log("csvDataset_sequence: " + csvDataset_sequence);
+	    
 	    // ---------------------------
 		    
 	    // Convert the xs and ys to a flattenedDataset
@@ -262,7 +264,6 @@ async function find_class_names(ylabel_str) {
     // [Step 1] Load custom model
 	  
     // Way 0: load pre-trained model
-    // const MODEL_URL = 'https://storage.googleapis.com/tensorflowjsmodels0/model.json';
     // const MODEL_URL = 'model.json';
     // const custom_model = await tf.loadLayersModel(MODEL_URL);
 
@@ -270,7 +271,7 @@ async function find_class_names(ylabel_str) {
 
     // Way 1: load model layers using sequential
     const NUM_WORDS = tokenizer.length;
-    console.log("NUM_WORDS: " + NUM_WORDS);
+    console.log("NUM_WORDS: " + tokenizer.length);
 	 
     const EMBEDDING_DIM = 256;
 	 
@@ -395,15 +396,9 @@ async function find_class_names(ylabel_str) {
 	  // Create a csvDataset
 	  // put x_clean and ys arrays in to a list of dictionaries per row with the same keys
 	  // data should look like : [{a: 1, b: 11}, {a: 2, b: 12}, {a: 3, b: 13}, ...]
-	  let data = [];
-	  xs_seq.forEach(async function(xs_val, ind) {
-		data.push({xs: xs_val, ys: ys[ind]});
-	  });  // end of forEach
+	  let data = []; xs_seq.forEach(async function(row, ind) { data.push({xs: row, ys: ys[ind]}); });
 	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
-	  
-	  // print dataset
-	  // await Dataset_sequence.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
-	  
+	  console.log('Dataset_sequence: ' + Dataset_sequence);
 	  
 	  return Dataset_sequence
   }
