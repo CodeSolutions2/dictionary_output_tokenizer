@@ -556,11 +556,9 @@ async function tokenize_X(xs) {
 async function apply_tokenizer_to_sentences(xs, tokenizer){
 
 	// Apply tokenizer to sentences, to obtain sequences
+	var sen_arr_len = []; var xs_seq = [];
+	
 	xs.forEach(async function(val, ind) {
-
-		// Initialize
-		if (ind == 0) {var sen_arr_len = []; var xs_seq = []; }
-
 		// console.log("val original: " + val);
 		
 		// Replace any multiple spaces with only a single space
