@@ -635,7 +635,8 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 		// 	console.log("xs_seq_pad: " + concatenated_array1);
 		// }
 		  
-		  data.push({xs: xs_seq_pad, ys: ys[correct_ind]}); 
+		  // data.push({xs: xs_seq_pad, ys: ys[correct_ind]}); 
+		  data.push({xs: xs_seq, ys: ys[correct_ind]}); 
 	  });
 	
 	  const  = await tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
