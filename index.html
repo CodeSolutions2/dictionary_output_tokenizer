@@ -221,7 +221,7 @@ async function find_class_names(ylabel_str) {
 
 	    // Load the model parameters
 	    // out = [NUM_WORDS, EMBEDDING_DIM, MAXLEN, NUM_OF_CLASSES]
-	    let out = await synchronize_model_parameters(vocab_size, maxlen, class_names);
+	    let out = await synchronize_model_parameters();
 	    console.log("out: " + out);
 
 	    // ---------------------------
@@ -254,7 +254,7 @@ async function find_class_names(ylabel_str) {
   // -------------------------------------------------
 
  
- async function synchronize_model_parameters(vocab_size, maxlen, class_names) {
+ async function synchronize_model_parameters() {
 	 
 	  let NUM_WORDS = await Number(vocab_size);
 	  console.log("NUM_WORDS: " + NUM_WORDS);  // NUM_WORDS: 1241
@@ -262,8 +262,8 @@ async function find_class_names(ylabel_str) {
 	  let EMBEDDING_DIM = 256;
 	 
 	  //let MAXLEN = await Number(maxlen);
-
-	let MAXLEN = localStorage.getItem("maxlen_local");
+	  // OR
+	  let MAXLEN = localStorage.getItem("maxlen_local");
 	  console.log("MAXLEN: " + MAXLEN);  // MAXLEN: NaN
 	  
 	  let NUM_OF_CLASSES = await class_names.length;
