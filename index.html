@@ -535,7 +535,10 @@ async function tokenize_X(xs, ys) {
   // -------------------------------------------------
 
 	
-  async function update_global_variable_maxlen(maxlen_local) {
+  async function update_global_variable_maxlen(maxlen_local, correctly_tokenized_rows) {
+
+	localStorage.setItem("correctly_tokenized_rows", correctly_tokenized_rows);
+	  
 	// Way 0: save variable in localStorage
 	localStorage.setItem("maxlen_local", maxlen_local);
 
@@ -603,12 +606,10 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer) {
 
 	// Outputs: xs_seq, maxlen_local, correctly_tokenized_rows
 
-	await localStorage.setItem("xs_seq", xs_seq);
-	
 	// ---------------------------
 
 	// Update global variable, one can return the variable from a function to make global variables update faster. So by calling it in a separate function return the variable updates faster than it would if one called "maxlen = maxlen_local" because it would update after apply_tokenizer_to_sentences returned, not in the middle of apply_tokenizer_to_sentences.
-	maxlen = await update_global_variable_maxlen(maxlen_local);
+	maxlen = await update_global_variable_maxlen(maxlen_local, correctly_tokenized_rows);
 	
 	// ---------------------------
 
