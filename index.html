@@ -189,9 +189,9 @@ th {border: 1px solid black; padding: 10px 20px;}
   }
 
 	
-  // -------------------------------------------------
+// -------------------------------------------------
 
-
+	
 async function find_class_names(ylabel_str) {
 	
 	let ylabel_vec = ylabel_str.split(",");
@@ -202,66 +202,84 @@ async function find_class_names(ylabel_str) {
 	 return class_names;
  }
 
+
+// -------------------------------------------------
+	
+
+async function print_a_csvDataset(csvDataset){
+	
+	const tensors = await csvDataset.toArray();
+	tensors.forEach(async function(rowdata, index) {
+
+		if (index < 5){
+			
+			X = Object.values(rowdata.xs);
+			Y = Object.values(rowdata.ys);
+			console.log("X: " + X);
+			console.log("Y: " + Y);
+		}
+	
+	});  // end of forEach
+
+}
+
+	
+// -------------------------------------------------
+
+	
+  async function load_data() {
+	  
+    // ---------------------------
+
+    // Read dataset from location to tensorflow csvDataset object
+    csvDataset = await get_csvDataset();  // Update global variable
+	  
+    // ---------------------------
+
+   return csvDataset;
+	  
+  }
+
 	
   // -------------------------------------------------
 
+
+async function tokenize_data(){
+
 	
-  async function train_model() {
-	  
-    // ---------------------------
-
-    // [Step 0] Read dataset from location to tensorflow csvDataset object
-    csvDataset = await get_csvDataset();  // Update global variable
-
-    // ---------------------------
-	  
-    // Number of columns
-    // const num_of_cols = (await csvDataset.columnNames()).length;
-    // outp.innerHTML += 'num_of_cols: ' + num_of_cols + "<br/>";
-
-    // const column_names = (await csvDataset.columnNames());
-    // outp.innerHTML += 'column_names: ' + column_names + "<br/>";
-
-    // ---------------------------
-
     // [Step 3] Clean the dataset
     await modify_X_Y(csvDataset).then(async function(csvDataset_sequence) {
 
 	    // ---------------------------
 		    
 	    // Convert the xs and ys to a flattenedDataset
-	    const flattenedDataset = await csvDataset_sequence.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
+	  //   const flattenedDataset = await csvDataset_sequence.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
 
 	    // ---------------------------
 
 	    // Load the model
-	    custom_model = await make_and_compile_custom_model();
+	 //    custom_model = await make_and_compile_custom_model();
 	    
 	    // ---------------------------
 	    
 	    // Fit the model using the prepared Dataset
-	    await custom_model.fitDataset(flattenedDataset, {
-		    epochs: 10,
-		    callbacks: {
-			    onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
-		    }
-	    });
+	  //   await custom_model.fitDataset(flattenedDataset, {
+		//     epochs: 10,
+		//     callbacks: {
+	// 		    onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
+		//     }
+	//     });
 
 	    // ---------------------------
 
 	    // Save the model if I can
-	    const saveResults = await custom_model.save('localstorage://my-model-1');
-	    
-	    
+	//     const saveResults = await custom_model.save('localstorage://my-model-1');
+
+
     });  // end of modify_X_Y(csvDataset)
-	  
-    // ---------------------------
-
-
-  }  // end of train_model
 
 	
-  // -------------------------------------------------
+}
 
  
 
