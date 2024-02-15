@@ -235,7 +235,6 @@ async function print_a_csvDataset(csvDataset){
 	    // ---------------------------
 	    
 	    // Print final data to see if it is correct
-	    // console.log("csvDataset_sequence: " + csvDataset_sequence); //  [object Object]
 	    await print_a_csvDataset(csvDataset_sequence);
 	    
 	    // ---------------------------
@@ -287,10 +286,11 @@ async function print_a_csvDataset(csvDataset){
 	 
 	  let EMBEDDING_DIM = 256;
 	 
-	  //let MAXLEN = await Number(maxlen);
+	  //let MAXLEN = await Number(maxlen); // the global variable was too slow at updating
 	  console.log("maxlen: " + maxlen);
 	  // OR
 	  let MAXLEN = localStorage.getItem("maxlen_local");
+	 localStorage.removeItem("maxlen_local");
 	  console.log("MAXLEN: " + MAXLEN);
 	 
 	  
@@ -377,11 +377,11 @@ async function print_a_csvDataset(csvDataset){
 	// ---------------------------
 	  
 	  // Call X Tokenizer function
-	  let csvDataset_sequence = await tokenize_X(xs, ys);
+	  let  = await tokenize_X(xs, ys);
 	  
 	  // ---------------------------	
 	  
-	  return csvDataset_sequence;
+	  return ;
   }
 
 
@@ -518,11 +518,11 @@ async function tokenize_X(xs, ys) {
 
 	// Apply tokenizer to sentences
 	// Return both variables as an array: out = [xs_seq, maxlen, correctly_tokenized_rows]
-	let csvDataset_sequence = await apply_tokenizer_to_sentences(xs, ys, tokenizer);
+	let  = await apply_tokenizer_to_sentences(xs, ys, tokenizer);
 
 	// ---------------------------
 	
-	return csvDataset_sequence;
+	return ;
 }
 
 
@@ -638,10 +638,7 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 		  
 		  data.push({xs: xs_seq_pad, ys: ys[correct_ind]}); 
 	  });
-	  const csvDataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
-	  
-	  // Does not print for some reason
-	  // console.log('csvDataset_sequence: ' + csvDataset_sequence);
+	  const  = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
 
 	// ---------------------------	
 	
