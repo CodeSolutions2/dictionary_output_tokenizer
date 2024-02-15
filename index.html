@@ -197,6 +197,28 @@ async function find_class_names(ylabel_str) {
 	
   // -------------------------------------------------
 
+
+async function print_a_csvDataset(csvDataset){
+	
+	const tensors = await csvDataset.toArray();
+	
+	tensors.forEach(async function(rowdata, index) {
+
+		if (index < 5){
+			
+			X = Object.values(rowdata.xs);
+			Y = Object.values(rowdata.ys);
+			console.log("X: " + X);
+			console.log("Y: " + Y);
+		}
+	
+	});  // end of forEach
+
+}
+
+
+  // -------------------------------------------------
+
 	
   async function train_model() {
 	  
@@ -210,7 +232,11 @@ async function find_class_names(ylabel_str) {
     // [Step 3] Clean the dataset
     await modify_X_Y(csvDataset).then(async function(csvDataset_sequence) {
 
-	    console.log("csvDataset_sequence: " + csvDataset_sequence);
+	    // ---------------------------
+	    
+	    // Print final data to see if it is correct
+	    // console.log("csvDataset_sequence: " + csvDataset_sequence); //  [object Object]
+	    await print_a_csvDataset(csvDataset_sequence);
 	    
 	    // ---------------------------
 		    
@@ -467,7 +493,7 @@ async function tokenize_X(xs, ys) {
 
 	// Split the accumulatted string
 	let final_arr = final_str.split(" ");
-	console.log('final_arr.length :' + final_arr.length); // final_arr.length :2807
+	// console.log('final_arr.length :' + final_arr.length); // final_arr.length :2807
 
 	// ---------------------------
 
@@ -476,7 +502,7 @@ async function tokenize_X(xs, ys) {
 
 	// Add the <OOV> token: if the word is not in the token list assign this value
 	uniqueArray.push('<OOV>');
-	console.log('uniqueArray.length :' + uniqueArray.length); // uniqueArray.length :1241
+	// console.log('uniqueArray.length :' + uniqueArray.length); // uniqueArray.length :1241
 
 	// ---------------------------
 	
