@@ -51,7 +51,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
   var vocab_size = 0;  // This is a global variable, that will be reassigned after button push
 
-  //var maxlen = 0;  // This is a global variable, that will be reassigned after button push
+  var maxlen = 0;  // This is a global variable, that will be reassigned after button push
 	
   var class_names = []; // This is a global variable, that will be reassigned after button push
 
@@ -262,9 +262,11 @@ async function find_class_names(ylabel_str) {
 	  let EMBEDDING_DIM = 256;
 	 
 	  //let MAXLEN = await Number(maxlen);
+	  console.log("maxlen: " + maxlen);
 	  // OR
 	  let MAXLEN = localStorage.getItem("maxlen_local");
-	  console.log("MAXLEN: " + MAXLEN);  // MAXLEN: NaN
+	  console.log("MAXLEN: " + MAXLEN);
+	 
 	  
 	  let NUM_OF_CLASSES = await class_names.length;
 	  console.log("NUM_OF_CLASSES: " + NUM_OF_CLASSES);  // NUM_OF_CLASSES: 5
@@ -574,13 +576,13 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 	
 	// ---------------------------
 
-	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "vocab_size = Object.keys(tokenizer).length;" because this call means that the variable is local to this function.
-	// maxlen = await update_global_variable_maxlen(maxlen_local);
+	// Update global variable, one can return the variable from a function to make global variables update faster. So by calling it in a separate function return the variable updates faster than it would if one called "maxlen = maxlen_local" because it would update after apply_tokenizer_to_sentences returned, not in the middle of apply_tokenizer_to_sentences.
+	maxlen = await update_global_variable_maxlen(maxlen_local);
 	// console.log("maxlen: " + maxlen);
 
 	// OR
 
-	localStorage.setItem("maxlen_local", "maxlen_local");
+	localStorage.setItem("maxlen_local", maxlen_local);
 	
 	// ---------------------------
 	
@@ -595,24 +597,25 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 		  // Post pad the sequences such that each sequence is [1, maxlen_local], or xs_seq is size [num_of_rows, maxlen_local]
 		let amount2pad = maxlen_local - xs_seq_correct_row.length; // OK
 		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
-
-		//let concatenated_array0 = array_of_zeros.concat(array_of_zeros);
 		let xs_seq_pad = xs_seq_correct_row.concat(array_of_zeros);
-		
-		if (ind == 0){
-			console.log("maxlen_local: " + maxlen_local);
-			console.log("xs_seq_correct_row.length: " + xs_seq_correct_row.length);
-			console.log("amount2pad: " + amount2pad);
+
+		  // Does not print for some reason
+		// if (ind == 0){
+		// 	console.log("maxlen_local: " + maxlen_local);
+		// 	console.log("xs_seq_correct_row.length: " + xs_seq_correct_row.length);
+		// 	console.log("amount2pad: " + amount2pad);
 			
-			console.log("xs_seq_correct_row: " + xs_seq_correct_row);
-			console.log("array_of_zeros: " + array_of_zeros);
-			console.log("xs_seq_pad: " + concatenated_array1);
-		}
+		// 	console.log("xs_seq_correct_row: " + xs_seq_correct_row);
+		// 	console.log("array_of_zeros: " + array_of_zeros);
+		// 	console.log("xs_seq_pad: " + concatenated_array1);
+		// }
 		  
 		  data.push({xs: xs_seq_pad, ys: ys[correct_ind]}); 
 	  });
 	  const csvDataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
-	  console.log('csvDataset_sequence: ' + csvDataset_sequence);
+	  
+	  // Does not print for some reason
+	  // console.log('csvDataset_sequence: ' + csvDataset_sequence);
 
 	// ---------------------------	
 	
