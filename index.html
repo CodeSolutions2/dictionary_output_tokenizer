@@ -52,7 +52,10 @@ th {border: 1px solid black; padding: 10px 20px;}
   var vocab_size = 0;  // This is a global variable, that will be reassigned after button push
   var maxlen = 0;  // This is a global variable, that will be reassigned after button push
   var class_names = []; // This is a global variable, that will be reassigned after button push
-	
+
+
+
+
   // -------------------------------------------------
 
   async function get_csvDataset(csvDataset) {
@@ -574,12 +577,17 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 		
 	});  // end of forEach
 
+	// Outputs: xs_seq, maxlen_local
+	
 	// ---------------------------
 
 	// Update global variable, one has to return the variable from a function to make global variables update. One can not just call "vocab_size = Object.keys(tokenizer).length;" because this call means that the variable is local to this function.
-	maxlen = await update_global_variable_maxlen(maxlen_local);
+	// maxlen = await update_global_variable_maxlen(maxlen_local);
 	// console.log("maxlen: " + maxlen);
 
+	// OR
+
+	localStorage.setItem("maxlen_local", "maxlen_local");
 	
 	// ---------------------------
 	
@@ -590,16 +598,19 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 		// post pad zeros: Using Array.from
 		let amount2pad = maxlen_local - row.length; // OK
 		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
+
+		let concatenated_array0 = array_of_zeros.concat(array_of_zeros);
+		let concatenated_array1 = row.concat(array_of_zeros);
 		
 		if (ind == 0){
 			console.log("maxlen_local: " + maxlen_local);
-			console.log("row: " + row);
 			console.log("row.length: " + row.length);
+			console.log("amount2pad: " + amount2pad);
+			
+			console.log("row: " + row);
 			console.log("array_of_zeros: " + array_of_zeros);
+			console.log("concatenated_array1: " + concatenated_array1);
 		}
-		
-		let concatenated_array0 = array_of_zeros.concat(array_of_zeros);
-		let concatenated_array1 = row.concat(array_of_zeros);
 		
 		xs_seq_pad.push( concatenated_array1 );
 	});
