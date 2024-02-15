@@ -255,7 +255,19 @@ async function tokenize_data(){
     await modify_X_Y(csvDataset).then(async function(csvDataset_sequence) {
 
 	    // ---------------------------
-		    
+		
+
+
+    });  // end of modify_X_Y(csvDataset)
+
+	
+}
+
+
+
+ async function train_model() {
+
+	     
 	    // Convert the xs and ys to a flattenedDataset
 	  //   const flattenedDataset = await csvDataset_sequence.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
 
@@ -278,15 +290,11 @@ async function tokenize_data(){
 
 	    // Save the model if I can
 	//     const saveResults = await custom_model.save('localstorage://my-model-1');
-
-
-    });  // end of modify_X_Y(csvDataset)
-
 	
-}
-
  
 
+}
+	 
 	
  async function make_and_compile_custom_model() {
 	
@@ -618,16 +626,16 @@ async function tokenize_X(xs) {
   // -------------------------------------------------
 
 	
-  async function predict_with_custom_model(y_assignment) {
+  async function predict_w_pretrained_model() {
 
-	  const loadedModel = await tf.loadLayersModel('localstorage://my-model-1');
+   // const loadedModel = await tf.loadLayersModel('localstorage://my-model-1');
     
-    var pred_vec = [['', '', ''],['row', 'prediction', 'probability']]; 
+   //  var pred_vec = [['', '', ''],['row', 'prediction', 'probability']]; 
 
-    const text_input = document.getElementById("input_text").value;
+   //  const text_input = document.getElementById("input_text").value;
 
-    text_input = text_input.split("\n")
-
+   //  text_input = text_input.split("\n")
+ 
     // ---------------------------
 	  
     // Tokenize X
@@ -635,35 +643,35 @@ async function tokenize_X(xs) {
 	  
     // ---------------------------
 
-    var pred_vec = [];
+  //   var pred_vec = [];
 		  
-    sequence_array.forEach(async function(seq, ind) {
+  //   sequence_array.forEach(async function(seq, ind) {
 	  
 	    // Call the custom_model 
-	    const result = loadedModel.predict(seq) ;
+	 //    const result = loadedModel.predict(seq) ;
 
 	    // Get index of maximum softmax probability 
-	    const index = result.as1D().argMax().dataSync()[0];
+	 //    const index = result.as1D().argMax().dataSync()[0];
 			
 	    // Get maximum softmax probability 
-	    const resultData = await result.data();    
-	    const maxprob = resultData[index];
+	 //    const resultData = await result.data();    
+	 //    const maxprob = resultData[index];
 
-	    pred_vec.push([y_assignment[index], maxprob]);    
+	  //   pred_vec.push([y_assignment[index], maxprob]);    
     
-    });  // end of forEach
+  //   });  // end of forEach
 
     // ---------------------------
 	  
     // Save array to csv and put download csv file link on screen (NO AUTOMATIC DOWNLOADING)
-    await put_results_in_CSVfile(pred_vec);
+    // await put_results_in_CSVfile(pred_vec);
 
     // Create a table dynamically with the results
-    await generateTable_dynamically(pred_vec);
+   //  await generateTable_dynamically(pred_vec);
 
     // ---------------------------	
 
-  }  // end of predict_with_custom_model
+  }
 
 	
   // -------------------------------------------------
