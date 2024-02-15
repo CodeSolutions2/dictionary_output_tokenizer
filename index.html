@@ -617,14 +617,15 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 	  let data = []; 
 	  correctly_tokenized_rows.forEach(async function(correct_ind, ind) { 
 
-		  let xs_seq_correct_row = xs_seq[correct_ind];
+		let xs_seq_correct_row = xs_seq[correct_ind];
+		  localStorage.setItem("xs_seq_correct_row", xs_seq_correct_row);
 		  
-		  // Post pad the sequences such that each sequence is [1, maxlen_local], or xs_seq is size [num_of_rows, maxlen_local]
+		// Post pad the sequences such that each sequence is [1, maxlen_local], or xs_seq is size [num_of_rows, maxlen_local]
 		let amount2pad = maxlen_local - xs_seq_correct_row.length; // OK
 		let array_of_zeros = Array.from({ length: amount2pad }, (_, i) => 0);
 		let xs_seq_pad = xs_seq_correct_row.concat(array_of_zeros);
 
-		  // Does not print for some reason
+		// Does not print for some reason
 		// if (ind == 0){
 		// 	console.log("maxlen_local: " + maxlen_local);
 		// 	console.log("xs_seq_correct_row.length: " + xs_seq_correct_row.length);
@@ -635,8 +636,8 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 		// 	console.log("xs_seq_pad: " + concatenated_array1);
 		// }
 		  
-		  // data.push({xs: xs_seq_pad, ys: ys[correct_ind]}); 
-		  data.push({xs: xs_seq, ys: ys[correct_ind]}); 
+		// data.push({xs: xs_seq_pad, ys: ys[correct_ind]}); 
+		data.push({xs: xs_seq[correct_ind], ys: ys[correct_ind]}); 
 	  });
 	
 	  const  = await tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
