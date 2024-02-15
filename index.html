@@ -8,24 +8,35 @@
 <h1 style='text-align: center; margin-bottom: -35px;'>Text classification webapp</h1>
 <br><br>
 
-<!-- [Step 0] Train model -->
+<!-- [Step 0] Load data, saves data to csvDataset as version0 -->
 <label for="train_dataset_url_label" style="display:block">Enter train dataset location url - url can be Github or GCP storage: (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv)</label>
 <input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" size="200" style="display:block">
+  
 <br><br>
+  
 <label for="y_datasetLabels_label" style="display:block">Enter the y dataset labels: (ie: sport,business,politics,entertainment,tech)</label>
 <input type="text" value="" placeholder="y dataset labels" id="y_datasetLabels" rows="1" cols="500" size="200" style="display:block">
 <br>
+<button id="load_data" onclick="load_data()" style="display:block">load_data</button>
+
+<!-- [Step 1] Tokenizes the data, save sequence data to csvDataset as version1, save model_parameters to text file -->
+<label for="tokenize_data_label" style="display:block">Tokenize X and Y:</label>
+<br>
+<button id="tokenize_data" onclick="tokenize_data()" style="display:block">tokenize_data</button>
+
+<!-- [Step 2] Loads sequence csvDataset and model_parameters, trains model, saves pre-trained model -->
+<label for="train_model_label" style="display:block">Train the model:</label>
+<br>
 <button id="train_model" onclick="train_model()" style="display:block">train_model</button>
-
 	
-<!-- [Step 1] Result: say if model is trained or not -->
+<!-- [Step 3] Predict/inference: input text in input-box, process text input (separate each sentence separated by a \n character), tokenize, save data to csvDataset, load csvDataset and pre-trained model -->
+<label for="input_text_label" style="display:block">Enter text to label, each sentence separated by the \n character will be labeled:</label>
+<input type="text" value="" placeholder="Enter text to label" id="input_text" rows="10" cols="500" style="display:block">
+<br>
+<button id="predict_w_pretrained_model" onclick="predict_w_pretrained_model()" style="display:block">predict_w_pretrained_model</button>
+  
+<!-- View results -->
 <div id="output" style="font-family:courier;font-size:24px;height:300px"></div>
-
-	
-<!-- [Step 2] Predict/inference: predict each sentence separated by a \n character -->
-<label for="input_text_label" style="display:none">Enter text to label, each sentence separated by the \n character will be labeled:</label>
-<input type="text" value="" placeholder="Enter text to label" id="input_text" rows="10" cols="500" style="display:none">
-
 
 
 	
@@ -50,16 +61,12 @@ th {border: 1px solid black; padding: 10px 20px;}
   var csvDataset = [];  // This is a global variable
 
   var vocab_size = 0;  // This is a global variable, that will be reassigned after button push
-
   var maxlen = 0;  // This is a global variable, that will be reassigned after button push
-	
   var class_names = []; // This is a global variable, that will be reassigned after button push
-
-
-
-
+	
   // -------------------------------------------------
 
+	
   async function get_csvDataset(csvDataset) {
 
 	// https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv
@@ -111,7 +118,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 		
 		// await fetch(url, options).then(res => res.json()).then(data => {
 		//     data.forEach(file => {
-		 //      if (file.type === 'file' && file.name.(/.(csv|txt)$/i)) {
+		 //      if (file.type === 'file' && file.name.match(/.(csv|txt)$/i)) {
 			// url_vec1.push(file.download_url);
 		 //      }
 		  //   });
@@ -154,13 +161,13 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		// console.log("url_vec:" + url_vec);
 
+
 		// OR
 
 		const BUCKET_NAME = out[3];
 		const fileName = out[4];
 		var url = `https://storage.googleapis.com//${BUCKET_NAME}/${fileName}`;
-		var options = {method : 'get', headers: {'Access-Control-Allow-Origin': '*'
-							}, mode: 'no-cors'};
+		var options = {method : 'get', headers: {'Access-Control-Allow-Origin': '*'}, mode: 'no-cors'};
 
 		csvDataset = await fetch(url, options).then(res => res).then(res => {   
 		 const out = tf.data.csv(res.text(), { columnConfigs: { Y: { isLabel: true } } });
@@ -169,7 +176,7 @@ th {border: 1px solid black; padding: 10px 20px;}
 
 		// OR
 
-		// The key "Y" provided in columnConfigs does not  any of the column names (<!DOCTYPE html>).
+		// The key "Y" provided in columnConfigs does not match any of the column names (<!DOCTYPE html>).
 		// const response = await fetch(url, { mode: 'no-cors' });
 		// const data = await response.text();
 		// csvDataset = tf.data.csv(data, { columnConfigs: { Y: { isLabel: true } } });
@@ -182,6 +189,460 @@ th {border: 1px solid black; padding: 10px 20px;}
   }
 
 	
+  // -------------------------------------------------
+
+
+async function find_class_names(ylabel_str) {
+	
+	let ylabel_vec = ylabel_str.split(",");
+
+	// y label should be unique, but find unique values just in case
+	class_names = [...new Set(ylabel_vec)];
+
+	 return class_names;
+ }
+
+	
+  // -------------------------------------------------
+
+	
+  async function train_model() {
+	  
+    // ---------------------------
+
+    // [Step 0] Read dataset from location to tensorflow csvDataset object
+    csvDataset = await get_csvDataset();  // Update global variable
+
+    // ---------------------------
+	  
+    // Number of columns
+    // const num_of_cols = (await csvDataset.columnNames()).length;
+    // outp.innerHTML += 'num_of_cols: ' + num_of_cols + "<br/>";
+
+    // const column_names = (await csvDataset.columnNames());
+    // outp.innerHTML += 'column_names: ' + column_names + "<br/>";
+
+    // ---------------------------
+
+    // [Step 3] Clean the dataset
+    await modify_X_Y(csvDataset).then(async function(csvDataset_sequence) {
+
+	    // ---------------------------
+		    
+	    // Convert the xs and ys to a flattenedDataset
+	    const flattenedDataset = await csvDataset_sequence.map(({xs, ys}) => { return {xs:Object.values(xs), ys:Object.values(ys)}; });
+
+	    // ---------------------------
+
+	    // Load the model
+	    custom_model = await make_and_compile_custom_model();
+	    
+	    // ---------------------------
+	    
+	    // Fit the model using the prepared Dataset
+	    await custom_model.fitDataset(flattenedDataset, {
+		    epochs: 10,
+		    callbacks: {
+			    onEpochEnd: async (epoch, logs) => { console.log(epoch + ':' + logs.loss); }
+		    }
+	    });
+
+	    // ---------------------------
+
+	    // Save the model if I can
+	    const saveResults = await custom_model.save('localstorage://my-model-1');
+	    
+	    
+    });  // end of modify_X_Y(csvDataset)
+	  
+    // ---------------------------
+
+
+  }  // end of train_model
+
+	
+  // -------------------------------------------------
+
+ 
+
+	
+ async function make_and_compile_custom_model() {
+	
+    // [Step 1] Load custom model
+	  
+    // Way 0: load pre-trained model
+    // const MODEL_URL = 'https://storage.googleapis.com/tensorflowjsmodels0/model.json';
+    // const MODEL_URL = 'model.json';
+    // const custom_model = await tf.loadLayersModel(MODEL_URL);
+
+    // OR
+
+    // Way 1: load model layers using sequential
+    const NUM_WORDS = tokenizer.length;
+    console.log("NUM_WORDS: " + NUM_WORDS);
+	 
+    const EMBEDDING_DIM = 256;
+	 
+    const MAXLEN = maxlen;
+    console.log("MAXLEN: " + MAXLEN);
+	  
+    const NUM_OF_CLASSES = class_names.length;
+    console.log("NUM_OF_CLASSES: " + NUM_OF_CLASSES);
+	 
+    const custom_model = tf.sequential();
+    custom_model.add( tf.layers.embedding(inputDim=NUM_WORDS, outputDim=EMBEDDING_DIM, inputLength=MAXLEN) );
+    custom_model.add( tf.layers.globalAveragePooling1d() );
+    custom_model.add( tf.layers.dense(NUM_OF_CLASSES, activation='softmax') );
+
+    // OR
+
+    // Way 2: load model layers using functional API (tf.LayersModel)
+	  
+    // ---------------------------
+
+    custom_model.compile({optimizer: 'adam', loss: 'sparse_categorical_crossentropy', metrics: ["accuracy"]});
+	 
+	return custom_model;
+ }
+
+	
+  // -------------------------------------------------
+
+
+  async function modify_X_Y(csvDataset) {
+
+	  // ---------------------------
+	  // Module 0: input=csvDataset, output=xs, ys
+	  // ---------------------------
+	  const tensors = await csvDataset.toArray();
+
+	  // tensors.length: 10
+	  // outp.innerHTML += 'num_of_rows = tensors.length: ' + tensors.length + "<br/>";  
+
+	  // tensors: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+	  // outp.innerHTML += 'tensors: ' + tensors + "<br/>";
+
+	  // ---------------------------
+	  // Handling desired y labels
+	  // ---------------------------
+	  // Obtain desired labels from user
+	  var ylabel_str = document.getElementById("y_datasetLabels").value;
+	  
+	  // Convert string tensor to javascript tensor, Make text lower case		  
+	  ylabel_str = ylabel_str.toString().toLowerCase();
+	  
+	  var class_names = await find_class_names(ylabel_str);
+	  console.log("class_names: " + class_names);
+	  
+	  // Tokenize Y using user input labels
+	  const y_assignment = Object.fromEntries(class_names.map((key, index) => [key, index]));
+	  
+	  // outp.innerHTML += 'y_assignment["business"]: ' + y_assignment['business'] + "<br/>";  // correct
+	  // outp.innerHTML += 'y_assignment.keys(): ' + y_assignment.keys() + "<br/>";
+	  // outp.innerHTML += 'y_assignment.values(): ' + y_assignment.values() + "<br/>";
+	  // ---------------------------
+	  
+          // ---------------------------
+          // Read data from csv object, clean each row, validate if X and Y are correct, tokenize X, 
+	  // save tokenized X and Y to a flattenedDataset
+	  // ---------------------------
+	  var X = '';
+	  var Y = '';
+	  var xs = [];
+	  var ys = [];
+
+	  undesireable_words = ["about", "above", "after", "again", "against", "all", "and", "any", "are", "because", "been", "before", "being", "below", "between", "both", "but", "could", "did", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves", '</p>', '<a', 'id=', "href=", 'title=', 'class=', '</a>', '</sup>', '<p>', '</b>', '<sup'];
+
+	  tensors.forEach(async function(rowdata, index) {
+		
+		 // ---------------------------
+		 // Clean text procedure
+		 // ---------------------------
+		 // Make text lower case, Remove characters between parenthesis, Remove text that are 1 or 2 characters long, Remove undesireable characters
+		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!-><\n]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '');  
+		Y = Object.values(rowdata.ys).toString().toLowerCase();
+		  
+		 // Remove undesireable words 
+		 // Maybe memory intensive - **** run after everything works ****
+		 // undesireable_words.forEach(function(word2remove, index) {X = X.replace(/\b${word2remove}\b/g, '');}
+		  // ---------------------------
+
+		  // ---------------------------
+                  // Using user input labels to validate X and Y values 
+		  // ---------------------------
+		  regexp = new RegExp(`${Y}`, 'g');
+		  iterator = ylabel_str.matchAll(regexp);
+		  let matches7 = Array.from(iterator); // Convert iterator to array
+		  // outp.innerHTML += 'matches7: ' + matches7 + "<br/>";  // matches7: business
+		  // outp.innerHTML += 'matches7.length: ' + matches7.length + "<br/>";  // matches7.length: 1
+
+		  // ---------------------------
+		  // Verify that data is correct, and only keep correct X and Y data
+		  if (X.length-1 > 10 && matches7.length == 1){
+		       // outp.innerHTML += 'X: ' + X + "<br/>";
+		       // outp.innerHTML += 'Y: ' + Y + "<br/>";
+
+		       // Save non-tokenized X values and tokenized Y values to array
+		       xs.push(X);
+		       ys.push(y_assignment[Y]);
+		  }
+
+	  });  // end of forEach
+	  // ---------------------------
+	  //  Module 0 END : input=csvDataset, output=xs, ys
+	  // ---------------------------
+
+
+	// ---------------------------
+	  
+	  // Call X Tokenizer function
+	  var xs_seq = await tokenize_X(xs);
+
+	  // OR
+
+	  // copy paste tokenizer here
+
+	// ---------------------------
+	  
+	  // Create a csvDataset
+	  // put x_clean and ys arrays in to a list of dictionaries per row with the same keys
+	  // data should look like : [{a: 1, b: 11}, {a: 2, b: 12}, {a: 3, b: 13}, ...]
+	  let data = [];
+	  xs_seq.forEach(async function(xs_val, ind) {
+		data.push({xs: xs_val, ys: ys[ind]});
+	  });  // end of forEach
+	  const Dataset_sequence = tf.data.array(data).batch(1);  // Output:  Returns: tf.data.Dataset 
+	  
+	  // print dataset
+	  // await Dataset_sequence.forEachAsync(e => { console.log('{'); for(var key in e) { console.log(key+':'); e[key].print(); } console.log('}'); });
+	  
+	  
+	  return Dataset_sequence
+  }
+
+
+  // -------------------------------------------------
+
+	
+  async function print_a_dictionary(dictt) {
+	  
+	// Print the first XX keys of a dictionary
+	var dictt_keys = Object.keys(dictt);
+
+	for (var i=0; i<dictt_keys.length; i++) {
+		let key = dictt_keys[i];
+		let value = dictt[key];
+		console.log('key: ' + key +  ', value:' +  value);
+	}
+
+  }
+
+	
+  // -------------------------------------------------
+
+	
+  async function create_tokenizer_dict(uniqueArray) {
+
+	// ------------------------------------------
+
+	// [0] Sort uniqueArray by an attribute (ie: length)
+	let arr = uniqueArray;
+	c = 0;
+	while (c != arr.length-1) {
+		 c = 0;
+		  for (var i=0; i<arr.length-1; i++) {
+			let cur = arr[i];
+			  let next = arr[i+1];
+			  let cur_value = cur.length;
+			  let next_value = next.length;
+			  
+			  if (cur_value < next_value) {
+				  temp_cur = arr[i]
+				  temp_next = arr[i+1]
+				  arr[i+1] = temp_cur
+				  arr[i] = temp_next
+			  } else {
+				  //this will be some value from 1 to arr.length-1
+				  c = c + 1;
+				  // c = arr.length-1 means that sorting is finished
+			  }
+		  }
+	}
+	  
+	// ------------------------------------------
+  
+	// [1] Make a dictionary where each key is a word in arr, and each value is index
+	// Create a dictionary from one array
+	const tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
+
+	// ------------------------------------------
+
+	// Print the first 5 rows of the array, array_w_dictionary_rows
+	console.log('print_a_dictionary:');
+	print_a_dictionary(tokenizer);
+
+	// ------------------------------------------
+
+	 return tokenizer;
+  }
+	
+
+	
+  // -------------------------------------------------
+
+
+async function tokenize_X(xs) {
+	
+	// ---------------------------
+	
+	// Concatenate the array contents into a long text string
+	
+	// Initialize with first array
+	let final_str = xs.slice(0,1);
+	// console.log('final_str 1st part:' + final_str);
+
+	let xs_rest = xs.slice(1, xs.length); // 9 [Correct]
+	// console.log('xs_rest:' + xs_rest.length);
+	
+	xs_rest.forEach(async function(val, ind) { 
+		final_str = final_str.concat(val); // string
+		// console.log('index: ' + ind + ', final_str type :' + typeof final_str); 
+	});
+
+	final_str = final_str.toString();
+	// console.log('final_str accumulated type :' + typeof final_str); // final_str accumulated type :string [Correct]
+	
+	// ---------------------------
+	
+	// Replace any multiple spaces from accumulatted string with only a single space
+	final_str = final_str.replace(/\s+/g, ' ');
+	// console.log('final_str accumulated :' + final_str);
+	
+	// ---------------------------
+
+	// Split the accumulatted string
+	let final_arr = final_str.split(" ");
+	console.log('final_arr.length :' + final_arr.length); // final_arr.length :2807
+
+	// ---------------------------
+
+	// Find unique words
+	let uniqueArray = [...new Set(final_arr)];
+
+	// Add the <OOV> token: if the word is not in the token list assign this value
+	uniqueArray.push('<OOV>');
+
+	console.log('uniqueArray.length :' + uniqueArray.length); // uniqueArray.length :1241
+
+	// ---------------------------
+
+   var tokenizer = await create_tokenizer_dict(uniqueArray);
+	
+	// ---------------------------
+
+	// Apply tokenizer to sentences, to obtain sequences
+	sen_arr_len = [];
+	xs_seq = [];
+	
+	xs.forEach(async function(val, ind) {
+
+		// Get sentence array from sentence string
+		let sen_arr = val.split(" ");
+
+		// Save length of each sentence to find MAXLEN of sentences, for padding the sequences
+		sen_arr_len.push(sen_arr.length);
+		
+		sen_arr.forEach(async function(val1, ind1) {
+			// Directly call the tokenizer, if the word does not exist put the number for '<OOV>' token
+			let result = tokenizer[val1] ?? tokenizer['<OOV>'];
+
+			// Replace all [val1 occurences] in the [string val], with the [token value result]
+			// val = val.replace(val1, result);
+			// X = X.replace(/\b${val1}\b/g, '');
+
+			regexp = new RegExp(`\b${val1}\b`, 'g');
+			val = val.replace(regexp, result);
+
+			
+		});  // end of forEach
+
+		// Convert string to integer array
+		let seq_arr = val.split(" ");
+		let seq_arr_int = [];
+		seq_arr.forEach(async function(val, ind) {
+			seq_arr_int.push(Number(val));
+		});
+
+		// Save output sequence per row
+		xs_seq.push(seq_arr_int);
+		
+	});  // end of forEach
+
+
+	// Update the global variable of sen_arr, to initialize the model
+	maxlen = await update_MAXLEN(sen_arr_len);
+	
+	return xs_seq;
+	
+}
+
+
+  // -------------------------------------------------
+
+  async function update_MAXLEN(sen_arr_len) {
+	return tf.max(sen_arr_len);
+  }
+	
+  // -------------------------------------------------
+
+	
+  async function predict_with_custom_model(y_assignment) {
+
+	  const loadedModel = await tf.loadLayersModel('localstorage://my-model-1');
+    
+    var pred_vec = [['', '', ''],['row', 'prediction', 'probability']]; 
+
+    const text_input = document.getElementById("input_text").value;
+
+    text_input = text_input.split("\n")
+
+    // ---------------------------
+	  
+    // Tokenize X
+    // sequence_array
+	  
+    // ---------------------------
+
+    var pred_vec = [];
+		  
+    sequence_array.forEach(async function(seq, ind) {
+	  
+	    // Call the custom_model 
+	    const result = loadedModel.predict(seq) ;
+
+	    // Get index of maximum softmax probability 
+	    const index = result.as1D().argMax().dataSync()[0];
+			
+	    // Get maximum softmax probability 
+	    const resultData = await result.data();    
+	    const maxprob = resultData[index];
+
+	    pred_vec.push([y_assignment[index], maxprob]);    
+    
+    });  // end of forEach
+
+    // ---------------------------
+	  
+    // Save array to csv and put download csv file link on screen (NO AUTOMATIC DOWNLOADING)
+    await put_results_in_CSVfile(pred_vec);
+
+    // Create a table dynamically with the results
+    await generateTable_dynamically(pred_vec);
+
+    // ---------------------------	
+
+  }  // end of predict_with_custom_model
+
 	
   // -------------------------------------------------
 
