@@ -201,7 +201,6 @@ async function find_class_names(ylabel_str) {
 async function print_a_csvDataset(csvDataset){
 	
 	const tensors = await csvDataset.toArray();
-	
 	tensors.forEach(async function(rowdata, index) {
 
 		if (index < 5){
@@ -603,6 +602,8 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 	});  // end of forEach
 
 	// Outputs: xs_seq, maxlen_local, correctly_tokenized_rows
+
+	await localStorage.setItem("xs_seq", xs_seq);
 	
 	// ---------------------------
 
@@ -618,7 +619,7 @@ async function apply_tokenizer_to_sentences(xs, ys, tokenizer){
 	  correctly_tokenized_rows.forEach(async function(correct_ind, ind) { 
 
 		let xs_seq_correct_row = xs_seq[correct_ind];
-		  localStorage.setItem("xs_seq_correct_row", xs_seq_correct_row);
+		  
 		  
 		// Post pad the sequences such that each sequence is [1, maxlen_local], or xs_seq is size [num_of_rows, maxlen_local]
 		let amount2pad = maxlen_local - xs_seq_correct_row.length; // OK
