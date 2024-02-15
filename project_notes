@@ -336,16 +336,6 @@ async function create_tokenizer_array_w_dict_per_row(uniqueArray) {
 // ---------------------------------------------
 
 
-
-// Strange error
-
-seq_arr_int: 975797539759975,975797539758975,9751975197579760000,975297599753975,975797539753975,975597539750975,9751975097579756000,975297599753975,9751975297529758000,9751975197529754000,975797539753975,9751975197559757000,9751975097509750000,9751975097599756000,975497599751975,9751975197559753000,975997549751975,9751975197529756000,9751975197559759000,975597539751975,9751975197599750000,975797529751975,975597539752975,975397559753975,975597539753975,9751975297529758000,9751975197529754000,975397559754975,9751975297519753000,975197529758975,975997529750975,975197549756975,975997599754975,975797539759975,975597539754975,975297569755975,975797549750975,975297519756975,975797549751975,9751975297529760000,975997579756975,975397559755975,9751975197559753000,97519753975,9751975097579756000,9751975097519760000,975597539755975,975797549752975,975797549751975,975997589756975,975297519757975,9751975197559753000,975997549752975,975797539753975,975597539756975,975797539759975,975997549753975,975697539756975,975297519758975,975897539753975,975597539757975,975797549753975,975797549754975,9751975197529756000,975997599750975,975297519759975,975997589753975,9751975197559753000,975297569755975,975397559756975,9751975197529758000,97519754975,975797529751975,9751975197559753000,9751975197529758000,975597539758975,975797549754975,975197529759975,9751975197559753000,975897539750975,9751975297529758000,9751975197529754000,975997549753975,975497589757975,97539752975,9751975197529760000,9751975197529760000,975397559757975,975597539759975,9751975197559759000,9751975197559753000,97569754975,975397559758975,975797549755975,9751975197559753000,975297599753975,975997549754975,975997549755975,975597549750975,975597589752975,975397559759975,9751975197559753000,9751975097579756000,975597549751975,9751975197559759000,9751975197559753000,975997549756975,9751975197559753000,975597539750975,9751975097579756000,975197559754975,975497589750975,9751975197539752000,9751975197509753000,9751975197559759000,9751975197539752000,975297529750975,9751975297529760000,975997579756975,975897579755975,9751975197599754000,9751975197559753000,975797549756975,975397569750975,975297529751975,975897549752975,9751975197579751000,97539753975,975597549752975,975797549751975,975997589756975,975497589750975,9751975197539752000,975797549757975,975897539753975,9751975297529760000,9751975197539752000,975497589750975,9751975197559753000,975997549757975,975997579758975,9751975297529760000,975997549758975,9751975297529760000,975397569751975,9751975197559753000,975897539750975,975497589750975,9751975197559753000,975797549758975,9751975197539752000,9751975197509753000,975997589758975,975997549759975,9751975197559753000,975297599753975,9751975097579756000,9751975197559753000,9751975197539754000,975897559752975,9751975197539754000,975897539753975,975997529755975,975797549759975,975797559750975,9751975297529760000,975997559750975,9751975297539752000,975997559751975,9751975297519753000,975297529752975,975397569752975,975197539750975,975397589755975,9751975197559753000,975997559750975,975297559755975,975
-
-sen_arr: daimlerchrysler,daimlerchrysler,daimlerchrysler,daimlerchrysler,daimlerchrysler,daimlerchrysler,daimerchrysler,profitability,profitability,mercedesbenz,expectations,unfavourably,expectations,productivity,mercedesbenz,compensation,improvements,performance,competition,transformed,performance,challenging,competitive,environment,significant,negotiated,determined,successful,calculated,subsidiary,mitsubishi,investment,operating,operating,divisions,oppenheim,operating,worldwide,expecting,mercedes,mercedes,prompted,germanus,carmaker,obscured,chrysler,mercedes,fortunes,mercedes,compared,mercedes,revenues,affected,weakness,carmaker,mercedes,mercedes,increase,mercedes,position,continue,surround,contrast,chrysler,increase,revenues,division,revenues,chrysler,carmaker,strategy,schrempp,chairman,stemming,japanese,expected,slightly,mercedes,profits,quarter,profits,profits,returns,profits,analyst,profits,profits,minicar,savings,workers,however,worries,michael,analyst,reuters,enjoyed,dollars,marques,include,overall,vehicle,million,largest,defects,scandal,venture,package,partner,looking,forward,profits,however,product,luxury,parent,fourth,strong,market,fierce,luxury,sector,revive,period,figure,brands,demand,cooled,dollar,blamed,launch,models,losses,hoping,having,annual,german,retain,luxury,shares,annual,profit,strong,helped,income,jurgen,agreed,motors,higher,result,giant,slump,slump,maker,euros,euros,euros,group,whose,faces,hopes,below,euros,whole,euros,sales,while,costs,smart,range,euros,euros,world,brand,while,these,doing,sales,while,whose,dodge,euros,euros,sales,while,total,added,euros,world,fifth,boost,euros,euros,shows,works,costs,joint,which,stake,major,range,drop,fall,from,woes,slid,just,from,from,over,with,euro,were,well,year,fell,fell,were,fall,high,from,with,last,year,firm,said,most,fell,news,well,rabb,with,bank,told,unit,rose,jeep,full,year,loss,into,last,year,rise,year,that,well,even,such,said,took,euro,from,fuso,last,week,with,will,fuso,car,hit,car,has,big,the,saw,its,the,met,the,car,bmw,and,but,its,the,and,for,the,its,the,the,the,the,for,new,and,its,the,was,the,the,all,are,the,big,sal,the,and,saw,the,net,the,our,hit,its,see,buy,out,its,are,the
-
-// ---------------------------------------------
-
-
     // Way 0: load pre-trained model
     // const MODEL_URL = 'model.json';
     // const custom_model = await tf.loadLayersModel(MODEL_URL);
@@ -380,8 +370,58 @@ sen_arr: daimlerchrysler,daimlerchrysler,daimlerchrysler,daimlerchrysler,daimler
 // ---------------------------------------------
 
 
+	  
+    // Number of columns
+    // const num_of_cols = (await csvDataset.columnNames()).length;
+    // outp.innerHTML += 'num_of_cols: ' + num_of_cols + "<br/>";
+
+    // const column_names = (await csvDataset.columnNames());
+    // outp.innerHTML += 'column_names: ' + column_names + "<br/>";
+
 // ---------------------------------------------
 
+
+
+
+Ideas
+
+0. use local Storage to save maxlen
+
+1. add and Event listener for the change of value for maxlen, then update global variable
+
+2. There is not guarantee that the 2 forEach statements will run in sequenqtial order - so add async/await to these two
+
+// ---------------------------------------------
+
+
+Design0 : this has too many sublevels I think
+async train_model
+	- await get_csvDataset ---> csvDataset
+	- await modify_X_Y ---> csvDataset_sequence
+		- await find_class_names ---> class_names (updates global variable)
+		- tensors.forEach ---> xs, ys (NO await used)
+		- await tokenize_X(xs, ys) 
+			- xs_rest.forEach --> final_str (NO await used)
+			- tokenizer = await create_tokenizer_dict(uniqueArray)
+			- vocab_size = await update_global_variable_vocab_size(tokenizer) (updates global variable)
+			- csvDataset_sequence = await apply_tokenizer_to_sentences(xs, ys, tokenizer)
+				- xs.forEach --> xs_seq, maxlen_local, correctly_tokenized_rows (NO await used)
+				- correctly_tokenized_rows.forEach --> csvDataset_sequence (NO await used)
+	- await csvDataset_sequence.map
+	- await synchronize_model_parameters
+
+		
+
+const tensors = await csvDataset.toArray();
+
+tensors.forEach(async function(rowdata, index) {
+
+	X = Object.values(rowdata.xs);
+	Y = Object.values(rowdata.ys);
+	console.log("X: " + X);
+	console.log("Y: " + Y);
+
+});  // end of forEach
 
 
 // ---------------------------------------------
