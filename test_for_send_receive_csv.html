@@ -7,6 +7,7 @@
   <br><br>
 
 <button id="sendreceive_files_GCP_form" onclick="sendreceive_files_GCP_form()" style="display:block">sendreceive_files_GCP_form</button>
+<button id="onsubmit_get_result" onclick="onsubmit_get_result()" style="display:block">onsubmit_get_result</button>
 
 <button id="sendreceive_files_GCP_fetch" onclick="sendreceive_files_GCP_fetch()" style="display:block">sendreceive_files_GCP_fetch</button>
 
@@ -31,6 +32,11 @@ const outp = document.getElementById('output');
 // Form has to be called with one level from main page - can not be called in a function-in-a-function
 
 // https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data
+
+
+// When the form is submitted it is redirected to GCP and the url changes to 
+// https://storage.googleapis.com/textclassification-w-labeled-data?keyvalue%3Dtrain_dataset0.csv=
+	  
 async function sendreceive_files_GCP_form() {
 	
   // Create <form> element to submit parameters to endpoint
@@ -62,9 +68,6 @@ async function sendreceive_files_GCP_form() {
     var input = document.createElement('input');
     input.innerHTML = '<input style="display:none;" type=' +type+ ' name=' +name+ 'value=' +value+ '>';
 
-		// https://storage.googleapis.com/textclassification-w-labeled-data?keytype%3D%22text%22=train_dataset0.csv
-		// https://storage.googleapis.com/textclassification-w-labeled-data?keyvalue%3Dtrain_dataset0.csv=
-          
      form.appendChild(input);
     });
 
@@ -74,6 +77,7 @@ async function sendreceive_files_GCP_form() {
   form.submit();
   
 }  // end of sendreceive_files_GCP_form
+	  
 
 // -----------------------------------
 
@@ -84,7 +88,7 @@ async function sendreceive_files_GCP_form() {
 // Add an eventlistener to a button, when the button is clicked, do not redirect AND output the form results
 // Do not redirect page to the page that we want to perform GET,POST requests with
 document.getElementById("sendreceive_files_GCP_form").addEventListener("click", (event) => {
-	event.preventDefault();
+	event.preventDefault();  // it still redirects, does not work
 });
 	  
 // OR
