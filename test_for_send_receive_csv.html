@@ -3,10 +3,12 @@
 <head></head>
 <body>
 
-<h1 style='text-align: center; margin-bottom: -35px;'>Test to receive and send csv files</h1>
+<h1 style='text-align: center; margin-bottom: -35px;'>Test to receive and send TEXT files</h1>
   <br><br>
 
-<button id="sendreceive_files_GCP_image" onclick="sendreceive_files_GCP_image()" style="display:block">sendreceive_files_GCP_image</button>
+<button id="sendreceive_files_GCP_form" onclick="sendreceive_files_GCP_form()" style="display:block">sendreceive_files_GCP_form</button>
+
+<button id="sendreceive_files_GCP_fetch" onclick="sendreceive_files_GCP_fetch()" style="display:block">sendreceive_files_GCP_fetch</button>
 
 <!-- View results -->
 <div id="output" style="font-family:courier;font-size:24px;height:300px"></div>
@@ -126,7 +128,7 @@ function onsubmit_get_result() {
 // Way 1: Use a fetch to perform GET to obtain an image from GCP
     
 // https://tr.javascript.info/fetch-crossorigin
-async function sendreceive_files_GCP_fetch_forTEXT() {
+async function sendreceive_files_GCP_fetch() {
 
 	let url = 'https://storage.googleapis.com/textclassification-w-labeled-data/train_dataset0.csv';
 
