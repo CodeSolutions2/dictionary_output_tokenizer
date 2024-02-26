@@ -10,30 +10,34 @@
 
 <!-- [Step 0] Load data, saves data to csvDataset as version0 -->
 <label for="train_dataset_url_label" style="display:block">Enter train dataset location url - url can be Github or GCP storage: (ie: https://github.com/CodeSolutions2/text_classification_w_labels/train_dataset0.csv)</label>
-<input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" size="200" style="display:block">
+<input type="text" value="" placeholder="Train dataset url" id="train_dataset_url" rows="1" cols="500" size="100" style="display:block">
   
 <br><br>
   
 <label for="y_datasetLabels_label" style="display:block">Enter the y dataset labels: (ie: sport,business,politics,entertainment,tech)</label>
-<input type="text" value="" placeholder="y dataset labels" id="y_datasetLabels" rows="1" cols="500" size="200" style="display:block">
+<input type="text" value="" placeholder="y dataset labels" id="y_datasetLabels" rows="1" cols="500" size="100" style="display:block">
+
 <br>
-<button id="load_data" onclick="load_data()" style="display:block">load_data</button>
+	
+<button id="load_data" onclick="load_data()" style="display:block">Step 0: load data</button>
+
+<br><br>
 
 <!-- [Step 1] Tokenizes the data, save sequence data to csvDataset as version1, save model_parameters to text file -->
-<label for="tokenize_data_label" style="display:block">Tokenize X and Y:</label>
-<br>
-<button id="tokenize_data" onclick="tokenize_data()" style="display:block">tokenize_data</button>
+<button id="tokenize_data" onclick="tokenize_data()" style="display:block">Step 1: tokenize data</button>
 
-<!-- [Step 2] Loads sequence csvDataset and model_parameters, trains model, saves pre-trained model -->
-<label for="train_model_label" style="display:block">Train the model:</label>
-<br>
-<button id="train_model" onclick="train_model()" style="display:block">train_model</button>
+<br><br>
 	
+<!-- [Step 2] Loads sequence csvDataset and model_parameters, trains model, saves pre-trained model -->
+<button id="train_model" onclick="train_model()" style="display:block">Step 2: train the model</button>
+
+<br><br>
+
 <!-- [Step 3] Predict/inference: input text in input-box, process text input (separate each sentence separated by a \n character), tokenize, save data to csvDataset, load csvDataset and pre-trained model -->
 <label for="input_text_label" style="display:block">Enter text to label, each sentence separated by the \n character will be labeled:</label>
 <input type="text" value="" placeholder="Enter text to label" id="input_text" rows="10" cols="500" style="display:block">
 <br>
-<button id="predict_w_pretrained_model" onclick="predict_w_pretrained_model()" style="display:block">predict_w_pretrained_model</button>
+<button id="predict_w_pretrained_model" onclick="predict_w_pretrained_model()" style="display:block">Step 3: predict with step 2 pretrained model</button>
   
 <!-- View results -->
 <div id="output" style="font-family:courier;font-size:24px;height:300px"></div>
