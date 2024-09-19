@@ -134,10 +134,8 @@ async function preprocess_xs(csvDataset) {
 		
 		  // ---------------------------
 		  // Verify that data is correct, and only keep correct X and Y data
-		  if (X.length-1 > 10){
-		       // Save non-tokenized X values
-		       xs.push(X);
-		  }
+		  // if (X.length-1 > 10){ xs.push(X); }
+		  xs.push(X);
 
 	  });  // end of forEach
 
