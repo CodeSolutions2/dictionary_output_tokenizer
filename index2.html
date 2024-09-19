@@ -123,7 +123,9 @@ async function preprocess_xs(csvDataset) {
 	  var xs = [];
 
 	  csvDataset.forEach(async function(rowdata, index) {
-		
+
+		console.log("rowdata.xs: ", rowdata.xs);
+		  
 		 // ---------------------------
 		 // Clean text procedure
 		 // ---------------------------
@@ -138,7 +140,10 @@ async function preprocess_xs(csvDataset) {
 		  }
 
 	  });  // end of forEach
-	  
+
+
+		console.log("X: ", X);
+	
 	  return xs;
   }
 
