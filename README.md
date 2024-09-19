@@ -1,3 +1,3 @@
-# text_classification_w_labels
+# tokenizer
 
-https://CodeSolutions2.github.io/text_classification_w_labels/index.html
+The purpose of this repository is to demonstrate a tokenizer for text.
