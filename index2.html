@@ -91,7 +91,7 @@ console.log("input_text: ", input_text);
 
 	  // Tokenizer xs
 	  var tokenizer = await tokenize_X(xs);
-  document.getElementById('data_display').innerHTML = tokenizer;
+  document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer);
 
   document.getElementById("progress_bar").value = 100;
   
