@@ -187,6 +187,8 @@ async function tokenize_X(xs) {
 	// Split the accumulatted string
 	let final_arr = final_str.split(" ");
 	console.log('final_arr.length :' + final_arr.length); // final_arr.length :2807
+	
+	console.log('final_arr :' + final_arr);
 
 	// ---------------------------
 
@@ -198,6 +200,8 @@ async function tokenize_X(xs) {
 
 	console.log('uniqueArray.length :' + uniqueArray.length); // uniqueArray.length :1241
 
+	console.log('uniqueArray :' + uniqueArray);
+	
 	// ---------------------------
 
    var tokenizer = await create_tokenizer_dict(uniqueArray);
@@ -281,7 +285,8 @@ async function create_tokenizer_dict(uniqueArray) {
 	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
 	const tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
-
+	console.log('tokenizer:', tokenizer);
+	
 	// ------------------------------------------
 
 	// Print the first 5 rows of the array, array_w_dictionary_rows
