@@ -90,8 +90,8 @@ console.log("input_text: ", input_text);
   document.getElementById("progress_bar").value = 25;
 
 	  // Tokenizer xs
-	  var xs_seq = await tokenize_X(xs);
-  document.getElementById('data_display').innerHTML = xs_seq;
+	  var tokenizer = await tokenize_X(xs);
+  document.getElementById('data_display').innerHTML = tokenizer;
 
   document.getElementById("progress_bar").value = 100;
   
@@ -204,51 +204,12 @@ async function tokenize_X(xs) {
 	
 	// ---------------------------
 
-   var tokenizer = await create_tokenizer_dict(uniqueArray);
-  document.getElementById("progress_bar").value = 50;
+	var tokenizer = await create_tokenizer_dict(uniqueArray);
+	console.log('tokenizer:', tokenizer);
 	
-  // ---------------------------
-
-	// Apply tokenizer to sentences, to obtain sequences
-	sen_arr_len = [];
-	xs_seq = [];
+	document.getElementById("progress_bar").value = 75;
 	
-	xs.forEach(async function(val, ind) {
-
-		// Get sentence array from sentence string
-		let sen_arr = val.split(" ");
-
-		// Save length of each sentence to find MAXLEN of sentences, for padding the sequences
-		sen_arr_len.push(sen_arr.length);
-		
-		sen_arr.forEach(async function(val1, ind1) {
-			// Directly call the tokenizer, if the word does not exist put the number for '<OOV>' token
-			let result = tokenizer[val1] ?? tokenizer['<OOV>'];
-
-			// Replace all [val1 occurences] in the [string val], with the [token value result]
-			// val = val.replace(val1, result);
-			// X = X.replace(/\b${val1}\b/g, '');
-
-			regexp = new RegExp(`\b${val1}\b`, 'g');
-			val = val.replace(regexp, result);
-
-			
-		});  // end of forEach
-
-		// Convert string to integer array
-		let seq_arr = val.split(" ");
-		let seq_arr_int = [];
-		seq_arr.forEach(async function(val, ind) {
-			seq_arr_int.push(Number(val));
-		});
-
-		// Save output sequence per row
-		xs_seq.push(seq_arr_int);
-		
-	});  // end of forEach
-  document.getElementById("progress_bar").value = 75;
-	
-	return xs_seq;
+	return tokenizer;
 	
 }
 
@@ -285,7 +246,6 @@ async function create_tokenizer_dict(uniqueArray) {
 	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
 	const tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
-	console.log('tokenizer:', tokenizer);
 	
 	// ------------------------------------------
 
