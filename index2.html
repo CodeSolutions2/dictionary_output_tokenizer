@@ -63,7 +63,16 @@ th, td {vertical-align: top; border: 0px solid black; padding: 10px; }
 th#table_leftside_input {width: 100%; }
 th#table_rightside_output {width: 100%; }
 
-div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 200; }
+div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 200; width: 500px; word-break: break-all; word-wrap: break-word; }
+
+/* Source: http://snipplr.com/view/10979/css-cross-browser-word-wrap */
+.wordwrap { 
+   white-space: pre-wrap;      /* CSS3 */   
+   white-space: -moz-pre-wrap; /* Firefox */    
+   white-space: -pre-wrap;     /* Opera <7 */   
+   white-space: -o-pre-wrap;   /* Opera 7 */    
+   word-wrap: break-word;      /* IE */
+}
 </style>
 
 <!-- ---------------------------------------- -->
