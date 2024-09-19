@@ -68,7 +68,7 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 
 <!-- ---------------------------------------- -->
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script> -->
 
 <script>
 
@@ -82,7 +82,8 @@ console.log("input_text: ", input_text);
   document.getElementById("progress_bar").style.display = "block";
 
   
-  var csvDataset = await convert_text_to_csv(input_text); 
+  var csvDataset = await convert_text_to_csv(input_text);
+	console.log("csvDataset: ", csvDataset);
   
   // Preprocess xs
     var xs = await preprocess_xs(csvDataset);
@@ -116,12 +117,12 @@ for (var i=0; i<sentences.length; i++) {
 
 async function preprocess_xs(csvDataset) {
 
-	  const tensors = await csvDataset.toArray();
+	  //const tensors = await csvDataset.toArray();
 
 	  var X = '';
 	  var xs = [];
 
-	  tensors.forEach(async function(rowdata, index) {
+	  csvDataset.forEach(async function(rowdata, index) {
 		
 		 // ---------------------------
 		 // Clean text procedure
