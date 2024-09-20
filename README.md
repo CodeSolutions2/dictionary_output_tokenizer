@@ -5,4 +5,6 @@ The purpose of this repository is to demonstrate/compare different ways to token
 [Current working versiion of word tokenization] https://codesolutions2.github.io/tokenizer/index2.html
 
 
-*in progress: * subword tokenization 
+## In progress
+  - A more rigorous version of the word tokenizer
+  - Subword tokenization
