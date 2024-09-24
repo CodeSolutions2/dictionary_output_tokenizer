@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+
+<h1>Tokenizer webapp</h1>
+<ol type="A">
+	<li>Enter text.</li>
+	<li>Display tokenized text.</li>
+</ol>
+<br><br>
+
+<!-- ---------------------------------------- -->
+<!-- View two split window -->
+<div align="left">
+<table style='text-align: left; width: 500px; display:block'>
+<tr>
+
+<th id="table_leftside_input">
+
+<h3>[Step 0] Input text.</h3>
+<input id="input_text" class="text_input" type="text" value="" placeholder="input_text" rows="10" cols="100" style="display:block; text-align: left; width: 600px; height: 600px">
+
+<br><br>
+
+<h3>[Step 1] Tokenize text.</h3>
+<button id="tokenize_data" onclick="tokenize_data()" style="display:block">Step 1: tokenize data</button>
+
+<br><br>
+
+<progress id="progress_bar" max="100" value="0" style="display:none">0%</progress>
+
+<!-- ---------------------------------------- -->
+
+<th id="table_rightside_output">
+<h3>[Step 1] View Results.</h3>
+<div id="data_display" style="display:block; text-align: left; width: 600px; height: 600px">
+<br>
+<div id="notification"></div>
+<br>
+<div id="error"></div>
+</th>
+	
+</tr>
+</table>
+</div>  
+<!-- ---------------------------------------- -->
+
+
+
+<!-- ---------------------------------------- -->
+<!-- CSS -->
+<style>
+div { padding: 10px; display:block; font-family:courier; font-size:15px; }
+div#notification { position: relative; color: #3236a8; }
+div#error { position: relative; color: #bd1f17; }
+
+table {vertical-align: top; border-collapse: collapse; position: relative; z-index: 0; border: 0px solid black;}
+
+tr {vertical-align: top; border: 0px solid black; padding: 30px 30px; }
+
+th, td {vertical-align: top; border: 0px solid black; padding: 10px; }
+th#table_leftside_input {width: 100%; }
+th#table_rightside_output {width: 100%; }
+
+div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 200; width: 500px; word-break: break-all; word-wrap: break-word; }
+
+.text_input { word-break: break-all; word-wrap: break-word; }
+  
+</style>
+
+<!-- ---------------------------------------- -->
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script> -->
+
+<script>
+
+// -------------------------------------------------
+
+async function tokenize_data(){
+
+  var input_text = document.getElementById('input_text').value;
+console.log("input_text: ", input_text);
+	
+  document.getElementById("progress_bar").style.display = "block";
+
+  
+  var csvDataset = await convert_text_to_csv(input_text);
+	console.log("csvDataset: ", csvDataset);
+  
+  // Preprocess xs
+    var xs = await preprocess_xs(csvDataset);
+  document.getElementById("progress_bar").value = 25;
+
+	  // Tokenizer xs
+	  var tokenizer = await tokenize_X(xs);
+  document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer);
+
+  document.getElementById("progress_bar").value = 100;
+  
+}
+
+// -------------------------------------------------
+
+async function convert_text_to_csv(input_text) {
+
+  var sentences = input_text.split(".");
+  console.log("sentences: ", sentences);
+  
+  var csvDataset = [];
+for (var i=0; i<sentences.length; i++) {
+  var tf_obj = {xs: sentences.at(i), ys: "none"};
+  csvDataset.push(tf_obj);
+}
+
+  return csvDataset;
+}
+
+// -------------------------------------------------
+
+async function preprocess_xs(csvDataset) {
+
+	  //const tensors = await csvDataset.toArray();
+
+	  var X = '';
+	  var xs = [];
+
+	  csvDataset.forEach(async function(rowdata, index) {
+
+		console.log("rowdata.xs: ", rowdata.xs);
+		  
+		 // ---------------------------
+		 // Clean text procedure
+		 // ---------------------------
+		 // Make text lower case, Remove characters between parenthesis, Remove text that are 1 or 2 characters long, Remove undesireable characters
+		 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!-><\n]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '');  
+		
+		  // ---------------------------
+		  // Verify that data is correct, and only keep correct X and Y data
+		  // if (X.length-1 > 10){ xs.push(X); }
+		  xs.push(X);
+
+	  });  // end of forEach
+
+
+		console.log("xs: ", xs);
+	
+	  return xs;
+  }
+
+
+  // -------------------------------------------------
+
+	
+
+
+	
+// -------------------------------------------------
+// SUBFUNCTIONS
+// -------------------------------------------------
+async function tokenize_X(xs) {
+	
+	// ---------------------------
+	
+	// Concatenate the array contents into a long text string
+	
+	// Initialize with first array
+	let final_str = xs.slice(0,1);
+	// console.log('final_str 1st part:' + final_str);
+
+	let xs_rest = xs.slice(1, xs.length); // 9 [Correct]
+	// console.log('xs_rest:' + xs_rest.length);
+	
+	xs_rest.forEach(async function(val, ind) { 
+		final_str = final_str.concat(val); // string
+		// console.log('index: ' + ind + ', final_str type :' + typeof final_str); 
+	});
+
+	final_str = final_str.toString();
+	// console.log('final_str accumulated type :' + typeof final_str); // final_str accumulated type :string [Correct]
+	
+	// ---------------------------
+	
+	// Replace any multiple spaces from accumulatted string with only a single space
+	final_str = final_str.replace(/\s+/g, ' ');
+	// console.log('final_str accumulated :' + final_str);
+	
+	// ---------------------------
+
+	// Split the accumulatted string
+	let final_arr = final_str.split(" ");
+	console.log('final_arr.length :' + final_arr.length); // final_arr.length :2807
+	
+	console.log('final_arr :' + final_arr);
+
+	// ---------------------------
+
+	// Find unique words
+	let uniqueArray = [...new Set(final_arr)];
+
+	// Add the <OOV> token: if the word is not in the token list assign this value
+	uniqueArray.push('<OOV>');
+
+	console.log('uniqueArray.length :' + uniqueArray.length); // uniqueArray.length :1241
+
+	console.log('uniqueArray :' + uniqueArray);
+	
+	// ---------------------------
+
+	var tokenizer = await create_tokenizer_dict(uniqueArray);
+	console.log('tokenizer:', tokenizer);
+	
+	document.getElementById("progress_bar").value = 75;
+	
+	return tokenizer;
+	
+}
+
+// -------------------------------------------------
+
+async function create_tokenizer_dict(uniqueArray) {
+  
+	// [0] Sort uniqueArray by an attribute (ie: length)
+	let arr = uniqueArray;
+	c = 0;
+	while (c != arr.length-1) {
+		 c = 0;
+		  for (var i=0; i<arr.length-1; i++) {
+			let cur = arr[i];
+			  let next = arr[i+1];
+			  let cur_value = cur.length;
+			  let next_value = next.length;
+			  
+			  if (cur_value < next_value) {
+				  temp_cur = arr[i]
+				  temp_next = arr[i+1]
+				  arr[i+1] = temp_cur
+				  arr[i] = temp_next
+			  } else {
+				  //this will be some value from 1 to arr.length-1
+				  c = c + 1;
+				  // c = arr.length-1 means that sorting is finished
+			  }
+		  }
+	}
+	  
+	// ------------------------------------------
+  
+	// [1] Make a dictionary where each key is a word in arr, and each value is index
+	// Create a dictionary from one array
+	const tokenizer = Object.fromEntries(arr.map((word, index) => [word, index]));
+	
+	// ------------------------------------------
+
+	// Print the first 5 rows of the array, array_w_dictionary_rows
+	console.log('print_a_dictionary:');
+	print_a_dictionary(tokenizer);
+
+	// ------------------------------------------
+
+	 return tokenizer;
+}
+
+// -------------------------------------------------
+
+async function print_a_dictionary(dictt) {
+	  
+	// Print the first XX keys of a dictionary
+	var dictt_keys = Object.keys(dictt);
+
+	for (var i=0; i<dictt_keys.length; i++) {
+		let key = dictt_keys[i];
+		let value = dictt[key];
+		console.log('key: ' + key +  ', value:' +  value);
+	}
+
+}
+
+// -------------------------------------------------
+
+async function generateTable_dynamically(pred_vec) {
+
+  	const tbl = document.createElement("table");
+  
+  	const tblBody = document.createElement("tbody");
+  
+  	// Create row cells dynamically
+  	for (let i=0; i < pred_vec.length; i++){
+  		// create a table row
+  		const row = document.createElement("tr");
+  
+  		for (let j=0; j < pred_vec[0].length; j++){
+  			const cell = document.createElement("td");
+  			const cellText = document.createTextNode(`${pred_vec[i][j]}`);
+  			cell.appendChild(cellText);
+  			row.appendChild(cell);
+  		}
+  
+  		// add a row to the end of the table
+  		tblBody.appendChild(row);
+  	}
+  	tbl.appendChild(tblBody);
+  
+  	document.body.appendChild(tbl);
+
+}  
+
+// -------------------------------------------------
+
+	
+</script>
+</body>
+</html>
