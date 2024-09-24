@@ -2,7 +2,7 @@
 
 The purpose of this repository is to demonstrate/compare different ways to tokenize text, for text classification and/or generation.
 
-[Current working version of word tokenization] https://codesolutions2.github.io/tokenizer/index2.html
+[Current working version of word tokenization] https://codesolutions2.github.io/tokenizer/index3.html
 
 
 ## In progress
