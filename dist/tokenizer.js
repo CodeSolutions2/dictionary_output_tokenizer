@@ -126,8 +126,8 @@ async function create_tokenizer_dict(uniqueArray) {
 			  let next_value = next.length;
 			  
 			  if (cur_value < next_value) {
-				  temp_cur = arr[i]
-				  temp_next = arr[i+1]
+				  let temp_cur = arr[i]
+				  let temp_next = arr[i+1]; // want the old value of arr[i+1]
 				  arr[i+1] = temp_cur
 				  arr[i] = temp_next
 			  } else {
