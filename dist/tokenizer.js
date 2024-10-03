@@ -116,7 +116,7 @@ async function create_tokenizer_dict(uniqueArray) {
   
 	// [0] Sort uniqueArray by an attribute (ie: length)
 	let arr = uniqueArray;
-	c = 0;
+	var c = 0;
 	while (c != arr.length-1) {
 		 c = 0;
 		  for (var i=0; i<arr.length-1; i++) {
