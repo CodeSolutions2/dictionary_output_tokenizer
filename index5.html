@@ -232,7 +232,7 @@ async function modify_tokenizer_button() {
 	console.log("key_names: ", key_names);
 
 	for (let i=0; i<key_names.length; i++) {
-		tokenizer_obj = await module1.delete_key_value(tokenizer_obj, i);
+		tokenizer_obj = await module1.delete_key_value(tokenizer_obj, key_names.at(i));
 	}
 	
 	document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
