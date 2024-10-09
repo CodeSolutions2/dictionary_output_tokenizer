@@ -223,10 +223,10 @@ async function modify_tokenizer_button() {
 	
 	var key_names = document.getElementById('modify_tokenizer').value;
 
-	key_names = key_names.split(",");
-	var regex = /\s+/g;
-	key_names = key_names.replace(regex, " ");
-	console.log("key_names: ", key_names);
+	key_names = key_names.replace(/\s+/g, " ");
+	key_names = key_names.replace(/,\s/g, ",");
+	key_names = key_names.replace(/\s,/g, ",");
+	console.log("key_names: ", key_names)
 
 	for (let i=0; i<key_names.length; i++) {
 		tokenizer_obj = await module1.delete_key_value(tokenizer_obj, i);
