@@ -21,7 +21,7 @@ async function delete_key_value(tokenizer_obj, key_name){
 
 async function randomize_tokenNumber(tokenizer_obj){
 
-	const x = Array.from({ length: Object.key_name(tokenizer_obj).length }, (val, ind) => { return ind; });
+	const x = Array.from({ length: Object.keys(tokenizer_obj).length }, (val, ind) => { return ind; });
 	const x_rand = await rand_perm(x);
 	
 	var tokenizer_obj_rand = {};
