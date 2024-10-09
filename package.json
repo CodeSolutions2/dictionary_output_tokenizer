@@ -1,7 +1,7 @@
 {
-  "name": "tokenizer_codesolutions2",
+  "name": "dictionary_output_tokenizer",
   "version": "1.0.1",
-  "description": ".",
+  "description": "An all-purpose tokenizer that transforms text into a JavaScript dictionary object of unique words and/or subwords, for text classification and/or text generation.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
