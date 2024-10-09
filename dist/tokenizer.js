@@ -1,13 +1,14 @@
-export { tokenize_data, delete_key_value, randomize_tokenNumber }
+export { create_tokenizer, delete_key_value, randomize_tokenNumber }
 
 
 // -------------------------------------------------
 
-async function tokenize_data(input_text){
-  
-  var csvDataset = await convert_text_to_csv(input_text);
-    var xs = await preprocess_xs(csvDataset);
-	  return await tokenize_X(xs);
+async function create_tokenizer(input_text){
+	
+	var csvDataset = await convert_text_to_csv(input_text);
+	var xs = await preprocess_xs(csvDataset);
+	var tokenizer = await tokenize_X(xs);
+	return [xs, tokenizer];
 }
 
 // -------------------------------------------------
@@ -29,28 +30,6 @@ async function randomize_tokenNumber(tokenizer_obj){
 	
 	return tokenizer_obj_rand;
 }
-
-// ----------------------------------------------------
-
-async function get_number(x) {
-	return x[Math.round(x.length*Math.random())-1];
-}
-	  
-export async function rand_perm(x) {
-
-	var out = [];
-	while (out.length != x.length) {
-		out = await get_number(x).then(async function(x_of_y) {
-			if (out.includes(x_of_y) == false && typeof x_of_y != "undefined") { 
-				out.push(x_of_y);
-			}
-			return [... new Set(out)]; // ensure that only unique values are stored in out
-		});
-	}
-	
-	return out;
-	
-}  // end of rand_perm
 
 // -------------------------------------------------
 
@@ -100,10 +79,9 @@ async function preprocess_xs(csvDataset) {
 	  return xs;
   }
 
+// -------------------------------------------------
 
-  // -------------------------------------------------
 
-	
 
 
 	
@@ -185,5 +163,27 @@ async function create_tokenizer_dict(uniqueArray) {
 	// Create a dictionary from one array
 	 return Object.fromEntries(arr.map((word, index) => [word, index]));
 }
+
+// ----------------------------------------------------
+
+async function get_number(x) {
+	return x[Math.round(x.length*Math.random())-1];
+}
+	  
+export async function rand_perm(x) {
+
+	var out = [];
+	while (out.length != x.length) {
+		out = await get_number(x).then(async function(x_of_y) {
+			if (out.includes(x_of_y) == false && typeof x_of_y != "undefined") { 
+				out.push(x_of_y);
+			}
+			return [... new Set(out)]; // ensure that only unique values are stored in out
+		});
+	}
+	
+	return out;
+	
+}  // end of rand_perm
 
 // -------------------------------------------------
