@@ -25,7 +25,7 @@ async function randomize_tokenNumber(tokenizer_obj){
 	const x_rand = await rand_perm(x);
 	
 	var tokenizer_obj_rand = {};
-	Object.keys(obj).map((val, ind) => { tokenizer_obj_rand[val] = x_rand[ind]; return ''; });
+	Object.keys(tokenizer_obj).map((val, ind) => { tokenizer_obj_rand[val] = x_rand[ind]; return ''; });
 	
 	return tokenizer_obj_rand;
 }
