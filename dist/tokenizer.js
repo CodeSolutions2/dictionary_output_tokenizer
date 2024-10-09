@@ -3,7 +3,7 @@ export { create_tokenizer, delete_key_value }
 
 // -------------------------------------------------
 
-async function create_tokenizer(input_text){
+async function create_tokenizer(input_text) {
 	
 	var csvDataset = await convert_text_to_csv(input_text);
 	var xs = await preprocess_xs(csvDataset);
@@ -13,9 +13,26 @@ async function create_tokenizer(input_text){
 
 // -------------------------------------------------
 
-async function delete_key_value(tokenizer_obj, key_name){
-	delete tokenizer_obj[key_name];
-	return tokenizer_obj;
+async function delete_key_value(tokenizer_obj, key_names_str) {
+
+	key_names_str = key_names_str.replace(/\s+/g, " ");
+	key_names_str = key_names_str.replace(/,\s/g, ",");
+	key_names_str = key_names_str.replace(/\s,/g, ",");
+	// console.log("key_names_str: ", key_names_str);
+
+	var key_names_arr = key_names_str.split(",");
+	// console.log("key_names_arr: ", key_names_arr);
+
+	for (let i=0; i<key_names_arr.length; i++) {
+		delete tokenizer_obj[key_names_arr.at(i)];
+	}
+
+	// Re-name the values from 0 to n
+	var tokenizer_obj_modified = {};
+	Object.keys(tokenizer_obj).map((val, ind) => { tokenizer_obj_modified[val] = ind; })
+	// console.log("tokenizer_obj_modified: ", tokenizer_obj_modified)
+	
+	return tokenizer_obj_modified;
 }
 
 // -------------------------------------------------
