@@ -133,37 +133,40 @@ async function run_selection() {
   
 	// Put in a function in <script>
 	var dropdown_option_type = document.getElementById("dropdown_options").value;
-
-
+	
 	var tokenizer_obj;
 	
-	if (dropdown_option_type == 'dictionary_output_tokenizer') {
+	// -------------------
+	
+	// startTime = await currentTime();
+	// OR
+	console.time('algo');
 
-		startTime = await currentTime();
+	// -------------------
+	
+	if (dropdown_option_type == 'dictionary_output_tokenizer') {
 		
 		tokenizer_obj = await module.tokenize_data(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
-
-		endTime = await currentTime();
-		response_time = await elapsedTime(startTime, endTime);
-		console.log("response_time: ", response_time);
-
+		
 	} else if (dropdown_option_type == 'npm_tokenizers') {
-
-		startTime = await currentTime();
 
 		// https://www.jsdelivr.com/package/npm/gpt-tokenizer
 		const { encode, decode } = GPTTokenizer_cl100k_base;
 		tokenizer_obj = await encode(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
-		
-		endTime = await currentTime();
-		response_time = await elapsedTime(startTime, endTime);
-		console.log("response_time: ", response_time);
     
 	} else {
 		document.getElementById('notification').innerHTML = "Please select a drop down option type."; 
 	}
+
+	// -------------------
+	
+	// endTime = await currentTime();
+	// response_time = await elapsedTime(startTime, endTime);
+	// console.log("response_time: ", response_time);
+	// OR
+	console.timeEnd('algo');
 	
 	// -------------------
 	
