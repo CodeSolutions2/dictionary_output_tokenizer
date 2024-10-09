@@ -1,4 +1,4 @@
-# tokenizer
+# dictionary_output_tokenizer
 
 The purpose of this repository is to demonstrate/compare different ways to tokenize text, for text classification and/or generation.
 
@@ -11,5 +11,4 @@ Regex is a powerful library that can be used to preprocess text strings. These J
 
 
 ## In progress
-  - A more rigorous version of the word tokenizer
   - Subword tokenization
