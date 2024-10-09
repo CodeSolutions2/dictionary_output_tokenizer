@@ -90,8 +90,11 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 <!-- ---------------------------------------- -->
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/tokenizer@1.1.2/lib/Tokenizer.min.js"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@2.5.0/dist/cl100k_base.min.js"></script>
 
+<!-- WORKS! -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@2.5.0/dist/cl100k_base.min.js"></script> -->
+
+<script src="https://unpkg.com/gpt-tokenizer@2.5.0/dist/cl100k_base.js"></script>
   
 
 <!-- ---------------------------------------- -->
@@ -100,18 +103,20 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 import { tokenize_data } from "./dist/tokenizer.js";
 module.tokenize_data = tokenize_data;
 </script>
-
-<!-- <script type="module"> -->
-<!-- import { encode } from "https://unpkg.com/gpt-tokenizer/dist/cl100k_base.js"; -->
-<!-- module1.encode = encode; -->
-<!-- </script> -->
   
 <script>
+
+
+// -----------------------------------------------
+	
+window.addEventListener('beforeunload', function() {
+	window.location.href = window.location.href + '?nocache=' + new Date().getTime();
+	document.getElementById("dropdown_options").selectedIndex = 0;
+});
 
 // ----------------------------------------------------
 
 const module = {};
-const module1 = {};
   
 // ----------------------------------------------------
 
@@ -127,26 +132,26 @@ async function run_selection() {
   
 	// Put in a function in <script>
 	var dropdown_option_type = document.getElementById("dropdown_options").value;
-  
+
+
+	var tokenizer_obj;
+	
 	if (dropdown_option_type == 'dictionary_output_tokenizer') {
 		
-		const tokenizer_obj = await module.tokenize_data(input_text);
-		console.log("tokenizer_obj: ", tokenizer_obj);
+		tokenizer_obj = await module.tokenize_data(input_text);
 
 	} else if (dropdown_option_type == 'npm_tokenizers') {
-
-		// const tokenizer_obj = await module1.GPTTokenizer_cl100k_base();
-		// OR
+		
 		const { encode, decode } = GPTTokenizer_cl100k_base;
 		// OR
-		// const tokenizer_obj = await module1.encode(input_text); // module1.encode is not a function
-		// OR
-		const tokenizer_obj = await encode(input_text);
-		console.log("tokenizer_obj: ", tokenizer_obj);
+		tokenizer_obj = await encode(input_text);
+		
     
 	} else {
 		document.getElementById('notification').innerHTML = "Please select a drop down option type."; 
 	}
+	
+	console.log("tokenizer_obj: ", tokenizer_obj);
 	
 	// -------------------
 	
