@@ -31,16 +31,16 @@ In the field of text classification, making a tokenizer is the first thing that 
 <select name="dropdown_options" id="dropdown_options" style="display:block">
   <option value="---">Select an option</option>
   <option value="dictionary_output_tokenizer">dictionary_output_tokenizer</option>
+  <option value="dictionary_output_tokenizer_randomOrder">dictionary_output_tokenizer_randomOrder</option>
+  <option value="dictionary_output_tokenizer_deleteTokens">dictionary_output_tokenizer_deleteTokens</option>
   <option value="npm_tokenizers">npm_tokenizers</option>
 </select>
 
-
-  
 <br><br>
   
 <h3>[Step 1] Input text.</h3>
-<textarea id="input_text"  wrap="soft" rows="10" cols="100" placeholder="input text" style="display:block; text-align: left; width: 600px; height: 600px;"></textarea>
-	
+<textarea id="input_text"  wrap="soft" rows="10" cols="100" placeholder="input text" style="display:block; text-align: left; width: 600px; height: 400px;"></textarea>
+
 <br><br>
   
 <h3>[Step 2] Tokenize text.</h3>
@@ -49,6 +49,15 @@ In the field of text classification, making a tokenizer is the first thing that 
 <br><br>
 
 <progress id="progress_bar" max="100" value="0" style="display:none">0%</progress>
+
+<br><br>
+  
+<h3 id="modify_tokenizer_h3" style="display:none;">Modify tokenizer: delete tokens.</h3>
+<p id="modify_tokenizer_p" style="display:none;">Only for dictionary_output_tokenizer: List the token keys to delete, for example for the tokenizer {"dictionary_output_tokenizer":0,"npm_tokenizers":1,"tokenization":2,"tokenizers,":3} input "dictionary_output_tokenizer, npm_tokenizers" to remove the first two tokens.</p>
+<textarea id="modify_tokenizer" wrap="soft" rows="10" cols="100" placeholder="input text" style="display:none; text-align: left; width: 600px; height: 200px;"></textarea>
+<button id="modify_tokenizer_button" onclick="modify_tokenizer_button()" style="display:none">Step 3: delete tokens</button>
+	
+<br><br>
 
 <!-- ---------------------------------------- -->
 
@@ -99,8 +108,10 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 <!-- ---------------------------------------- -->
 
 <script type="module">
-import { tokenize_data } from "./dist/tokenizer.js";
+import { tokenize_data, delete_key_value, randomize_tokenNumber } from "./dist/tokenizer.js";
 module.tokenize_data = tokenize_data;
+module1.delete_key_value = delete_key_value;
+module2.randomize_tokenNumber = randomize_tokenNumber;
 </script>
   
 <script>
@@ -116,6 +127,10 @@ window.addEventListener('beforeunload', function() {
 // ----------------------------------------------------
 
 const module = {};
+const module1 = {};
+const module2 = {};
+
+var tokenizer_obj;
   
 // ----------------------------------------------------
 
@@ -132,8 +147,6 @@ async function run_selection() {
 	// Put in a function in <script>
 	var dropdown_option_type = document.getElementById("dropdown_options").value;
 	
-	var tokenizer_obj;
-	
 	// -------------------
 	
 	console.time('algo');
@@ -145,6 +158,20 @@ async function run_selection() {
 		tokenizer_obj = await module.tokenize_data(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
 		// algo: 129ms - timer ended
+
+	} else if (dropdown_option_type == 'dictionary_output_tokenizer_randomOrder') {
+		
+		tokenizer_obj = await module.tokenize_data(input_text);
+		tokenizer_obj = await module2.randomize_tokenNumber(tokenizer_obj)
+
+	} else if (dropdown_option_type == 'dictionary_output_tokenizer_deleteTokens') {
+
+		tokenizer_obj = await module.tokenize_data(input_text);
+		
+		document.getElementById("modify_tokenizer_h3").style.display = "block";
+		document.getElementById("modify_tokenizer_p").style.display = "block";
+		document.getElementById("modify_tokenizer").style.display = "block";
+		document.getElementById("modify_tokenizer_button").style.display = "block";
 		
 	} else if (dropdown_option_type == 'npm_tokenizers') {
 
@@ -175,7 +202,25 @@ async function run_selection() {
 
 // ----------------------------------------------------
 
+async function modify_tokenizer_button() {
+	
+	var key_names = document.getElementById('modify_tokenizer').value;
 
+	key_names = key_names.split(",");
+	var regex = /\s+/g;
+	key_names = key_names.replace(regex, " ");
+	console.log("key_names: ", key_names);
+
+	for (let i=0; i<key_names.length; i++) {
+		tokenizer_obj = await module1.delete_key_value(tokenizer_obj, i);
+	}
+	
+	document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
+}
+
+// ----------------------------------------------------
+
+	
 </script>
 </body>
 </html>
