@@ -221,20 +221,27 @@ async function run_selection() {
 
 async function modify_tokenizer_button() {
 	
-	var key_names = document.getElementById('modify_tokenizer').value;
+	var key_names_str = document.getElementById('modify_tokenizer').value;
 
-	key_names = key_names.replace(/\s+/g, " ");
-	key_names = key_names.replace(/,\s/g, ",");
-	key_names = key_names.replace(/\s,/g, ",");
-	console.log("key_names: ", key_names);
+	// key_names = key_names.replace(/\s+/g, " ");
+	// key_names = key_names.replace(/,\s/g, ",");
+	// key_names = key_names.replace(/\s,/g, ",");
+	// console.log("key_names: ", key_names);
 
-	key_names = key_names.split(",");
-	console.log("key_names: ", key_names);
+	// key_names = key_names.split(",");
+	// console.log("key_names: ", key_names);
 
-	for (let i=0; i<key_names.length; i++) {
-		tokenizer_obj = await module1.delete_key_value(tokenizer_obj, key_names.at(i));
-	}
-	
+	// for (let i=0; i<key_names.length; i++) {
+	// 	tokenizer_obj = await module1.delete_key_value(tokenizer_obj, key_names.at(i));
+	// }
+
+	// Re-name the values from 0 to n
+	// var tokenizer_obj_modified = {};
+	// Object.keys(tokenizer_obj).map((val, ind) => { tokenizer_obj_modified[val] = ind; })
+	// console.log("tokenizer_obj_modified: ", tokenizer_obj_modified)
+
+
+	tokenizer_obj = await module1.delete_key_value(tokenizer_obj, key_names_str);
 	document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
 }
 
