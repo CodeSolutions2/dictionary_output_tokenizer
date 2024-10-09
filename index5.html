@@ -89,15 +89,13 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 
 <!-- ---------------------------------------- -->
 
-<!-- <script src="https://cdn.jsdelivr.net/npm/tokenizer@1.1.2/lib/Tokenizer.min.js"></script> -->
-
-<!-- WORKS! -->
+<!-- gpt-tokenizer: WORKS! -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@2.5.0/dist/cl100k_base.min.js"></script> -->
 
-<!-- WORKS! -->
+<!-- gpt-tokenizer: WORKS! -->
 <script src="https://unpkg.com/gpt-tokenizer@2.5.0/dist/cl100k_base.js"></script>
   
-
+	
 <!-- ---------------------------------------- -->
 
 <script type="module">
@@ -138,8 +136,6 @@ async function run_selection() {
 	
 	// -------------------
 	
-	// startTime = await currentTime();
-	// OR
 	console.time('algo');
 
 	// -------------------
@@ -148,6 +144,7 @@ async function run_selection() {
 		
 		tokenizer_obj = await module.tokenize_data(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
+		// algo: 129ms - timer ended
 		
 	} else if (dropdown_option_type == 'npm_tokenizers') {
 
@@ -155,6 +152,11 @@ async function run_selection() {
 		const { encode, decode } = GPTTokenizer_cl100k_base;
 		tokenizer_obj = await encode(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
+
+		
+		const tokenDict = tokenizer.getTokensDict();
+		console.log(tokenDict);
+		// algo: 68ms - timer ended
     
 	} else {
 		document.getElementById('notification').innerHTML = "Please select a drop down option type."; 
@@ -162,10 +164,6 @@ async function run_selection() {
 
 	// -------------------
 	
-	// endTime = await currentTime();
-	// response_time = await elapsedTime(startTime, endTime);
-	// console.log("response_time: ", response_time);
-	// OR
 	console.timeEnd('algo');
 	
 	// -------------------
@@ -180,22 +178,6 @@ async function run_selection() {
 
 // ----------------------------------------------------
 
-
-async function currentTime() { 
-	let date = new Date(); 
-	let hh = date.getHours(); 
-	let mm = date.getMinutes(); 
-	let ss = date.getSeconds();
-	return [hh, mm, ss];
-}
-			
-
-// -------------------------------------------------
-
-async function elapsedTime(startTime, endTime) {
-	return (endTime[0]*60*60 + endTime[1]*60 + endTime[2]) - (startTime[0]*60*60 + startTime[1]*60 + startTime[2]);
-	
-}
 
 </script>
 </body>
