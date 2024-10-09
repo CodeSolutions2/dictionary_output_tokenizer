@@ -94,6 +94,7 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 <!-- WORKS! -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@2.5.0/dist/cl100k_base.min.js"></script> -->
 
+<!-- WORKS! -->
 <script src="https://unpkg.com/gpt-tokenizer@2.5.0/dist/cl100k_base.js"></script>
   
 
@@ -137,21 +138,32 @@ async function run_selection() {
 	var tokenizer_obj;
 	
 	if (dropdown_option_type == 'dictionary_output_tokenizer') {
+
+		startTime = await currentTime();
 		
 		tokenizer_obj = await module.tokenize_data(input_text);
+		// console.log("tokenizer_obj: ", tokenizer_obj);
+
+		endTime = await currentTime();
+		response_time = await elapsedTime(startTime, endTime);
+		console.log("response_time: ", response_time);
 
 	} else if (dropdown_option_type == 'npm_tokenizers') {
-		
+
+		startTime = await currentTime();
+
+		// https://www.jsdelivr.com/package/npm/gpt-tokenizer
 		const { encode, decode } = GPTTokenizer_cl100k_base;
-		// OR
 		tokenizer_obj = await encode(input_text);
+		// console.log("tokenizer_obj: ", tokenizer_obj);
 		
+		endTime = await currentTime();
+		response_time = await elapsedTime(startTime, endTime);
+		console.log("response_time: ", response_time);
     
 	} else {
 		document.getElementById('notification').innerHTML = "Please select a drop down option type."; 
 	}
-	
-	console.log("tokenizer_obj: ", tokenizer_obj);
 	
 	// -------------------
 	
@@ -165,6 +177,22 @@ async function run_selection() {
 
 // ----------------------------------------------------
 
+
+async function currentTime() { 
+	let date = new Date(); 
+	let hh = date.getHours(); 
+	let mm = date.getMinutes(); 
+	let ss = date.getSeconds();
+	return [hh, mm, ss];
+}
+			
+
+// -------------------------------------------------
+
+async function elapsedTime(startTime, endTime) {
+	return (endTime[0]*60*60 + endTime[1]*60 + endTime[2]) - (startTime[0]*60*60 + startTime[1]*60 + startTime[2]);
+	
+}
 
 </script>
 </body>
