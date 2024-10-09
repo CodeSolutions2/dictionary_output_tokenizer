@@ -1,4 +1,4 @@
-export { create_tokenizer, delete_key_value, randomize_tokenNumber }
+export { create_tokenizer, delete_key_value }
 
 
 // -------------------------------------------------
@@ -16,19 +16,6 @@ async function create_tokenizer(input_text){
 async function delete_key_value(tokenizer_obj, key_name){
 	delete tokenizer_obj.key_name;
 	return tokenizer_obj;
-}
-
-// -------------------------------------------------
-
-async function randomize_tokenNumber(tokenizer_obj){
-
-	const x = Array.from({ length: Object.keys(tokenizer_obj).length }, (val, ind) => { return ind; });
-	const x_rand = await rand_perm(x);
-	
-	var tokenizer_obj_rand = {};
-	Object.keys(tokenizer_obj).map((val, ind) => { tokenizer_obj_rand[val] = x_rand[ind]; return ''; });
-	
-	return tokenizer_obj_rand;
 }
 
 // -------------------------------------------------
@@ -165,25 +152,3 @@ async function create_tokenizer_dict(uniqueArray) {
 }
 
 // ----------------------------------------------------
-
-async function get_number(x) {
-	return x[Math.round(x.length*Math.random())-1];
-}
-	  
-export async function rand_perm(x) {
-
-	var out = [];
-	while (out.length != x.length) {
-		out = await get_number(x).then(async function(x_of_y) {
-			if (out.includes(x_of_y) == false && typeof x_of_y != "undefined") { 
-				out.push(x_of_y);
-			}
-			return [... new Set(out)]; // ensure that only unique values are stored in out
-		});
-	}
-	
-	return out;
-	
-}  // end of rand_perm
-
-// -------------------------------------------------
