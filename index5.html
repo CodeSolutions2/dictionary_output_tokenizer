@@ -31,7 +31,6 @@ In the field of text classification, making a tokenizer is the first thing that 
 <select name="dropdown_options" id="dropdown_options" style="display:block">
   <option value="---">Select an option</option>
   <option value="dictionary_output_tokenizer">dictionary_output_tokenizer</option>
-  <option value="dictionary_output_tokenizer_randomOrder">dictionary_output_tokenizer_randomOrder</option>
   <option value="dictionary_output_tokenizer_deleteTokens">dictionary_output_tokenizer_deleteTokens</option>
   <option value="npm_tokenizers">npm_tokenizers</option>
 </select>
@@ -108,10 +107,9 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 <!-- ---------------------------------------- -->
 
 <script type="module">
-import { create_tokenizer, delete_key_value, randomize_tokenNumber } from "./dist/tokenizer.js";
+import { create_tokenizer, delete_key_value } from "./dist/tokenizer.js";
 module.create_tokenizer = create_tokenizer;
 module1.delete_key_value = delete_key_value;
-module2.randomize_tokenNumber = randomize_tokenNumber;
 </script>
   
 <script>
@@ -128,7 +126,6 @@ window.addEventListener('beforeunload', function() {
 
 const module = {};
 const module1 = {};
-const module2 = {};
 
 var xs;
 var tokenizer_obj;
@@ -159,11 +156,6 @@ async function run_selection() {
 		[xs, tokenizer_obj] = await module.create_tokenizer(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
 		// algo: 129ms - timer ended
-
-	} else if (dropdown_option_type == 'dictionary_output_tokenizer_randomOrder') {
-		
-		[xs, tokenizer_obj] = await module.create_tokenizer(input_text);
-		tokenizer_obj = await module2.randomize_tokenNumber(tokenizer_obj)
 
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_deleteTokens') {
 
