@@ -124,6 +124,28 @@ window.addEventListener('beforeunload', function() {
 
 // ----------------------------------------------------
 
+// Put in <script>
+async function processEvent_dropdown_options(event) {
+
+	if (document.getElementById("dropdown_options").selectedIndex == 2) {
+		document.getElementById("modify_tokenizer_h3").style.display = 'block';
+		document.getElementById("modify_tokenizer_p").style.display = 'block';
+		document.getElementById("modify_tokenizer").style.display = 'block';
+		document.getElementById("modify_tokenizer_button").style.display = 'block';
+
+	} else {
+		document.getElementById("modify_tokenizer_h3").style.display = 'none';
+		document.getElementById("modify_tokenizer_p").style.display = 'none';
+		document.getElementById("modify_tokenizer").style.display = 'none';
+		document.getElementById("modify_tokenizer_button").style.display = 'none';
+	}
+	
+}
+
+document.getElementById("dropdown_options").addEventListener("change", processEvent_dropdown_options, false);
+
+// ----------------------------------------------------
+
 const module = {};
 const module1 = {};
 
