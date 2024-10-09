@@ -131,6 +131,7 @@ async function run_selection() {
   if (dropdown_option_type == 'dictionary_output_tokenizer') {
     
     const tokenizer_obj = await module.tokenize_data(input_text);
+	  console.log("tokenizer_obj: ", tokenizer_obj);
 
   } else if (dropdown_option_type == 'npm_tokenizers') {
 
@@ -139,13 +140,14 @@ async function run_selection() {
     // const { encode, decode } = GPTTokenizer_cl100k_base;
     // OR
     const tokenizer_obj = await module1.encode(input_text);
+	  console.log("tokenizer_obj: ", tokenizer_obj);
     
   } else {
   	document.getElementById('notification').innerHTML = "Please select a drop down option type."; 
   }
 
 
-  console.log("tokenizer_obj: ", tokenizer_obj);
+  
   
   // -------------------
 	
