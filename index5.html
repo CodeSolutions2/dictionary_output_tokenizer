@@ -108,8 +108,8 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 <!-- ---------------------------------------- -->
 
 <script type="module">
-import { tokenize_data, delete_key_value, randomize_tokenNumber } from "./dist/tokenizer.js";
-module.tokenize_data = tokenize_data;
+import { create_tokenizer, delete_key_value, randomize_tokenNumber } from "./dist/tokenizer.js";
+module.create_tokenizer = create_tokenizer;
 module1.delete_key_value = delete_key_value;
 module2.randomize_tokenNumber = randomize_tokenNumber;
 </script>
@@ -130,8 +130,9 @@ const module = {};
 const module1 = {};
 const module2 = {};
 
+var xs;
 var tokenizer_obj;
-  
+	
 // ----------------------------------------------------
 
 async function run_selection() {
@@ -155,18 +156,18 @@ async function run_selection() {
 	
 	if (dropdown_option_type == 'dictionary_output_tokenizer') {
 		
-		tokenizer_obj = await module.tokenize_data(input_text);
+		[xs, tokenizer_obj] = await module.create_tokenizer(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
 		// algo: 129ms - timer ended
 
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_randomOrder') {
 		
-		tokenizer_obj = await module.tokenize_data(input_text);
+		[xs, tokenizer_obj] = await module.create_tokenizer(input_text);
 		tokenizer_obj = await module2.randomize_tokenNumber(tokenizer_obj)
 
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_deleteTokens') {
 
-		tokenizer_obj = await module.tokenize_data(input_text);
+		[xs, tokenizer_obj] = await module.create_tokenizer(input_text);
 		
 		document.getElementById("modify_tokenizer_h3").style.display = "block";
 		document.getElementById("modify_tokenizer_p").style.display = "block";
@@ -185,6 +186,8 @@ async function run_selection() {
 	} else {
 		document.getElementById('notification').innerHTML = "Please select a drop down option type."; 
 	}
+
+	console.log("xs: ", xs);
 
 	// -------------------
 	
