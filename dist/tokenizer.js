@@ -14,7 +14,7 @@ async function create_tokenizer(input_text){
 // -------------------------------------------------
 
 async function delete_key_value(tokenizer_obj, key_name){
-	delete tokenizer_obj.key_name;
+	delete tokenizer_obj[key_name];
 	return tokenizer_obj;
 }
 
