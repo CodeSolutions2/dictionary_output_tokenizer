@@ -122,7 +122,7 @@ const module = {};
 async function run_selection() {
 	
 	var input_text = document.getElementById('input_text').value;
-	console.log("input_text: ", input_text);
+	// console.log("input_text: ", input_text);
 	
 	document.getElementById("progress_bar").style.display = "block";
 	document.getElementById("progress_bar").value = (1/3)*100;
@@ -154,8 +154,8 @@ async function run_selection() {
 		// console.log("tokenizer_obj: ", tokenizer_obj);
 
 		
-		const tokenDict = tokenizer.getTokensDict();
-		console.log(tokenDict);
+		const tokenDict = tokenizer_obj.getTokensDict();
+		console.log("tokenDict: ", tokenDict);
 		// algo: 68ms - timer ended
     
 	} else {
