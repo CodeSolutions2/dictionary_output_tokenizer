@@ -25,6 +25,10 @@ In the field of text classification, making a tokenizer is the first thing that 
 	<li>dictionary_output_tokenizer: easy to use, fast processing because replacement of words with tokens are performed with regex, currently one rule (word tokenization)</li>
 	<li>npm_tokenizers: Multiple rules for tokenization, tokenization output for model usage (ie: BERT, GPT, etc)</li>
 </ol>
+
+<h3 id="modify_tokenizer_h3" style="display:none;">Modify tokenizer: delete tokens. If there are no tokens to modify, run dictionary_output_tokenizer first.</h3>
+<p id="modify_tokenizer_p" style="display:none;">Only for dictionary_output_tokenizer: List the token keys to delete, for example for the tokenizer {"dictionary_output_tokenizer":0,"npm_tokenizers":1,"tokenization":2,"tokenizers,":3} input "dictionary_output_tokenizer, npm_tokenizers" to remove the first two tokens.</p>
+<textarea id="modify_tokenizer" wrap="soft" rows="10" cols="100" placeholder="input text" style="display:none; text-align: left; width: 600px; height: 200px;"></textarea>
   
 <!-- Drop down menu: put in body -->
 <label for="select_dropdown_option_label">Select a drop down option:</label>
@@ -51,14 +55,6 @@ In the field of text classification, making a tokenizer is the first thing that 
 <br><br>
 
 <progress id="progress_bar" max="100" value="0" style="display:none">0%</progress>
-
-<br><br>
-  
-<h3 id="modify_tokenizer_h3" style="display:none;">Modify tokenizer: delete tokens.</h3>
-<p id="modify_tokenizer_p" style="display:none;">Only for dictionary_output_tokenizer: List the token keys to delete, for example for the tokenizer {"dictionary_output_tokenizer":0,"npm_tokenizers":1,"tokenization":2,"tokenizers,":3} input "dictionary_output_tokenizer, npm_tokenizers" to remove the first two tokens.</p>
-<textarea id="modify_tokenizer" wrap="soft" rows="10" cols="100" placeholder="input text" style="display:none; text-align: left; width: 600px; height: 200px;"></textarea>
-	
-<br><br>
 
 <!-- ---------------------------------------- -->
 
