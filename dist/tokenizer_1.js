@@ -190,7 +190,9 @@ async function tokenize_X(xs) {
 // -------------------------------------------------
 
 async function create_tokenizer_dict(uniqueArray) {
-  
+
+	console.log("uniqueArray: ", JSON.stringify(uniqueArray));
+	
 	// [0] Sort uniqueArray by an attribute (ie: length)
 	let arr = uniqueArray;
 	var c = 0;
@@ -205,8 +207,8 @@ async function create_tokenizer_dict(uniqueArray) {
 			  if (cur_value < next_value) {
 				  let temp_cur = arr[i]
 				  let temp_next = arr[i+1]; // want the old value of arr[i+1]
-				  arr[i+1] = temp_cur
-				  arr[i] = temp_next
+				  arr[i+1] = temp_cur;
+				  arr[i] = temp_next;
 			  } else {
 				  //this will be some value from 1 to arr.length-1
 				  c = c + 1;
