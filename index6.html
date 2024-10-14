@@ -62,8 +62,6 @@ In the field of text classification, making a tokenizer is the first thing that 
 <h3>[Step 1] View Results.</h3>
 <div id="data_display" style="display:block; text-align: left; width: 600px; height: 600px">
 <br>
-<div id="data_display1" style="display:block; text-align: left; width: 600px; height: 600px">
-<br>
 <div id="notification"></div>
 <br>
 <div id="error"></div>
@@ -156,6 +154,7 @@ const module5 = {};
 
 var xs;
 var tokenizer_obj;
+var xs_encoded_npm;
 var xs_encoded;
 	
 // ----------------------------------------------------
@@ -183,8 +182,13 @@ async function run_selection() {
 
 		// https://www.jsdelivr.com/package/npm/gpt-tokenizer
 		const { encode, decode } = GPTTokenizer_cl100k_base;
-		tokenizer_obj = await encode(input_text);
-		// console.log("tokenizer_obj: ", tokenizer_obj);
+		xs_encoded_npm = await encode(input_text);
+
+		document.getElementById("progress_bar").value = (2/3)*100;
+		
+		// Print to DOM
+		document.getElementById('data_display').innerHTML = JSON.stringify(xs_encoded_npm);
+		// console.log("xs_encoded_npm: ", xs_encoded_npm);
 
 		// algo: 36ms - timer ended
 
@@ -194,6 +198,9 @@ async function run_selection() {
 		[xs, tokenizer_obj] = await module2.create_tokenizer(input_text);
 		// console.log("xs: ", xs);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
+
+
+		document.getElementById("progress_bar").value = (2/3)*100;
 		
 		// Highlight original text
 		// var textarea = document.getElementById("input_text");
@@ -202,6 +209,9 @@ async function run_selection() {
 		// for (let i=0; i < tokenizer_obj.length; i++) {
 		// }
 
+		// Print to DOM
+		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
+		
 		// algo: 18ms - timer ended
 
 		
@@ -209,6 +219,10 @@ async function run_selection() {
 		
 		var key_names_str = document.getElementById('modify_tokenizer').value;
 		tokenizer_obj = await module3.delete_key_value(tokenizer_obj, key_names_str);
+
+		document.getElementById("progress_bar").value = (2/3)*100;
+		
+		// Print to DOM
 		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
 
 		
@@ -216,8 +230,12 @@ async function run_selection() {
 
 		xs_encoded = await module4.encode(xs, tokenizer_obj);
 		console.log("xs_encoded: ", xs_encoded);
-		// document.getElementById('data_display').innerHTML += "<br><br>";
-		// document.getElementById('data_display1').innerHTML += xs_encoded;
+
+		document.getElementById("progress_bar").value = (2/3)*100;
+		
+		// Print to DOM
+		document.getElementById('data_display').innerHTML += "<br><br>";
+		document.getElementById('data_display').innerHTML += JSON.stringify(xs_encoded);
 
 		// algo: 13ms - timer ended
 
@@ -226,8 +244,14 @@ async function run_selection() {
 
 		var xs_decoded = await module5.decode(xs_encoded, tokenizer_obj);
 		console.log("xs_decoded: ", xs_decoded);
-		// document.getElementById('data_display').innerHTML += "<br><br>";
-		// document.getElementById('data_display1').innerHTML += xs_decoded;
+
+		document.getElementById("progress_bar").value = (2/3)*100;
+			
+		// Print to DOM
+		document.getElementById('data_display').innerHTML += "<br><br>";
+		document.getElementById('data_display').innerHTML += JSON.stringify(xs_decoded);
+
+		// algo: 8ms - timer ended
 
 		
 	} else {
@@ -241,8 +265,6 @@ async function run_selection() {
 	
 	// -------------------
 	
-	document.getElementById("progress_bar").value = (2/3)*100;
-	document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
 	document.getElementById("progress_bar").value = (3/3)*100;
 	document.getElementById("progress_bar").style.display = "none";
 
