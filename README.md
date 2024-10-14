@@ -17,6 +17,4 @@ The available functions that can be exported are:
 - async function delete_key_value(tokenizer_obj, key_names_str)
 
 ## In progress
-  - Encode text with the tokenizer
-  - Decode text with the tokenizer
   - Subword tokenization
