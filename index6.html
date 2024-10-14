@@ -462,14 +462,17 @@ async function create_tokenizer_dict(uniqueArray) {
   
 	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
-	let tokenizer_obj = Object.fromEntries(arr.map((word, index) => [word, index]));
+	let tokenizer_obj = Object.fromEntries(arr.map((word, index) => { 
+		return [word.replace(/[,.]/g, '').toString(), index]; 
+	} ));
 
 	// Add out of vocabulary key to tokenizer
 	// tokenizer_obj['<OOV>'] = Object.keys(tokenizer_obj).length;
 	// console.log("tokenizer_obj: ", JSON.stringify(tokenizer_obj))
 
 	// remove commas from the tokenizer keys
-	return Object.entries(tokenizer_obj).map(([key, value]) => { tokenizer_obj[key.replace(/[,.]/g, '').toString()] = value; });
+	// return Object.entries(tokenizer_obj).map(([key, value]) => { tokenizer_obj[key.replace(/[,.]/g, '').toString()] = value; });
+	return tokenizer_obj;
 }
 
 // ----------------------------------------------------
