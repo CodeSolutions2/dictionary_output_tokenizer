@@ -230,19 +230,24 @@ async function run_selection() {
 			let matches = Array.from(iterator); // Convert iterator to array
 			console.log("matches: ", matches);
 
-			let startIndex = matches.start_index;
-			let endIndex = startIndex + key_arr.at(i).length;
-			var highlightedText = textarea.value.substring(startIndex, endIndex);
-			console.log("highlightedText: ", highlightedText);
+			for (let j=0; j < matches.length; j++) {
+				let startIndex = matches.at(j).index;
+				let endIndex = startIndex + key_arr.at(i).length;
+				var highlightedText = textarea.value.substring(startIndex, endIndex);
+				console.log("highlightedText: ", highlightedText);
+	
+				if (key_arr.length % 5 == 0) {
+					val = 0;
+				} else {
+					val = val + 1;
+				}
+				console.log("val: ", val);
+				
+				textarea.innerHTML += textarea.value.replace(highlightedText, `<span class="highlight${val}">` + highlightedText + '</span>');
+				
+			}	
 
-			if (key_arr.length % 5 == 0) {
-				val = 0;
-			} else {
-				val = val + 1;
-			}
-			console.log("val: ", val);
 			
-			textarea.innerHTML += textarea.value.replace(highlightedText, `<span class="highlight${val}">` + highlightedText + '</span>');
 		}
 
 		// Print to DOM
