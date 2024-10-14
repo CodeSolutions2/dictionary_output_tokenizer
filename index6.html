@@ -187,12 +187,14 @@ async function run_selection() {
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_v1') {
 
 		[xs, tokenizer_obj] = await module2.create_tokenizer(input_text);
-		// console.log("tokenizer_obj: ", tokenizer_obj);
+
+		console.log("xs: ", xs);
+		console.log("tokenizer_obj: ", tokenizer_obj);
 		
 		// Highlight original text
-		var textarea = document.getElementById("input_text");
-		textarea.setSelectionRange(5, 9); // Highlight text from index 5 to 9
-		textarea.focus();
+		// var textarea = document.getElementById("input_text");
+		// textarea.setSelectionRange(5, 9); // Highlight text from index 5 to 9
+		// textarea.focus();
 		// for (let i=0; i < tokenizer_obj.length; i++) {
 		// }
 
