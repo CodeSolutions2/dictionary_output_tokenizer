@@ -189,9 +189,6 @@ async function run_selection() {
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_v1') {
 
 		[xs, tokenizer_obj] = await module2.create_tokenizer(input_text);
-		// OR
-		// [xs, tokenizer_obj] = await create_tokenizer(input_text);
-
 		// console.log("xs: ", xs);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
 		
@@ -212,18 +209,17 @@ async function run_selection() {
 		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_encode_v1') {
 
-		// var xs_encoded = await module4.encode(xs, tokenizer_obj);
-		// OR
-		var xs_encoded = await encode(xs, tokenizer_obj);
+		var xs_encoded = await module4.encode(xs, tokenizer_obj);
 		console.log("xs_encoded: ", xs_encoded);
-		
-		document.getElementById('data_display').innerHTML = JSON.stringify(xs_encoded);
+		document.getElementById('data_display').innerHTML += "<br><br>";
+		document.getElementById('data_display').innerHTML += xs_encoded;
 
 		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_decode_v1') {
 
 		var xs_decoded = await module5.decode(xs_tokens, tokenizer_obj);
-		document.getElementById('data_display').innerHTML = JSON.stringify(xs_decoded);
+		document.getElementById('data_display').innerHTML += "<br><br>";
+		document.getElementById('data_display').innerHTML += xs_decoded;
 
 		
 	} else {
