@@ -189,9 +189,10 @@ async function tokenize_X(xs) {
 
 // -------------------------------------------------
 
+
 async function create_tokenizer_dict(uniqueArray) {
 
-	console.log("uniqueArray: ", uniqueArray);
+	// console.log("uniqueArray: ", uniqueArray);
 	
 	// [0] Sort uniqueArray by an attribute (ie: length)
 	let arr = uniqueArray;
@@ -205,7 +206,7 @@ async function create_tokenizer_dict(uniqueArray) {
 			  let next_value = next.length;
 			  
 			  if (cur_value < next_value) {
-				  let temp_cur = arr[i]
+				  let temp_cur = arr[i];
 				  let temp_next = arr[i+1]; // want the old value of arr[i+1]
 				  arr[i+1] = temp_cur;
 				  arr[i] = temp_next;
@@ -216,18 +217,15 @@ async function create_tokenizer_dict(uniqueArray) {
 			  }
 		  }
 	}
-	  
+	// console.log("arr: ", arr);
   
 	// [1] Make a dictionary where each key is a word in arr, and each value is index
 	// Create a dictionary from one array
-	let tokenizer_obj = Object.fromEntries(arr.map((word, index) => [word, index]));
+	let tokenizer_obj = Object.fromEntries(arr.map((word, index) => { 
+		return [word.replace(/[,.]/g, '').toString(), index]; 
+	} ));
 
-	// Add out of vocabulary key to tokenizer
-	// tokenizer_obj['<OOV>'] = Object.keys(tokenizer_obj).length;
-	// console.log("tokenizer_obj: ", JSON.stringify(tokenizer_obj))
-
-	// remove commas from the tokenizer keys
-	return Object.entries(tokenizer_obj).map(([key, value]) => { tokenizer_obj[key.replace(/[,.]/g, '').toString()] = value; });
+	return tokenizer_obj;
 }
 
 // ----------------------------------------------------
