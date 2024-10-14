@@ -26,10 +26,12 @@ In the field of text classification, making a tokenizer is the first thing that 
 	<li>npm_tokenizers: Multiple rules for tokenization, tokenization output for model usage (ie: BERT, GPT, etc)</li>
 </ol>
 
+<hr>
 <h3 id="modify_tokenizer_h3" style="display:none;">Modify tokenizer: delete tokens. If there are no tokens to modify, run dictionary_output_tokenizer first.</h3>
 <p id="modify_tokenizer_p" style="display:none;">Only for dictionary_output_tokenizer: List the token keys to delete, for example for the tokenizer {"dictionary_output_tokenizer":0,"npm_tokenizers":1,"tokenization":2,"tokenizers,":3} input "dictionary_output_tokenizer, npm_tokenizers" to remove the first two tokens.</p>
 <textarea id="modify_tokenizer" wrap="soft" rows="10" cols="100" placeholder="input text" style="display:none; text-align: left; width: 600px; height: 200px;"></textarea>
-  
+<hr>
+
 <!-- Drop down menu: put in body -->
 <label for="select_dropdown_option_label">Select a drop down option:</label>
 <select name="dropdown_options" id="dropdown_options" style="display:block">
@@ -149,6 +151,7 @@ const module2 = {};
 const module3 = {};
 const module4 = {};
 const module5 = {};
+
 var xs;
 var tokenizer_obj;
 	
@@ -209,7 +212,11 @@ async function run_selection() {
 		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_encode_v1') {
 
-		var xs_encoded = await module4.encode(xs, tokenizer_obj);
+		// var xs_encoded = await module4.encode(xs, tokenizer_obj);
+		// OR
+		var xs_encoded = await encode(xs, tokenizer_obj);
+		console.log("xs_encoded: ", xs_encoded);
+		
 		document.getElementById('data_display').innerHTML = JSON.stringify(xs_encoded);
 
 		
@@ -300,7 +307,7 @@ async function encode(xs, tokenizer_obj) {
         var xs_tokens = xs_final_arr.map((val, ind) => { 
             return tokenizer_obj[val] ?? tokenizer_obj['<OOV>']; 
         });
-        // console.log("xs_tokens: ", xs_tokens)
+        console.log("xs_tokens: ", xs_tokens)
         
         xs_encoded.push(xs_tokens)
     }
