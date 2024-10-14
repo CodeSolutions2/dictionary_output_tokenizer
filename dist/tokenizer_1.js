@@ -104,36 +104,34 @@ async function convert_text_to_csv(input_text) {
 // -------------------------------------------------
 
 async function preprocess_xs(csvDataset) {
-	
-	var X = '';
-	var xs = [];
 
-	csvDataset.forEach(async function(rowdata, index) {
+  //const tensors = await csvDataset.toArray();
 
-		// console.log("rowdata.xs: ", rowdata.xs);
-		  
-		 // ---------------------------
-		 // Clean text procedure
-		 // ---------------------------
-		 // Make text lower case, Remove characters between parenthesis, Remove text that are 1 or 2 characters long, Remove undesireable characters
-		 X = Object.values(rowdata.xs)
-			 .toString()
-			 .toLowerCase()
-			 .replace(/\((.*?)\)/g, '')
-			 .replace(/\{(.*?)\}/g, '')
-			 .replace(/\[(.*?)\]/g, '')
-			 .replace(/[/\/\n]/g, ' ')
-			 .replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!-><\n]/g, ' ')
-			 .replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '');  
-		
-		  xs.push(X);
+  var X = '';
+  var xs = [];
 
-	});  // end of forEach
+  csvDataset.forEach(async function(rowdata, index) {
+
+	console.log("rowdata.xs: ", rowdata.xs);
+	  
+	 // ---------------------------
+	 // Clean text procedure
+	 // ---------------------------
+	 // Make text lower case, Remove characters between parenthesis, Remove text that are 1 or 2 characters long, Remove undesireable characters
+	 X = Object.values(rowdata.xs).toString().toLowerCase().replace(/\((.*?)\)/g, '').replace(/\{(.*?)\}/g, '').replace(/\[(.*?)\]/g, '').replace(/[/\/\n]/g, ' ').replace(/[\.\€\$\£\%\d,\[\]\(\)\{\}\!-><\n]/g, '').replace(/(?<=\s)[A-Za-z]{1,2}(?=\s)/g, '');  
 	
-	// console.log("xs: ", xs);
-	
-	return xs;
-  }
+	  // ---------------------------
+	  // Verify that data is correct, and only keep correct X and Y data
+	  // if (X.length-1 > 10){ xs.push(X); }
+	  xs.push(X);
+
+  });  // end of forEach
+
+
+	console.log("xs: ", xs);
+
+  return xs;
+}
 
 // -------------------------------------------------
 
