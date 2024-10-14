@@ -5,7 +5,7 @@ The purpose of this repository is to demonstrate/compare different ways to token
 
 ## Example of library usage
 
-[Current working version of word tokenization] https://codesolutions2.github.io/dictionary_output_tokenizer/index5.html
+[Current working version of word tokenization] https://codesolutions2.github.io/dictionary_output_tokenizer/index6.html
 The example webapp shows the tokenizer output of the dictionary_output_tokenizer, and the encode output of a popular tokenizer for gpt ([gpt-tokenizer](https://www.jsdelivr.com/package/npm/gpt-tokenizer)) because gpt-tokenizer is rapid. 
 
 
