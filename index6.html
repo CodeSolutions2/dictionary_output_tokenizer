@@ -183,7 +183,7 @@ async function run_selection() {
 		tokenizer_obj = await encode(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
 
-		// algo: 68ms - timer ended
+		// algo: 36ms - timer ended
 
   		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_v1') {
@@ -199,6 +199,8 @@ async function run_selection() {
 		// for (let i=0; i < tokenizer_obj.length; i++) {
 		// }
 
+		// algo: 18ms - timer ended
+
 		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_deleteTokens_v1') {
 		
@@ -212,22 +214,23 @@ async function run_selection() {
 		var xs_encoded = await module4.encode(xs, tokenizer_obj);
 		console.log("xs_encoded: ", xs_encoded);
 		document.getElementById('data_display').innerHTML += "<br><br>";
-		document.getElementById('data_display').innerHTML += xs_encoded;
+		document.getElementById('data_display').innerHTML += xs_encoded.toString();
+
+		// algo: 26ms - timer ended
 
 		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_decode_v1') {
 
 		var xs_decoded = await module5.decode(xs_tokens, tokenizer_obj);
+		console.log("xs_decoded: ", xs_decoded);
 		document.getElementById('data_display').innerHTML += "<br><br>";
-		document.getElementById('data_display').innerHTML += xs_decoded;
+		document.getElementById('data_display').innerHTML += xs_decoded.toString();
 
 		
 	} else {
 		
 		document.getElementById('notification').innerHTML = "Please select a drop down option type."; 
 	}
-
-	console.log("xs: ", xs);
 
 	// -------------------
 	
