@@ -191,7 +191,7 @@ async function tokenize_X(xs) {
 
 async function create_tokenizer_dict(uniqueArray) {
 
-	console.log("uniqueArray: ", JSON.stringify(uniqueArray));
+	console.log("uniqueArray: ", uniqueArray);
 	
 	// [0] Sort uniqueArray by an attribute (ie: length)
 	let arr = uniqueArray;
