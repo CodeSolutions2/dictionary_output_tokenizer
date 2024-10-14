@@ -90,7 +90,12 @@ th#table_leftside_input {width: 100%; }
 th#table_rightside_output {width: 100%; }
 
 div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 200; width: 500px; word-break: break-all; word-wrap: break-word; }
-  
+
+.highlight0 { background-color: #ed968e; }
+.highlight1 { background-color: #eced8e; }
+.highlight2 { background-color: #8fc48f; }
+.highlight3 { background-color: #8f96c4; }
+.highlight4 { background-color: #c48fb7; }
 </style>
 
 <!-- ---------------------------------------- -->
@@ -203,11 +208,36 @@ async function run_selection() {
 		document.getElementById("progress_bar").value = (2/3)*100;
 		
 		// Highlight original text
-		// var textarea = document.getElementById("input_text");
-		// textarea.setSelectionRange(5, 9); // Highlight text from index 5 to 9
+		var textarea = document.getElementById("input_text");
+
+		// Way 0
+		// textarea.setSelectionRange(5, 9); // Highlight text with cursor from index 5 to 9
 		// textarea.focus();
-		// for (let i=0; i < tokenizer_obj.length; i++) {
-		// }
+		
+		// Get start and stop index for each token
+		var key_arr = Object.keys(tokenizer_obj);
+		var val;
+		for (let i=0; i < key_arr.length; i++) {
+			let regexp = `${key_arr.at(i)}`;
+			console.log("regexp: ", regexp);
+			
+			let matches = [...xs.matchAll(regexp)];
+			console.log("matches: ", matches);
+
+			let startIndex = matches.start_index;
+			let endIndex = startIndex + key_arr.at(i).length;
+			var highlightedText = textarea.value.substring(startIndex, endIndex);
+			console.log("highlightedText: ", highlightedText);
+
+			if (key_arr.length % 5 == 0) {
+				val = 0;
+			} else {
+				val = val + 1;
+			}
+			console.log("val: ", val);
+			
+			textarea.innerHTML += textarea.value.replace(highlightedText, `<span class="highlight${val}">` + highlightedText + '</span>');
+		}
 
 		// Print to DOM
 		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
