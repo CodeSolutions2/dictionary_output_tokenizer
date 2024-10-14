@@ -6,8 +6,14 @@ export { create_tokenizer, delete_key_value, encode, decode }
 async function create_tokenizer(input_text) {
 	
 	var csvDataset = await convert_text_to_csv(input_text);
+	console.log("csvDataset: ", csvDataset);
+	
 	var xs = await preprocess_xs(csvDataset);
+	console.log("xs: ", xs);
+	
 	var tokenizer = await tokenize_X(xs);
+	console.log("tokenizer: ", tokenizer);
+	
 	return [xs, tokenizer];
 }
 
