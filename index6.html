@@ -34,8 +34,6 @@ In the field of text classification, making a tokenizer is the first thing that 
 <label for="select_dropdown_option_label">Select a drop down option:</label>
 <select name="dropdown_options" id="dropdown_options" style="display:block">
   <option value="---">Select an option</option>
-  <option value="dictionary_output_tokenizer">dictionary_output_tokenizer</option>
-  <option value="dictionary_output_tokenizer_deleteTokens">dictionary_output_tokenizer_deleteTokens</option>
   <option value="npm_tokenizers">npm_tokenizers</option>
   <option value="dictionary_output_tokenizer_v1">dictionary_output_tokenizer_v1</option>
   <option value="dictionary_output_tokenizer_deleteTokens_v1">dictionary_output_tokenizer_deleteTokens_v1</option>
@@ -105,13 +103,6 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 <!-- ---------------------------------------- -->
 
 <script type="module">
-import { create_tokenizer, delete_key_value } from "./dist/tokenizer.js";
-module.create_tokenizer = create_tokenizer;
-module1.delete_key_value = delete_key_value;
-</script>
-
-
-<script type="module">
 import { create_tokenizer, delete_key_value, encode, decode } from "./dist/tokenizer_1.js";
 module2.create_tokenizer = create_tokenizer;
 module3.delete_key_value = delete_key_value;
@@ -154,8 +145,6 @@ document.getElementById("dropdown_options").addEventListener("change", processEv
 
 // ----------------------------------------------------
 
-const module = {};
-const module1 = {};
 const module2 = {};
 const module3 = {};
 const module4 = {};
@@ -185,23 +174,7 @@ async function run_selection() {
 
 	// -------------------
 	
-	if (dropdown_option_type == 'dictionary_output_tokenizer') {
-		
-		[xs, tokenizer_obj] = await module.create_tokenizer(input_text);
-		// console.log("tokenizer_obj: ", tokenizer_obj);
-		// algo: 129ms - timer ended
-
-	} else if (dropdown_option_type == 'dictionary_output_tokenizer_deleteTokens') {
-
-		[xs, tokenizer_obj] = await module.create_tokenizer(input_text);
-
-    var key_names_str = document.getElementById('modify_tokenizer').value;
-    
-		tokenizer_obj = await module1.delete_key_value(tokenizer_obj, key_names_str);
-    
-    document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
-    
-	} else if (dropdown_option_type == 'npm_tokenizers') {
+	if (dropdown_option_type == 'npm_tokenizers') {
 
 		// https://www.jsdelivr.com/package/npm/gpt-tokenizer
 		const { encode, decode } = GPTTokenizer_cl100k_base;
@@ -213,7 +186,7 @@ async function run_selection() {
   		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_v1') {
 
-		[xs, tokenizer_obj] = await module.create_tokenizer(input_text);
+		[xs, tokenizer_obj] = await module2.create_tokenizer(input_text);
 		// console.log("tokenizer_obj: ", tokenizer_obj);
 		
 		// Highlight original text
@@ -222,30 +195,29 @@ async function run_selection() {
 		textarea.focus();
 		// for (let i=0; i < tokenizer_obj.length; i++) {
 		// }
-    
+
+		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_deleteTokens_v1') {
-    
-		[xs, tokenizer_obj] = await module2.create_tokenizer(input_text);
-    
+		
 		var key_names_str = document.getElementById('modify_tokenizer').value;
-    
 		tokenizer_obj = await module3.delete_key_value(tokenizer_obj, key_names_str);
-    
 		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
-    
+
+		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_encode_v1') {
 
 		var xs_encoded = await module4.encode(xs, tokenizer_obj);
-
 		document.getElementById('data_display').innerHTML = JSON.stringify(xs_encoded);
+
 		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_decode_v1') {
 
 		var xs_decoded = await module5.decode(xs_tokens, tokenizer_obj);
-
 		document.getElementById('data_display').innerHTML = JSON.stringify(xs_decoded);
-    
+
+		
 	} else {
+		
 		document.getElementById('notification').innerHTML = "Please select a drop down option type."; 
 	}
 
