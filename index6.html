@@ -102,13 +102,13 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 	
 <!-- ---------------------------------------- -->
 
-<!-- <script type="module"> -->
-<!-- import { create_tokenizer, delete_key_value, encode, decode } from "./dist/tokenizer_1.js"; -->
-<!-- module2.create_tokenizer = create_tokenizer; -->
-<!-- module3.delete_key_value = delete_key_value; -->
-<!-- module4.encode = encode; -->
-<!-- module5.decode = decode; -->
-<!-- </script> -->
+<script type="module">
+<!-- import { create_tokenizer, delete_key_value, encode, decode } from "./dist/tokenizer_1.js";
+module2.create_tokenizer = create_tokenizer;
+module3.delete_key_value = delete_key_value;
+module4.encode = encode;
+module5.decode = decode;
+</script>
 
 <!-- ---------------------------------------- -->
 
@@ -145,11 +145,10 @@ document.getElementById("dropdown_options").addEventListener("change", processEv
 
 // ----------------------------------------------------
 
-// const module2 = {};
-// const module3 = {};
-// const module4 = {};
-// const module5 = {};
-
+const module2 = {};
+const module3 = {};
+const module4 = {};
+const module5 = {};
 var xs;
 var tokenizer_obj;
 	
@@ -186,12 +185,12 @@ async function run_selection() {
   		
 	} else if (dropdown_option_type == 'dictionary_output_tokenizer_v1') {
 
-		// [xs, tokenizer_obj] = await module2.create_tokenizer(input_text);
+		[xs, tokenizer_obj] = await module2.create_tokenizer(input_text);
 		// OR
-		[xs, tokenizer_obj] = await create_tokenizer(input_text);
+		// [xs, tokenizer_obj] = await create_tokenizer(input_text);
 
-		console.log("xs: ", xs);
-		console.log("tokenizer_obj: ", tokenizer_obj);
+		// console.log("xs: ", xs);
+		// console.log("tokenizer_obj: ", tokenizer_obj);
 		
 		// Highlight original text
 		// var textarea = document.getElementById("input_text");
@@ -234,7 +233,6 @@ async function run_selection() {
 	// -------------------
 	
 	document.getElementById("progress_bar").value = (2/3)*100;
-	
 	document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
 	document.getElementById("progress_bar").value = (3/3)*100;
 	document.getElementById("progress_bar").style.display = "none";
@@ -466,12 +464,6 @@ async function create_tokenizer_dict(uniqueArray) {
 		return [word.replace(/[,.]/g, '').toString(), index]; 
 	} ));
 
-	// Add out of vocabulary key to tokenizer
-	// tokenizer_obj['<OOV>'] = Object.keys(tokenizer_obj).length;
-	// console.log("tokenizer_obj: ", JSON.stringify(tokenizer_obj))
-
-	// remove commas from the tokenizer keys
-	// return Object.entries(tokenizer_obj).map(([key, value]) => { tokenizer_obj[key.replace(/[,.]/g, '').toString()] = value; });
 	return tokenizer_obj;
 }
 
