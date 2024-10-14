@@ -217,7 +217,7 @@ async function run_selection() {
 		xs_encoded = await module4.encode(xs, tokenizer_obj);
 		console.log("xs_encoded: ", xs_encoded);
 		// document.getElementById('data_display').innerHTML += "<br><br>";
-		document.getElementById('data_display1').innerHTML += xs_encoded;
+		// document.getElementById('data_display1').innerHTML += xs_encoded;
 
 		// algo: 13ms - timer ended
 
@@ -227,7 +227,7 @@ async function run_selection() {
 		var xs_decoded = await module5.decode(xs_encoded, tokenizer_obj);
 		console.log("xs_decoded: ", xs_decoded);
 		// document.getElementById('data_display').innerHTML += "<br><br>";
-		document.getElementById('data_display1').innerHTML += xs_decoded;
+		// document.getElementById('data_display1').innerHTML += xs_decoded;
 
 		
 	} else {
