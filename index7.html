@@ -211,17 +211,17 @@ async function run_selection() {
   
 		// Print to DOM
 		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
-
+		document.getElementById('data_display').style.backgroundColor = "#ed968e";
     
 		// Test trying to highlight a div item
 		// const test = document.getElementById('data_display1');
 		// console.log('test: ', test);  //null
 
 		
-		document.getElementById('notification').setAttribute('innerHTML', 'test'); 
+		document.getElementById('data_display1').setAttribute('innerHTML', 'test'); 
 		
 		// document.getElementById('data_display1').innerHTML = "test";  //JSON.stringify(xs);
-		//document.getElementById('data_display1').style.backgroundColor = "#ed968e";
+		
     
 		
 		// algo: 18ms - timer ended
