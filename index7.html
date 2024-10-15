@@ -197,7 +197,7 @@ async function run_selection() {
 		// Print to DOM
 		document.getElementById('data_display').innerHTML = JSON.stringify(xs_encoded_npm);
 		// console.log("xs_encoded_npm: ", xs_encoded_npm);
-
+		
 		// algo: 36ms - timer ended
 
   		
@@ -213,6 +213,9 @@ async function run_selection() {
 		
 		// Print to DOM
 		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
+
+		document.getElementById('data_display').innerHTML += "<br><br>";
+		document.getElementById('data_display').innerHTML += JSON.stringify(xs);
 
 		// -------------------------------------------------
 		
@@ -232,7 +235,7 @@ async function run_selection() {
 				val = val + 1;
 			}
 
-			document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, `<span class="highlight${val}">`+select_word+'</span>');  
+			document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, `<span class="highlight${val}">`+select_word+'</span>'); 
 		}
 
 		// -------------------------------------------------
@@ -245,12 +248,17 @@ async function run_selection() {
 		document.getElementById('input_text').innerHTML = document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>');  
 		document.getElementById('input_text').focus();
 
+		// Obtain text in the textarea
 		// console.log("input_text value : ", document.getElementById('input_text').value);
+		
 		
 		// console.log("input_text innerHTML : ", document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>'));
 
 		
 		// -------------------------------------------------
+
+		document.getElementById('input_text').setSelectionRange(5, 10);
+		document.getElementById('input_text').setSelectionRange(25, 30);
 		
 		// algo: 18ms - timer ended
 
