@@ -214,8 +214,11 @@ async function run_selection() {
 
     
 		// Test trying to highlight a div item
-		document.getElementById('data_display1').innerHTML = "test";  //JSON.stringify(xs);
-		document.getElementById('data_display1').style.backgroundColor = "#ed968e";
+		const test = document.getElementById('data_display1');
+		console.log('test: ', test);
+		
+		// document.getElementById('data_display1').innerHTML = "test";  //JSON.stringify(xs);
+		// document.getElementById('data_display1').style.backgroundColor = "#ed968e";
     
 		
 		// algo: 18ms - timer ended
