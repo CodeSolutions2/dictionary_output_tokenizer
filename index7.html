@@ -213,7 +213,9 @@ async function run_selection() {
 		
 		// Print to DOM
 		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
-			
+
+		// -------------------------------------------------
+		
 		// Highlight a text string in the div element
 		var key_arr = Object.keys(tokenizer_obj);
 		console.log("key_arr: ", key_arr);
@@ -221,7 +223,7 @@ async function run_selection() {
 		var val;
 		for (let i=0; i < key_arr.length; i++) {
 			var select_word = key_arr.at(i);
-			let regexp = new RegExp(`${select_word}`, 'g');
+			let regexp = new RegExp(`"${select_word}"`, 'g');
 		
 			// Determine highlight color
 			if (i % 5 == 0) {
@@ -230,35 +232,7 @@ async function run_selection() {
 				val = val + 1;
 			}
 
-			// Highlight word/s in div
-			var total_string = document.getElementById('data_display').innerHTML;
-			
-			var separator;
-
-			// need to find select_word for each entry of total_arr
-			// first test if it is an array, if not test if it is an object, if not make an array by parsing on \s, \t, \n
-			if (total_string.at(0) == '[' && total_string.at(total_string.length-1) == ']') {
-				separator = ',';
-			} else if (total_string.at(0) == '{' && total_string.at(total_string.length-1) == '}') {
-				separator = ',';
-			} else {
-				separator = ' ';
-			}
-			var total_arr = total_string.split(separator);
-
-			var temp = [];
-			for (let j=0; j < total_arr.length; j++) {
-				var matches = total_arr.at(j).match(regexp) ?? [];
-
-				if (matches.length > 0) {
-					temp.push(total_arr.at(j).replace(regexp, `<span class="highlight${val}">`+select_word+'</span>'));
-				} else {
-					temp.push(total_arr.at(j))
-				}
-			}
-			temp_str = temp.join(separator)
-			
-			document.getElementById('data_display').innerHTML = temp_str;
+			document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, `<span class="highlight${val}">`+select_word+'</span>');  
 		}
 
 		// -------------------------------------------------
