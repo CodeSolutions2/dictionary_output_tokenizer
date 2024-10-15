@@ -216,10 +216,9 @@ async function run_selection() {
 		// document.getElementById('data_display').style.backgroundColor = "#ed968e";  // WORKS!
 
 		// Change a the background color for text strings in the div element
-		document.getElementById('notification').innerHTML = "other text, test, text";
-		const select_word = "test";
+		const select_word = "dictionary_output_tokenizer";
 		const regexp = new RegExp(`${select_word}`, 'g');
-		document.getElementById('notification').innerHTML = document.getElementById('notification').innerHTML.replace(regexp, '<span class="highlight">'+select_word+'</span>');
+		document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, '<span class="highlight">'+select_word+'</span>');
 		// OR
 		document.getElementById('data_display').value.substring(0, 10).style.backgroundColor = "#ed968e";
 		
