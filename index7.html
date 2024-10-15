@@ -218,8 +218,7 @@ async function run_selection() {
 		document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, '<span class="highlight0">'+select_word+'</span>'); // WORKS!
 		
 		// Highlight a text string in the textarea element
-		var i = 1;
-		document.getElementById('input_text').innerHTML = document.getElementById('input_text').innerHTML.replace(regexp, '<span class="highlight0">'+select_word+'</span>');
+		document.getElementById('input_text').innerHTML = document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>');  
 
 		
 		
