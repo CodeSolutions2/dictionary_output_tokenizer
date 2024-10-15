@@ -10,6 +10,9 @@ The example webapp shows the tokenizer output of the dictionary_output_tokenizer
 
 
 ## Library versions
+- JSdelivr: https://www.jsdelivr.com/package/npm/dictionary_output_tokenizer
+- NPM: https://www.npmjs.com/package/dictionary_output_tokenizer
+  
 The available functions that can be exported are:
 
 ### Version 0 (current version)
