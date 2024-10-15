@@ -217,17 +217,9 @@ async function run_selection() {
 		var key_arr = Object.keys(tokenizer_obj);
 		console.log("key_arr: ", key_arr);
 		
-		// Remove space character
-		const Vals_toKeep = (x) => x.length > 2;
-		key_arr = key_arr.filter(Vals_toKeep);
-		console.log("key_arr: ", key_arr);
-		
 		var val;
-		// key_arr.length
-		for (let i=0; i < 10; i++) {
+		for (let i=0; i < key_arr.length; i++) {
 			var select_word = key_arr.at(i);
-			console.log("select_word: ", select_word);
-			
 			let regexp = new RegExp(`${select_word}`, 'g');
 		
 			// Determine highlight color
@@ -236,17 +228,18 @@ async function run_selection() {
 			} else {
 				val = val + 1;
 			}
-		
-			// const select_word = "dictionary_output_tokenizer";
-			// const regexp = new RegExp(`${select_word}`, 'g');
 
 			// Highlight word/s in div
-			document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, '<span class="highlight0">'+select_word+'</span>'); // WORKS!
+			document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, `<span class="highlight${val}">`+select_word+'</span>'); // WORKS!
 		}
 
 		// -------------------------------------------------
 		
 		// Highlight a text string in the textarea element
+		const select_word = "dictionary_output_tokenizer";
+		
+		const regexp = new RegExp(`${select_word}`, 'g');
+		
 		document.getElementById('input_text').innerHTML = document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>');  
 
 		console.log("input_text value : ", document.getElementById('input_text').value);
