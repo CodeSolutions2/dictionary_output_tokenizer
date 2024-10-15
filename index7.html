@@ -229,6 +229,8 @@ async function run_selection() {
 		var val;
 		for (let i=0; i < key_arr.length; i++) {
 			var select_word = key_arr.at(i);
+			console.log("select_word: ", select_word);
+			
 			let regexp = new RegExp(`${select_word}`, 'g');
 
 			// Determine highlight color
@@ -239,10 +241,10 @@ async function run_selection() {
 			}
 
 			// Highlight word/s in div
-			document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, `<span class="highlight${val}">`+select_word+'</span>');
+			document.getElementById('data_display').innerHTML += document.getElementById('data_display').innerHTML.replace(regexp, `<span class="highlight${val}">`+select_word+'</span>');
 
 			// Highlight word/s in textarea
-			document.getElementById('input_text').innerHTML = document.getElementById('input_text').innerHTML.replace(regexp, `<span class="highlight${val}">`+select_word+'</span>');
+			document.getElementById('input_text').innerHTML += document.getElementById('input_text').innerHTML.replace(regexp, `<span class="highlight${val}">`+select_word+'</span>');
 		}
 		
 		// algo: 18ms - timer ended
