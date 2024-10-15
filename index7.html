@@ -236,9 +236,9 @@ async function run_selection() {
 		// -------------------------------------------------
 		
 		// Highlight a text string in the textarea element
-		const select_word = "dictionary_output_tokenizer";
+		select_word = "dictionary_output_tokenizer";
 		
-		const regexp = new RegExp(`${select_word}`, 'g');
+		regexp = new RegExp(`${select_word}`, 'g');
 		
 		document.getElementById('input_text').innerHTML = document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>');  
 
