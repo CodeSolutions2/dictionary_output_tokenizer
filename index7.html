@@ -98,6 +98,7 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 .highlight2 { background-color: #8fc48f; }
 .highlight3 { background-color: #8f96c4; }
 .highlight4 { background-color: #c48fb7; }
+	
 </style>
 
 <!-- ---------------------------------------- -->
@@ -241,11 +242,13 @@ async function run_selection() {
 		regexp = new RegExp(`${select_word}`, 'g');
 		
 		document.getElementById('input_text').innerHTML = document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>');  
+		document.getElementById('input_text').focus();
 
-		console.log("input_text value : ", document.getElementById('input_text').value);
+		// console.log("input_text value : ", document.getElementById('input_text').value);
 		
-		console.log("input_text innerHTML : ", document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>'));
+		// console.log("input_text innerHTML : ", document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>'));
 
+		
 		// -------------------------------------------------
 		
 		// algo: 18ms - timer ended
