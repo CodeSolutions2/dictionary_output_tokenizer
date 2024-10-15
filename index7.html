@@ -257,8 +257,9 @@ async function run_selection() {
 			var first_part_str = total_arr.at(0);
 			var total_string = total_arr.at(1);
 			console.log('total_string: ', total_string);
-			
-			var total_arr = total_string.split(' ');
+
+			var separator = ' ';
+			var total_arr = total_string.split(separator);
 			console.log('total_arr: ', total_arr);
 
 			var temp = [];
