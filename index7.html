@@ -211,18 +211,25 @@ async function run_selection() {
   
 		// Print to DOM
 		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
+
+		// Change the entire background color of the div element
 		document.getElementById('data_display').style.backgroundColor = "#ed968e";
     
 		// Test trying to highlight a div item
 		// const test = document.getElementById('data_display1');
 		// console.log('test: ', test);  //null
-
-		
-		document.getElementById('data_display1').setAttribute('innerHTML', 'test'); 
-		
+		// document.getElementById('data_display1').setAttribute('innerHTML', 'test'); 
+		// OR
 		// document.getElementById('data_display1').innerHTML = "test";  //JSON.stringify(xs);
-		
-    
+		// Uncaught (in promise) TypeError: document.getElementById(...) is null
+
+		// Change the entire background color of the textarea element
+		document.getElementById('input_text').style.backgroundColor = "#eced8e";
+
+		// Change a portion of the background color for text in the textarea element
+		const highlightedText = document.getElementById('input_text').value.substring(0, 10);
+		document.getElementById('input_text').innerHTML += document.getElementById('input_text').value.replace(highlightedText, '<span style="backgroundColor: #ed968e;">' + highlightedText + '</span>');
+				
 		
 		// algo: 18ms - timer ended
 
