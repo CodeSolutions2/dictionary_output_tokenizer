@@ -240,25 +240,43 @@ async function run_selection() {
 
 		// -------------------------------------------------
 		
-		// Highlight a text string in the textarea element
-		select_word = "dictionary_output_tokenizer";
+		// Highlight a text string in the div element below the tokenizer
+		var val;
+		for (let i=0; i < key_arr.length; i++) {
+			var select_word = key_arr.at(i);
+			let regexp = new RegExp(`"${select_word}"`, 'g');
 		
-		regexp = new RegExp(`${select_word}`, 'g');
-		
-		document.getElementById('input_text').innerHTML = document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>');  
-		document.getElementById('input_text').focus();
+			// Determine highlight color
+			if (i % 5 == 0) {
+				val = 0; // reset
+			} else {
+				val = val + 1;
+			}
 
-		// Obtain text in the textarea
-		// console.log("input_text value : ", document.getElementById('input_text').value);
-		
-		
-		// console.log("input_text innerHTML : ", document.getElementById('input_text').value.replace(regexp, '<span class="highlight0">'+select_word+'</span>'));
+			var total_arr = document.getElementById('data_display').innerHTML.split('<br><br>');
+			var first_part_str = total_arr.at(0);
+			var total_string = total_arr.at(1);
+			console.log('total_string: ', total_string);
+			
+			var separator = ' ';
+			var total_arr = total_string.split(separator);
 
+			var temp = [];
+			for (let j=0; j < total_arr.length; j++) {
+				var matches = total_arr.at(j).match(regexp) ?? [];
+		
+				if (matches.length > 0) {
+					temp.push(total_arr.at(j).replace(regexp, `<span class="highlight${val}">`+select_word+'</span>'));
+				} else {
+					temp.push(total_arr.at(j))
+				}
+			}
+			temp_str = temp.join(separator)
+			
+			document.getElementById('data_display').innerHTML = first_part_str+'<br><br>'+temp_str;
+		}
 		
 		// -------------------------------------------------
-
-		document.getElementById('input_text').setSelectionRange(5, 10);
-		document.getElementById('input_text').setSelectionRange(25, 30);
 		
 		// algo: 18ms - timer ended
 
