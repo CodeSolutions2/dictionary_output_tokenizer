@@ -244,7 +244,7 @@ async function run_selection() {
 		var val;
 		for (let i=0; i < key_arr.length; i++) {
 			var select_word = key_arr.at(i);
-			let regexp = new RegExp(`"${select_word}"`, 'g');
+			let regexp = new RegExp(`${select_word}`, 'g');
 		
 			// Determine highlight color
 			if (i % 5 == 0) {
@@ -258,14 +258,15 @@ async function run_selection() {
 			var total_string = total_arr.at(1);
 			console.log('total_string: ', total_string);
 			
-			var separator = ' ';
-			var total_arr = total_string.split(separator);
+			var total_arr = total_string.split(' ');
+			console.log('total_arr: ', total_arr);
 
 			var temp = [];
 			for (let j=0; j < total_arr.length; j++) {
 				var matches = total_arr.at(j).match(regexp) ?? [];
+				var span_matches = total_arr.at(j).match(/span/g) ?? [];
 		
-				if (matches.length > 0) {
+				if (matches.length > 0 && span_matches.length == 0) {
 					temp.push(total_arr.at(j).replace(regexp, `<span class="highlight${val}">`+select_word+'</span>'));
 				} else {
 					temp.push(total_arr.at(j))
