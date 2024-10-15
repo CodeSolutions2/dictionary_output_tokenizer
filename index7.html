@@ -214,35 +214,36 @@ async function run_selection() {
 
 		// Change the entire background color of the div element
 		// document.getElementById('data_display').style.backgroundColor = "#ed968e";  // WORKS!
-
-		// Change a the background color for text strings in the div element
-		const select_word = "dictionary_output_tokenizer";
-		const regexp = new RegExp(`${select_word}`, 'g');
-		document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, '<span class="highlight0">'+select_word+'</span>');
+			
+		// Highlight a text string in the div element
+		// const select_word = "dictionary_output_tokenizer";
+		// const regexp = new RegExp(`${select_word}`, 'g');
+		// document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, '<span class="highlight0">'+select_word+'</span>'); // WORKS!
 		
-		
-		// Test trying to highlight a div item
-		// const test = document.getElementById('data_display1');
-		// console.log('test: ', test);  //null
-		// document.getElementById('data_display1').setAttribute('innerHTML', 'test'); 
-		// OR
-		// document.getElementById('data_display1').innerHTML = "test";  //JSON.stringify(xs);
-		// Uncaught (in promise) TypeError: document.getElementById(...) is null
+		// Highlight a text string in the textarea element
+		// var i = 1;
+		// document.getElementById('input_text').innerHTML = document.getElementById('input_text').innerHTML.replace(regexp, `<span class="highlight${i}">`+select_word+'</span>');
 
-		// Change the entire background color of the textarea element
-		// document.getElementById('input_text').style.backgroundColor = "#eced8e";  // WORKS!
+		// Highlight text strings
+		var key_arr = Object.keys(tokenizer_obj);
+		var val;
+		for (let i=0; i < key_arr.length; i++) {
+			var select_word = key_arr.at(i);
+			let regexp = new RegExp(`${select_word}`, 'g');
 
-		// Change a the background color for text strings in the textarea element
-		// const highlightedText0 = document.getElementById('input_text').innerHTML.substring(0, 10);
-		// console.log('highlightedText innerHTML:', highlightedText);
-		// Uncaught (in promise) TypeError: document.getElementById(...) is null
+			// Determine highlight color
+			if (i % 5 == 0) {
+				val = 0; // reset
+			} else {
+				val = val + 1;
+			}
 
-		// const highlightedText1 = document.getElementById('input_text').value.substring(0, 10);
-		// console.log('highlightedText value:', highlightedText0);
-		// Uncaught (in promise) TypeError: document.getElementById(...) is null
-		
-		// document.getElementById('input_text').innerHTML += document.getElementById('input_text').innerHTML.replace(highlightedText0, '<span style="backgroundColor: #ed968e;">' + highlightedText0 + '</span>');
-				
+			// Highlight word/s in div
+			document.getElementById('data_display').innerHTML = document.getElementById('data_display').innerHTML.replace(regexp, `<span class="highlight${i}">`+select_word+'</span>');
+
+			// Highlight word/s in textarea
+			document.getElementById('input_text').innerHTML = document.getElementById('input_text').innerHTML.replace(regexp, `<span class="highlight${i}">`+select_word+'</span>');
+		}
 		
 		// algo: 18ms - timer ended
 
