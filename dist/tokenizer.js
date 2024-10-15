@@ -179,6 +179,14 @@ async function tokenize_X(xs) {
 	// Find unique words
 	let uniqueArray = [...new Set(final_arr)];
 
+	// ---------------------------
+
+	// Remove any empty array fields
+	const Vals_toKeep = (x) => x.length != 0;
+	uniqueArray = uniqueArray.filter(Vals_toKeep);
+
+	// ---------------------------
+
 	// Add the <OOV> token: if the word is not in the token list assign this value
 	uniqueArray.push('<OOV>');
 	
