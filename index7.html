@@ -208,51 +208,7 @@ async function run_selection() {
 
 		document.getElementById("progress_bar").value = (2/3)*100;
 
-    
-    
-    // Highlight original text
-		var textarea = document.getElementById("input_text");
-
-		// Way 0
-		// textarea.setSelectionRange(5, 9); // Highlight text with cursor from index 5 to 9
-		// textarea.focus();
-
-    // Way 1: replace the text with span
-		// Get start and stop index for each token
-		var key_arr = Object.keys(tokenizer_obj);
-		var val;
-		for (let i=0; i < key_arr.length; i++) {
-			let regexp = `${key_arr.at(i)}`;
-			console.log("regexp: ", regexp);
-
-			var xs_str = xs.join(' ');
-			console.log("xs_str: ", xs_str);
-			
-			let iterator = [...xs_str.matchAll(regexp)];
-			console.log("iterator: ", iterator);
-			
-			let matches = Array.from(iterator); // Convert iterator to array
-			console.log("matches: ", matches);
-
-			for (let j=0; j < matches.length; j++) {
-				let startIndex = matches.at(j).index;
-				let endIndex = startIndex + key_arr.at(i).length;
-				var highlightedText = textarea.value.substring(startIndex, endIndex);
-				console.log("highlightedText: ", highlightedText);
-	
-				if (i % 5 == 0) {
-					val = 0;
-				} else {
-					val = val + 1;
-				}
-				console.log("val: ", val);
-				
-				textarea.innerHTML += textarea.value.replace(highlightedText, `<span class="highlight${val}">` + highlightedText + '</span>');
-				
-			}
-		}
-
-    
+  
 		// Print to DOM
 		document.getElementById('data_display').innerHTML = JSON.stringify(tokenizer_obj);
 
