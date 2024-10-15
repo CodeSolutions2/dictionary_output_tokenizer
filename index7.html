@@ -216,6 +216,10 @@ async function run_selection() {
 			
 		// Highlight a text string in the div element
 		var key_arr = Object.keys(tokenizer_obj);
+
+		// Inverse the list so that short words are highlighted first and longer words are highlighted last
+		key_arr = key_arr.toReversed();
+		
 		console.log("key_arr: ", key_arr);
 		
 		var val;
