@@ -109,16 +109,24 @@ div#data_display {position: absolute; vertical-align: top; top: 200; z-index: 20
 <!-- gpt-tokenizer: WORKS! -->
 <script src="https://unpkg.com/gpt-tokenizer@2.5.0/dist/cl100k_base.js"></script>
   
-	
-<!-- ---------------------------------------- -->
 
-<script type="module">
-import { create_tokenizer, delete_key_value, encode, decode } from "./dist/tokenizer.js";
+<script type="module" crossorigin="*" redirect="follow" mode="cors">
+import { create_tokenizer, delete_key_value, encode, decode } from "https://cdn.jsdelivr.net/npm/dictionary_output_tokenizer@1.0.2/dist/tokenizer.js";
 module2.create_tokenizer = create_tokenizer;
 module3.delete_key_value = delete_key_value;
 module4.encode = encode;
 module5.decode = decode;
 </script>
+
+<!-- ---------------------------------------- -->
+
+<!-- <script type="module">
+import { create_tokenizer, delete_key_value, encode, decode } from "./dist/tokenizer.js";
+module2.create_tokenizer = create_tokenizer;
+module3.delete_key_value = delete_key_value;
+module4.encode = encode;
+module5.decode = decode;
+</script> -->
 
 <!-- ---------------------------------------- -->
 
